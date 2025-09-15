@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<!-- BEGIN: Head -->
+
+<head>
+    <meta charset="utf-8">
+    <link href="dist/images/logo.svg" rel="shortcut icon">
+    <meta name="author" content="LEFT4CODE">
+    <title>Tooltip - Midone - Tailwind HTML Admin Template</title>
+    <!-- BEGIN: CSS Assets-->
+    <link rel="stylesheet" href="dist/css/app.css" />
+    <!-- END: CSS Assets-->
+</head>
+<!-- END: Head -->
+
+<body class="main">
+    <!-- BEGIN: Top Bar -->
+    <div
+        class="top-bar-boxed h-[70px] z-[51] relative border-b border-white/[0.08] mt-12 md:-mt-5 -mx-3 sm:-mx-8 px-3 sm:px-8 md:pt-0 mb-12">
+        <div class="h-full flex items-center">
+            <!-- BEGIN: Logo -->
+            <a href="" class="-intro-x hidden md:flex">
+                <img alt="Midone - HTML Admin Template" class="w-6" src="dist/images/logo.svg">
+                <span class="text-white text-lg ml-3"> Icewall </span>
+            </a>
+            <!-- END: Logo -->
+            <!-- BEGIN: Breadcrumb -->
+            <nav aria-label="breadcrumb" class="-intro-x h-full mr-auto">
+                <ol class="breadcrumb breadcrumb-light">
+                    <li class="breadcrumb-item"><a href="#">Application</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+            </nav>
+            <!-- END: Breadcrumb -->
+            <!-- BEGIN: Account Menu -->
+            <div class="intro-x dropdown w-8 h-8">
+                <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in scale-110"
+                    role="button" aria-expanded="false" data-tw-toggle="dropdown">
+                    <img alt="Midone - HTML Admin Template" src="dist/images/profile-4.jpg">
+                </div>
+                <div class="dropdown-menu w-56">
+                    <ul
+                        class="dropdown-content bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
+                        <li class="p-2">
+                            <div class="font-medium">Johnny Depp</div>
+                            <div class="text-xs text-white/60 mt-0.5 dark:text-slate-500">DevOps Engineer</div>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider border-white/[0.08]">
+                        </li>
+                        <li>
+                            <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="user"
+                                    class="w-4 h-4 mr-2"></i> Profile </a>
+                        </li>
+                        <li>
+                            <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="edit"
+                                    class="w-4 h-4 mr-2"></i> Add Account </a>
+                        </li>
+                        <li>
+                            <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="lock"
+                                    class="w-4 h-4 mr-2"></i> Reset Password </a>
+                        </li>
+                        <li>
+                            <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="help-circle"
+                                    class="w-4 h-4 mr-2"></i> Help </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider border-white/[0.08]">
+                        </li>
+                        <li>
+                            <a href="" class="dropdown-item hover:bg-white/5"> <i data-lucide="toggle-right"
+                                    class="w-4 h-4 mr-2"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- END: Account Menu -->
+        </div>
+    </div>
+    <!-- END: Top Bar -->
+    <!-- BEGIN: Top Menu -->
+    <nav class="top-nav">
+        <ul>
+            <li>
+                <a href="dashboard.html" class="top-menu top-menu--active">
+                    <div class="top-menu__icon"> <i data-lucide="home"></i> </div>
+                    <div class="top-menu__title"> Dashboard </div>
+                </a>
+            </li>
+
+            <!-- Data Master -->
+            <li>
+                <a href="javascript:;" class="top-menu">
+                    <div class="top-menu__icon"> <i data-lucide="database"></i> </div>
+                    <div class="top-menu__title"> Data Master <i data-lucide="chevron-down"
+                            class="top-menu__sub-icon"></i></div>
+                </a>
+                <ul>
+                    <li>
+                        <a href="siswa.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="users"></i> </div>
+                            <div class="top-menu__title"> Data Siswa </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="guru.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="user"></i> </div>
+                            <div class="top-menu__title"> Data Guru </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mapel.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="book"></i> </div>
+                            <div class="top-menu__title"> Mata Pelajaran </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="kelas.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="layout"></i> </div>
+                            <div class="top-menu__title"> Data Kelas </div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Nilai -->
+            <li>
+                <a href="javascript:;" class="top-menu">
+                    <div class="top-menu__icon"> <i data-lucide="file-text"></i> </div>
+                    <div class="top-menu__title"> Nilai <i data-lucide="chevron-down" class="top-menu__sub-icon"></i>
+                    </div>
+                </a>
+                <ul>
+                    <li>
+                        <a href="input-nilai.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="edit"></i> </div>
+                            <div class="top-menu__title"> Input Nilai </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="rekap-nilai.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="bar-chart"></i> </div>
+                            <div class="top-menu__title"> Rekap Nilai </div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Kenaikan Kelas -->
+            <li>
+                <a href="kenaikan.html" class="top-menu">
+                    <div class="top-menu__icon"> <i data-lucide="trending-up"></i> </div>
+                    <div class="top-menu__title"> Kenaikan Kelas </div>
+                </a>
+            </li>
+
+            <!-- Laporan -->
+            <li>
+                <a href="javascript:;" class="top-menu">
+                    <div class="top-menu__icon"> <i data-lucide="printer"></i> </div>
+                    <div class="top-menu__title"> Laporan <i data-lucide="chevron-down" class="top-menu__sub-icon"></i>
+                    </div>
+                </a>
+                <ul>
+                    <li>
+                        <a href="raport.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="file"></i> </div>
+                            <div class="top-menu__title"> Cetak Raport </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="rekap-absen.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="calendar"></i> </div>
+                            <div class="top-menu__title"> Rekap Absensi </div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Pengaturan -->
+            <li>
+                <a href="javascript:;" class="top-menu">
+                    <div class="top-menu__icon"> <i data-lucide="settings"></i> </div>
+                    <div class="top-menu__title"> Pengaturan <i data-lucide="chevron-down"
+                            class="top-menu__sub-icon"></i></div>
+                </a>
+                <ul>
+                    <li>
+                        <a href="update-profile.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="user"></i> </div>
+                            <div class="top-menu__title"> Update Profile </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="change-password.html" class="top-menu">
+                            <div class="top-menu__icon"> <i data-lucide="lock"></i> </div>
+                            <div class="top-menu__title"> Ganti Password </div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <!-- END: Top Menu -->
+
+    <!-- END: Top Menu -->
+    <!-- BEGIN: Content -->
+    <div class="wrapper wrapper--top-nav">
+        <div class="wrapper-box">
+            <!-- BEGIN: Content -->
+            <div class="content">
+                INI KONTEN
+            </div>
+            <!-- END: Content -->
+        </div>
+    </div>
+    <!-- END: Content -->
+    <!-- BEGIN: JS Assets-->
+    <script
+        src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script src="dist/js/app.js"></script>
+    <!-- END: JS Assets-->
+</body>
+
+</html>
