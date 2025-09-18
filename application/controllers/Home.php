@@ -7,6 +7,6 @@ class Home extends CI_Controller {
 		$data = array (
 			'title' => 'Dashboard'
 		);
-		$this->template->load('template','home');
+		$this->template->load('template','home',$data);
 	}
 }
