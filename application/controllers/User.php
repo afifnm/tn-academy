@@ -19,41 +19,36 @@ class User extends MY_Controller {
 	}
 	public function index()
 	{
-		$limit = $this->input->get('limit') ?? 10;
-		$offset = $this->uri->segment(3, 0);
-
-		$data['all_users'] = $this->User_model->get_users($limit, $offset);
-		$total_users   = $this->User_model->count_users();
-
-		$data['pagination'] = pagination(base_url('user/index'), $total_users, $limit, 3);
-
-		$this->db->from('users')->order_by('name','ASC');
-		$data['users'] = $this->db->get()->result_array();
-
-		$data['title'] = 'List User';
-
+		$result = $this->paginate('users', 'name ASC');
+		$data = array(
+        'users'      => $result['data'],
+        'pagination' => $result['pagination'],
+        'title'      => 'List User',
+        'offset'     => $result['offset'], 
+		);
 		$this->template->load('template','user',$data);
 	}
 
 	public function add()
 	{
+		$this->only_post_allowed();
 		$this->User_model->add();
 		$this->set_flash('success', 'User berhasil ditambahkan');
-		redirect('user');
+		redirect($_SERVER['HTTP_REFERER']);
 	}
 
 	public function edit()
 	{
+		$this->only_post_allowed();
 		$this->User_model->update();
 		$this->set_flash('success', 'User berhasil diedit!');
-		redirect('user');
+		redirect($_SERVER['HTTP_REFERER']);
 	}
 
 	public function delete($id_user)
 	{
 		$this->User_model->delete($id_user);
         $this->set_flash('success', 'User berhasil dihapus!');
-       
-            redirect('user');
+		redirect($_SERVER['HTTP_REFERER']);
 	}
 }
