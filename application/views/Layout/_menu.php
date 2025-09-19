@@ -1,4 +1,4 @@
-  <nav class="top-nav">
+<nav class="top-nav">
   	<ul>
   		<li>
   			<a href="<?=base_url('home')?>"
@@ -66,7 +66,7 @@
   		</li>
   		<li>
   			<a href="<?=base_url('user')?>"
-  				class="top-menu  <?=($this->uri->uri_string()=='user')? 'top-menu--active' : ''?>">
+  				class="top-menu  <?= (strpos($this->uri->uri_string(), 'user') === 0) ? 'top-menu--active' : '' ?>">
   				<div class="top-menu__icon"> <i data-lucide="user"></i> </div>
   				<div class="top-menu__title"> User </div>
   			</a>
