@@ -10,6 +10,10 @@ class Enroll extends MY_Controller {
 
     public function index()
     {
+        $siswa        = $this->db->get('siswa')->result();
+        $kelas        = $this->db->get('kelas')->result();
+        $tahun_ajaran = $this->db->get('tahun_ajaran')->result();
+        
         $result = $this->paginate('enroll', 'id_enroll DESC', [
             'join' => [
                 ['siswa', 'siswa.id_siswa = enroll.id_siswa'],
@@ -24,6 +28,9 @@ class Enroll extends MY_Controller {
             'pagination' => $result['pagination'],
             'title'      => 'List Enroll',
             'offset'     => $result['offset'], 
+            'siswa'        => $siswa,
+            'kelas'        => $kelas,
+            'tahun_ajaran' => $tahun_ajaran,
         );
         $this->template->load('template','enroll',$data);
     }
@@ -55,29 +62,32 @@ class Enroll extends MY_Controller {
         redirect('admin/enroll');
     }
 
-    public function edit($id_enroll)
-    {
-        $data_enroll = $this->db->get_where('enroll', ['id_enroll' => $id_enroll])->row();
-        if(!$data_enroll) show_404();
+    // public function edit($id_enroll)
+    // {
+    //     $data_enroll = $this->db->get_where('enroll', ['id_enroll' => $id_enroll])->row();
+    //     if(!$data_enroll) show_404();
 
-        $siswa        = $this->db->get('siswa')->result();
-        $kelas        = $this->db->get('kelas')->result();
-        $tahun_ajaran = $this->db->get('tahun_ajaran')->result();
+    //     $siswa        = $this->db->get('siswa')->result();
+    //     $kelas        = $this->db->get('kelas')->result();
+    //     $tahun_ajaran = $this->db->get('tahun_ajaran')->result();
 
-        $data = array(
-            'title'        => 'Edit Enroll',
-            'enroll'       => $data_enroll,
-            'siswa'        => $siswa,
-            'kelas'        => $kelas,
-            'tahun_ajaran' => $tahun_ajaran,
-        );
-        $this->template->load('template','enroll_edit',$data);
-    }
+    //     $data = array(
+    //         'title'        => 'Edit Enroll',
+    //         'enroll'       => $data_enroll,
+    //         'siswa'        => $siswa,
+    //         'kelas'        => $kelas,
+    //         'tahun_ajaran' => $tahun_ajaran,
+    //     );
+    //     $this->template->load('template','enroll_edit',$data);
+    // }
 
-    public function update($id_enroll)
+    public function update()
     {
         $this->only_post_allowed();
+        $id_enroll = $this->input->post('id_enroll'); 
+
         $this->Enroll_model->update($id_enroll);
+
         $this->set_flash('success', 'Enroll berhasil diperbarui!');
         redirect('admin/enroll');
     }
