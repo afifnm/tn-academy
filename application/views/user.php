@@ -1,11 +1,4 @@
 <h2 class="intro-y text-lg font-medium">List Data User</h2>
-<?php if ($this->session->flashdata('notifikasi')): ?>
-<div id="flash-alert" class="alert alert-<?= $this->session->flashdata('icon'); ?>-soft show flex items-center mb-2"
-	role="alert">
-	<i data-lucide="alert-triangle" class="w-6 h-6 mr-2"></i>
-	<?= $this->session->flashdata('notifikasi'); ?>
-</div>
-<?php endif; ?>
 
 
 <div class="grid grid-cols-6 mt-5">

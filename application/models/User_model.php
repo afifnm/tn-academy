@@ -18,11 +18,7 @@ class User_model extends CI_Model {
 		$cek = $this->db->get()->row();
 
 		if($cek != null){
-			$this->session->set_flashdata('alert','<div class="alert alert-primary alert-dismissible fade show" role="alert">
-                            username alredy exist
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>');
-			redirect('user');
+        	return false; 
 		}
 		$data = array(
             'name'	=>$this->input->post('name'),
