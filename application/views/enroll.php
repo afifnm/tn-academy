@@ -59,10 +59,85 @@
 
 						</div>
 					</td>
-                    
+                    <!-- BEGIN: Modal Content -->
+                    <div id="edit<?=$enr['id_enroll']?>" class="modal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="font-medium text-base mr-auto">Edit Data Enroll</h2>
+                                </div> <!-- END: Modal Header -->
+                                 <form action="<?=base_url('admin/enroll/update')?>" method="post">
+                                    <div class="modal-body ">
+                                        <input type="hidden" name="id_enroll" value="<?=$enr['id_enroll']?>">
+                                        <div class="mt-3">
+                                            <label>Nama Siswa</label>
+                                            <div class="mt-2"> <select data-placeholder="Cari Nama siswa" class="tom-select w-full" name="id_siswa" class="form-control" required>
+                                                <option value="">-- Pilih Siswa --</option>
+                                                <?php foreach ($siswa as $s): ?> 
+                                                    <option value="<?= $s->id_siswa ?>" <?= ($enr['id_siswa'] == $s->id_siswa) ? 'selected' : '' ?>>
+                                                         <?= $s->nama ?>
+                                                    </option> 
+                                                <?php endforeach; ?>
+                                                </select> 
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <label class="form-label">Kelas</label>
+                                            <select name="id_kelas" class="form-control" required>
+                                                <option value="">-- Pilih Kelas --</option>
+                                                <?php foreach ($kelas as $k): ?>
+                                                    <option value="<?= $k->id_kelas ?>" 
+                                                        <?= ($enr['id_kelas'] == $k->id_kelas) ? 'selected' : '' ?>>
+                                                        <?= $k->nama_kelas ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+
+                                            </select>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <label class="form-label">Tahun Ajaran</label>
+                                            <select name="id_ta" class="form-control" required>
+                                                <option value="">-- Pilih Tahun Ajaran --</option>
+                                                <?php foreach ($tahun_ajaran as $ta): ?>
+                                                    <option value="<?= $ta->id_ta ?>" 
+                                                        <?= ($enr['id_ta'] == $ta->id_ta) ? 'selected' : '' ?>>
+                                                        <?= $ta->tahun ?> (<?= $ta->semester ?>)
+                                                    </option>
+                                                <?php endforeach; ?>
+
+                                            </select>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <label class="form-label">Status</label>
+                                            <select name="status" class="form-control" required>
+                                                <option value="aktif"    <?= ($enr['status'] == 'aktif') ? 'selected' : '' ?>>Aktif</option>
+                                                <option value="nonaktif" <?= ($enr['status'] == 'nonaktif') ? 'selected' : '' ?>>Nonaktif</option>
+                                                <option value="pindah"   <?= ($enr['status'] == 'pindah') ? 'selected' : '' ?>>Pindah</option>
+                                                <option value="lulus"    <?= ($enr['status'] == 'lulus') ? 'selected' : '' ?>>Lulus</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" data-tw-dismiss="modal"
+                                            class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                                        <button type="submit" class="btn btn-primary w-20">Save</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- END: Modal Content -->
 				</tr>
 				<?php $no++; }?>
 			</tbody>
+			<!-- BEGIN: Modal Toggle -->
 		</table>
         
 	</div>
