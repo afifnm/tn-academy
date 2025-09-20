@@ -15,31 +15,31 @@
   			</a>
   			<ul class="">
   				<li>
-  					<a href="side-menu-light-dashboard-overview-1.html" class="top-menu">
+  					<a href="<?=base_url('admin/siswa')?>" class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/siswa') === 0) ? 'side-menu--active' : '' ?>">
   						<div class="top-menu__icon"> <i data-lucide="users"></i> </div>
   						<div class="top-menu__title"> Data Siswa </div>
   					</a>
   				</li>
   				<li>
-  					<a href="side-menu-light-dashboard-overview-1.html" class="top-menu">
+  					<a href="<?=base_url('admin/guru')?>" class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/guru') === 0) ? 'side-menu--active' : '' ?>">
   						<div class="top-menu__icon"> <i data-lucide="contact"></i> </div>
   						<div class="top-menu__title"> Data Guru </div>
   					</a>
   				</li>
   				<li>
-  					<a href="side-menu-light-dashboard-overview-1.html" class="top-menu">
+  					<a href="<?=base_url('admin/kelas')?>" class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/kelas') === 0) ? 'side-menu--active' : '' ?>">
   						<div class="top-menu__icon"> <i data-lucide="layout-list"></i> </div>
   						<div class="top-menu__title"> Data Kelas </div>
   					</a>
   				</li>
   				<li>
-  					<a href="side-menu-light-dashboard-overview-1.html" class="top-menu">
+  					<a href="<?=base_url('admin/mapel')?>" class="top-menu">
   						<div class="top-menu__icon"> <i data-lucide="book"></i> </div>
   						<div class="top-menu__title"> Data Mata Pelajaran </div>
   					</a>
   				</li>
   				<li>
-  					<a href="side-menu-light-dashboard-overview-1.html" class="top-menu">
+  					<a href="<?=base_url('admin/tahun_ajaran')?>" class="top-menu">
   						<div class="top-menu__icon"> <i data-lucide="calendar"></i> </div>
   						<div class="top-menu__title"> Data Tahun Ajaran & <br> Semester </div>
   					</a>

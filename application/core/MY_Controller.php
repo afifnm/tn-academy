@@ -54,4 +54,30 @@ class MY_Controller extends CI_Controller {
 
         ];
     }
+    protected function only_admin_allowed()
+    {
+        if ($this->session->userdata('role') !== 'admin') {
+            $this->set_flash('error', 'Kamu bukan admin');
+            redirect('auth');
+            exit;
+        }
+    }
+
+    protected function only_principal_allowed()
+    {
+        if ($this->session->userdata('role') !== 'admin') {
+            $this->set_flash('error', 'Kamu bukan kepala sekolah ');
+            redirect('auth');
+            exit;
+        }
+    }
+
+    // protected function only_teacher_allowed()
+    // {
+    //     if ($this->session->userdata('role') !== 'admin') {
+    //         $this->set_flash('error', 'Kamu bukan admin');
+    //         redirect('auth');
+    //         exit;
+    //     }
+    // }
 }

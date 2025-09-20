@@ -32,8 +32,12 @@ class User extends MY_Controller {
 	public function add()
 	{
 		$this->only_post_allowed();
-		$this->User_model->add();
-		$this->set_flash('success', 'User berhasil ditambahkan');
+		$result = $this->User_model->add();
+		if($result){
+        	$this->set_flash('success', 'User berhasil ditambahkan');
+		} else {
+			$this->set_flash('error', 'Username sudah ada');
+		}
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 
