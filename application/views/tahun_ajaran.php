@@ -1,4 +1,4 @@
-<h2 class="intro-y text-lg font-medium">List Data Kelas</h2>
+<h2 class="intro-y text-lg font-medium">List Tahun ajaran</h2>
 
 
 <div class="grid grid-cols-6 mt-5">

@@ -45,7 +45,7 @@
   					</a>
   				</li>
   				<li>
-  					<a href="side-menu-light-dashboard-overview-1.html" class="top-menu">
+  					<a href="<?=base_url('admin/enroll')?>" class="top-menu">
   						<div class="top-menu__icon"> <i data-lucide="columns"></i> </div>
   						<div class="top-menu__title"> Data Rombel </div>
   					</a>
