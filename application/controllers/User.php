@@ -19,12 +19,9 @@ class User extends MY_Controller {
 	}
 	public function index()
 	{
-		$result = $this->paginate('users', 'name ASC');
 		$data = array(
-        'users'      => $result['data'],
-        'pagination' => $result['pagination'],
+        'users'      => $this->User_model->get_all(),
         'title'      => 'List User',
-        'offset'     => $result['offset'], 
 		);
 		$this->template->load('template','user',$data);
 	}

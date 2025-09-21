@@ -7,6 +7,10 @@ class User_model extends CI_Model {
         $query = $this->db->get('users', $limit, $offset);
         return $query->result_array(); 
     }
+	public function get_all() {
+		$query = $this->db->get('users');
+		return $query->result_array(); 
+	}
 
     public function count_users() {
         return $this->db->count_all('users');
@@ -21,7 +25,7 @@ class User_model extends CI_Model {
         	return false; 
 		}
 		$data = array(
-            'name'	=>$this->input->post('name'),
+            'nama'	=>$this->input->post('nama'),
 			'username'	=>$this->input->post('username'),
 			'password'	=> md5($this->input->post('password')),
 			'role'	=>$this->input->post('role'),
@@ -33,7 +37,7 @@ class User_model extends CI_Model {
     public function update()
 	{
 		$data = array(
-            'name'	=>$this->input->post('name'),
+            'nama'	=>$this->input->post('nama'),
 			'username'	=>$this->input->post('username'),
 			'role'	=>$this->input->post('role'),
 		);

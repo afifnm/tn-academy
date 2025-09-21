@@ -54,21 +54,14 @@
 			</div>
 		</div>
 		<!-- END: Modal Add User -->
-		<!-- <div class="hidden md:block mx-auto text-slate-500">Showing 1 to 10 of 150 entries</div> -->
-		<div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-2">
-			<div class="w-56 relative text-slate-500">
-				<input type="text" class="form-control w-56 box pr-10" placeholder="Search...">
-				<i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-lucide="search"></i>
-			</div>
-		</div>
 	</div>
 	<!-- BEGIN: Data List -->
 	<div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-		<table class="table table-report -mt-2" id="myTable">
+		<table class="table table-report -mt-2" id="example1">
 			<thead>
 				<tr>
 					<th class="table-report__action whitespace-nowrap">NO</th>
-					<th class="table-report__action text-center whitespace-nowrap">NAME</th>
+					<th class="table-report__action text-center whitespace-nowrap">NAMA</th>
 					<th class="table-report__action text-center whitespace-nowrap">USERNAME</th>
 					<th class="table-report__action text-center whitespace-nowrap">ROLE</th>
 					<th class="table-report__action text-center whitespace-nowrap">ACTIONS</th>
@@ -78,7 +71,7 @@
 				<?php $no=1+ ($offset ?? 0); foreach ($users as $ok) {?>
 				<tr class="intro-x">
 					<td class="w-10"><?= $no ?></td>
-					<td class="table-report__action text-center"><?= $ok['name'] ?></td>
+					<td class="table-report__action text-center"><?= $ok['nama'] ?></td>
 					<td class="table-report__action text-center"><?= $ok['username'] ?></td>
 
 					<td class="table-report__action w-50">
@@ -156,12 +149,4 @@
 		</table>
 	</div>
 	<!-- END: Data List -->
-
-
-
-
-	<!-- BEGIN: Pagination -->
-	<?php $this->load->view('components/pagination', ['pagination' => $pagination]); ?>
-	<!-- END: Pagination -->
-
 </div>
