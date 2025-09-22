@@ -2,7 +2,12 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Siswa_model extends CI_Model {
-    
+
+	public function get_all()
+	{
+		return $this->db->get('siswa')->result_array();
+	}
+
     public function add()
 	{
 		$this->db->from('siswa')->where('nisn',$this->input->post('nisn'));

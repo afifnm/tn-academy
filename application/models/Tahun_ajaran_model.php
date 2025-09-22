@@ -2,6 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Tahun_ajaran_model extends CI_Model {
+	public function get_all(){
+		$this->db->from('tahun_ajaran');
+		$this->db->order_by('tahun','ASC');
+		return $this->db->get()->result_array();
+	}
     
     public function add()
 	{

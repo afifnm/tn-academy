@@ -6,7 +6,7 @@
         <meta name="description" content="Icewall admin is super flexible, powerful, clean & modern responsive tailwind admin template with unlimited possibilities.">
         <meta name="keywords" content="admin template, Icewall Admin Template, dashboard template, flat admin template, responsive admin template, web app">
         <meta name="author" content="LEFT4CODE">
-        <title><?=$title?> - Midone - Tailwind HTML Admin Template</title>
+        <title><?=$title?> - TN Academy</title>
        
     </head>
     <!-- END: Head -->

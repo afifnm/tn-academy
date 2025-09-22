@@ -20,18 +20,18 @@ class User_model extends CI_Model {
 	{
 		$this->db->from('users')->where('username',$this->input->post('username'));
 		$cek = $this->db->get()->row();
-
-		if($cek != null){
+		if($cek){
         	return false; 
+		} else {
+			$data = array(
+				'nama'	=>$this->input->post('nama'),
+				'username'	=>$this->input->post('username'),
+				'password'	=> md5($this->input->post('password')),
+				'role'	=>$this->input->post('role'),
+			);
+			$this->db->insert('users',$data);
+			return true; 
 		}
-		$data = array(
-            'nama'	=>$this->input->post('nama'),
-			'username'	=>$this->input->post('username'),
-			'password'	=> md5($this->input->post('password')),
-			'role'	=>$this->input->post('role'),
-		);
-
-		$this->db->insert('users',$data);
 	}
 
     public function update()

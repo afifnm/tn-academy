@@ -2,7 +2,12 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Guru_model extends CI_Model {
-    
+
+	public function get_all()
+	{
+		return $this->db->get('guru')->result_array();
+	}
+
     public function add()
 	{
 		$this->db->from('guru')->where('nama_guru',$this->input->post('nama_guru'));

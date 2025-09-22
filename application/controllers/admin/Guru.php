@@ -4,20 +4,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Guru extends MY_Controller {
     public function __construct() {
         parent::__construct();
-        $this->only_admin_allowed();
+        //$this->only_admin_allowed();
         $this->load->model('Guru_model');
     }
 
     public function index()
     {
-        $result = $this->paginate('guru', 'nama_guru ASC');
         $data = array(
-            'guru'      => $result['data'],
-            'pagination' => $result['pagination'],
+            'guru'      => $this->Guru_model->get_all(),
             'title'      => 'List Guru',
-            'offset'     => $result['offset'], 
         );
-        $this->template->load('template','guru',$data);
+        $this->template->load('template','master/guru',$data);
     }
     
     public function add()
@@ -25,9 +22,9 @@ class Guru extends MY_Controller {
 		$this->only_post_allowed();
 		$result = $this->Guru_model->add();
 		if($result){
-        	$this->set_flash('success', 'Data guru berhasil ditambahkan');
+        	$this->set_flash('Data guru berhasil ditambahkan', 'success');
 		} else {
-			$this->set_flash('error', 'Data guru sudah ada');
+			$this->set_flash('Data guru sudah ada', 'error');
 		}
 		redirect('admin/guru');
 	}
@@ -36,14 +33,14 @@ class Guru extends MY_Controller {
     {
         $this->only_post_allowed();
         $this->Guru_model->update();
-        $this->set_flash('success', 'Data guru berhasil diedit!');
+        $this->set_flash('Data guru berhasil diedit!', 'success');
         redirect('admin/guru');
     }
 
     public function delete($id_guru)
     {
         $this->Guru_model->delete($id_guru);
-        $this->set_flash('success', 'Data guru berhasil dihapus!');
+        $this->set_flash('Data guru berhasil dihapus!', 'success');
         redirect('admin/guru');
     }
 }

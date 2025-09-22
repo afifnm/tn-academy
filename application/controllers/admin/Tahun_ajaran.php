@@ -4,20 +4,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Tahun_ajaran extends MY_Controller {
     public function __construct() {
         parent::__construct();
-        $this->only_admin_allowed();
+        //$this->only_admin_allowed();
         $this->load->model('Tahun_ajaran_model');
     }
 
     public function index()
     {
-        $result = $this->paginate('tahun_ajaran', 'tahun ASC');
         $data = array(
-            'tahun_ajaran'  => $result['data'],
-            'pagination' => $result['pagination'],
+            'tahun_ajaran'  => $this->Tahun_ajaran_model->get_all(),
             'title'      => 'List Tahun Ajaran & Semester',
-            'offset'     => $result['offset'], 
         );
-        $this->template->load('template','tahun_ajaran',$data);
+        $this->template->load('template','master/tahun_ajaran',$data);
     }
     
     public function add()
@@ -25,9 +22,9 @@ class Tahun_ajaran extends MY_Controller {
 		$this->only_post_allowed();
 		$result = $this->Tahun_ajaran_model->add();
 		if($result){
-        	$this->set_flash('success', 'Data Tahun ajaran dan semsester berhasil ditambahkan');
+        	$this->set_flash('Data Tahun ajaran dan semsester berhasil ditambahkan', 'success');
 		} else {
-			$this->set_flash('error', 'Data Tahun ajaran dan semsester sudah ada');
+			$this->set_flash('Data Tahun ajaran dan semsester sudah ada', 'error');
 		}
 		redirect('admin/tahun_ajaran');
 	}
@@ -36,14 +33,14 @@ class Tahun_ajaran extends MY_Controller {
     {
         $this->only_post_allowed();
         $this->Tahun_ajaran_model->update();
-        $this->set_flash('success', 'Data Tahun ajaran dan semsester berhasil diedit!');
+        $this->set_flash('Data Tahun ajaran dan semsester berhasil diedit!', 'success');
         redirect('admin/tahun_ajaran');
     }
 
     public function delete($id_ta)
     {
         $this->Tahun_ajaran_model->delete($id_ta);
-        $this->set_flash('success', 'Data Tahun ajaran dan semsester berhasil dihapus!');
+        $this->set_flash('Data Tahun ajaran dan semsester berhasil dihapus!', 'success');
         redirect('admin/tahun_ajaran');
     }
 }

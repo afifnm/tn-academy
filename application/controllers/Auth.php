@@ -15,7 +15,7 @@ class Auth extends MY_Controller {
         $user = $this->db->get()->row();
 
         if ($user == NULL){
-            $this->set_flash('error','Username tidak ditemukan');
+            $this->set_flash('Username tidak ditemukan','error');
             redirect('auth');
         } else if ($user->password==$password){
             $data = array (
@@ -27,38 +27,11 @@ class Auth extends MY_Controller {
             $this -> session->set_userdata($data);
             redirect('home');
         }else {
-            $this->set_flash('error','Password salah');
+            $this->set_flash('Password Salah','error');
             redirect('auth');
         }
 
     }
-
-    public function regist(){
-        $this->load->view('regist');
-    }
-
-    public function signup()
-	{
-        $this->only_post_allowed();
-		$this->db->from('users')->where('username',$this->input->post('username'));
-		$cek = $this->db->get()->result_array();
-
-		if($cek != null){
-			$this->set_flash('error','Username sudah digunakan');
-			redirect('auth/regist');
-		}
-		$data = array(
-			'username'	=>$this->input->post('username'),
-			'password'	=> md5($this->input->post('password')),
-			'name'	=>$this->input->post('name'),
-			'role'	=>'guru',
-		);
-
-		$this->db->insert('users',$data);
-		$this->set_flash('success','Akun berhasil dibuat, silahkan login');
-		redirect('auth/login');
-
-	}
 
     public function logout(){
         $this->session->sess_destroy();

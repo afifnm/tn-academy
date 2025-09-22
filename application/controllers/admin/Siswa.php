@@ -4,20 +4,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Siswa extends MY_Controller {
     public function __construct() {
         parent::__construct();
-        $this->only_admin_allowed();
+        //$this->only_admin_allowed();
         $this->load->model('Siswa_model');
     }
 
     public function index()
     {
-        $result = $this->paginate('siswa', 'nama ASC');
         $data = array(
-            'siswa'      => $result['data'],
-            'pagination' => $result['pagination'],
-            'title'      => 'List Siswa',
-            'offset'     => $result['offset'], 
+            'siswa'      => $this->Siswa_model->get_all(),
+            'title'      => 'List Siswa'
         );
-        $this->template->load('template','siswa',$data);
+        $this->template->load('template','master/siswa',$data);
     }
     
     public function add()
@@ -25,9 +22,9 @@ class Siswa extends MY_Controller {
 		$this->only_post_allowed();
 		$result = $this->Siswa_model->add();
 		if($result){
-        	$this->set_flash('success', 'User berhasil ditambahkan');
+        	$this->set_flash('Siswa berhasil ditambahkan', 'success');
 		} else {
-			$this->set_flash('error', 'Data siswa sudah ada');
+			$this->set_flash('Data siswa sudah ada', 'error');
 		}
 		redirect('admin/siswa');
 	}
@@ -36,14 +33,14 @@ class Siswa extends MY_Controller {
     {
         $this->only_post_allowed();
         $this->Siswa_model->update();
-        $this->set_flash('success', 'Siswa berhasil diedit!');
+        $this->set_flash('Siswa berhasil diedit!', 'success');
         redirect('admin/siswa');
     }
 
     public function delete($id_siswa)
     {
         $this->Siswa_model->delete($id_siswa);
-        $this->set_flash('success', 'Siswa berhasil dihapus!');
+        $this->set_flash('Siswa berhasil dihapus!', 'success');
         redirect('admin/siswa');
     }
 }

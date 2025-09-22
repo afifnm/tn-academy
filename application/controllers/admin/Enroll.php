@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Enroll extends MY_Controller {
     public function __construct() {
         parent::__construct();
-        $this->only_admin_allowed();
+        //$this->only_admin_allowed();
         $this->load->model('Enroll_model');
     }
 

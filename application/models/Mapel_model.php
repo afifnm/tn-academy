@@ -2,7 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mapel_model extends CI_Model {
-    
+	public function get_all(){
+		$this->db->from('mapel')->order_by('nama_mapel','ASC');
+		return $this->db->get()->result_array();
+	}
     public function add()
 	{
 		$this->db->from('mapel')->where('nama_mapel',$this->input->post('nama_mapel'));
