@@ -1,73 +1,127 @@
-<div class="col-span-12 mt-8">
-	<div class="intro-y flex items-center h-10">
-		<h2 class="text-lg font-medium truncate mr-5">
-			MAHI MAHI YES !
-		</h2>
-	</div>
-	<div class="grid grid-cols-12 gap-6 mt-5">
-		<div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-			<div class="report-box zoom-in">
-				<div class="box p-5">
-					<div class="flex">
-						<i data-lucide="shopping-cart" class="report-box__icon text-primary"></i>
-						<div class="ml-auto">
-							<div class="report-box__indicator bg-success tooltip cursor-pointer"
-								title="33% Higher than last month"> 33% <i data-lucide="chevron-up"
-									class="w-4 h-4 ml-0.5"></i> </div>
-						</div>
-					</div>
-					<div class="text-3xl font-medium leading-8 mt-6">4.710</div>
-					<div class="text-base text-slate-500 mt-1">Item Sales</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-			<div class="report-box zoom-in">
-				<div class="box p-5">
-					<div class="flex">
-						<i data-lucide="credit-card" class="report-box__icon text-pending"></i>
-						<div class="ml-auto">
-							<div class="report-box__indicator bg-danger tooltip cursor-pointer"
-								title="2% Lower than last month"> 2% <i data-lucide="chevron-down" class="w-4 h-4 ml-0.5"></i>
-                             </div>
-						</div>
-					</div>
-					<div class="text-3xl font-medium leading-8 mt-6">3.721</div>
-					<div class="text-base text-slate-500 mt-1">New Orders</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-			<div class="report-box zoom-in">
-				<div class="box p-5">
-					<div class="flex">
-						<i data-lucide="monitor" class="report-box__icon text-warning"></i>
-						<div class="ml-auto">
-							<div class="report-box__indicator bg-success tooltip cursor-pointer"
-								title="12% Higher than last month"> 12% <i data-lucide="chevron-up"class="w-4 h-4 ml-0.5"></i> 
-                            </div>
-						</div>
-					</div>
-					<div class="text-3xl font-medium leading-8 mt-6">2.149</div>
-					<div class="text-base text-slate-500 mt-1">Total Products</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-			<div class="report-box zoom-in">
-				<div class="box p-5">
-					<div class="flex">
-						<i data-lucide="user" class="report-box__icon text-success"></i>
-						<div class="ml-auto">
-							<div class="report-box__indicator bg-success tooltip cursor-pointer"
-								title="22% Higher than last month"> 22% <i data-lucide="chevron-up" class="w-4 h-4 ml-0.5"></i> 
-                            </div>
-						</div>
-					</div>
-					<div class="text-3xl font-medium leading-8 mt-6">152.040</div>
-					<div class="text-base text-slate-500 mt-1">Unique Visitor</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <div class="p-6">
+    <h1 class="text-2xl font-bold text-blue-700">Dashboard Raport Akademik TN Malang</h1>
+    <p class="text-gray-600">Selamat datang di sistem raport akademik</p>
+
+    <!-- Statistik Utama -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div class="bg-white shadow rounded-xl p-5">
+        <div class="flex items-center">
+          <i data-lucide="users" class="w-10 h-10 text-blue-500"></i>
+          <div class="ml-auto text-right">
+            <h3 class="text-3xl font-bold">1.245</h3>
+            <p class="text-gray-500">Jumlah Siswa</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5">
+        <div class="flex items-center">
+          <i data-lucide="user" class="w-10 h-10 text-green-500"></i>
+          <div class="ml-auto text-right">
+            <h3 class="text-3xl font-bold">86</h3>
+            <p class="text-gray-500">Jumlah Guru</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5">
+        <div class="flex items-center">
+          <i data-lucide="book" class="w-10 h-10 text-purple-500"></i>
+          <div class="ml-auto text-right">
+            <h3 class="text-3xl font-bold">32</h3>
+            <p class="text-gray-500">Jumlah Kelas</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5">
+        <div class="flex items-center">
+          <i data-lucide="file-text" class="w-10 h-10 text-orange-500"></i>
+          <div class="ml-auto text-right">
+            <h3 class="text-3xl font-bold">15</h3>
+            <p class="text-gray-500">Mata Pelajaran</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistik Nilai -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div class="bg-white shadow rounded-xl p-5">
+        <p class="text-gray-500">Rata-rata Nilai</p>
+        <h3 class="text-3xl font-bold text-blue-700">82.4</h3>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5">
+        <p class="text-gray-500">Top Student</p>
+        <h3 class="text-lg font-bold">Aulia Rahman (97)</h3>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5">
+        <p class="text-gray-500">Nilai Terendah</p>
+        <h3 class="text-lg font-bold">Budi Santoso (55)</h3>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5">
+        <p class="text-gray-500">Kenaikan Semester</p>
+        <h3 class="text-lg font-bold text-green-600">+4.5%</h3>
+      </div>
+    </div>
+
+    <!-- Grafik Dummy -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+      <div class="bg-white shadow rounded-xl p-5 h-60 flex items-center justify-center">
+        <p class="text-gray-500">[ Grafik Distribusi Nilai ]</p>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5 h-60 flex items-center justify-center">
+        <p class="text-gray-500">[ Grafik Kehadiran Siswa ]</p>
+      </div>
+      <div class="bg-white shadow rounded-xl p-5 h-60 flex items-center justify-center">
+        <p class="text-gray-500">[ Grafik Perkembangan Nilai ]</p>
+      </div>
+    </div>
+
+    <!-- Ranking & Informasi -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+      <!-- Ranking -->
+      <div class="bg-white shadow rounded-xl p-5">
+        <h3 class="text-lg font-bold text-blue-700 mb-3">Top 5 Siswa Kelas XII</h3>
+        <ol class="list-decimal list-inside text-gray-700 space-y-1">
+          <li>Aulia Rahman - 97</li>
+          <li>Siti Aminah - 95</li>
+          <li>Rizky Hidayat - 94</li>
+          <li>Dewi Lestari - 93</li>
+          <li>Budi Santoso - 92</li>
+        </ol>
+      </div>
+
+      <!-- Pengumuman -->
+      <div class="bg-white shadow rounded-xl p-5">
+        <h3 class="text-lg font-bold text-blue-700 mb-3">Pengumuman Terbaru</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>Deadline input nilai: 25 September 2025</li>
+          <li>Rapat guru wali kelas: 28 September 2025</li>
+          <li>Pembagian rapor: 5 Oktober 2025</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Agenda Akademik -->
+    <div class="bg-white shadow rounded-xl p-5 mt-6">
+      <h3 class="text-lg font-bold text-blue-700 mb-3">Agenda Akademik</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-4 bg-blue-50 rounded-lg">
+          <p class="text-gray-500">Ujian Tengah Semester</p>
+          <h4 class="font-bold text-gray-800">10 - 15 Oktober</h4>
+        </div>
+        <div class="p-4 bg-blue-50 rounded-lg">
+          <p class="text-gray-500">Ujian Akhir Semester</p>
+          <h4 class="font-bold text-gray-800">5 - 10 Desember</h4>
+        </div>
+        <div class="p-4 bg-blue-50 rounded-lg">
+          <p class="text-gray-500">Pembagian Rapor</p>
+          <h4 class="font-bold text-gray-800">20 Desember</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
