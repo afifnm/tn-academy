@@ -157,51 +157,30 @@ CREATE TABLE `users` (
 -- Indexes for dumped tables
 --
 
---
--- Indexes for table `enroll`
---
 ALTER TABLE `enroll`
   ADD PRIMARY KEY (`id_enroll`),
   ADD UNIQUE KEY `id_siswa` (`id_siswa`,`id_kelas`,`id_ta`),
   ADD KEY `id_kelas` (`id_kelas`),
   ADD KEY `id_ta` (`id_ta`);
 
---
--- Indexes for table `guru`
---
 ALTER TABLE `guru`
   ADD PRIMARY KEY (`id_guru`);
 
---
--- Indexes for table `kelas`
---
 ALTER TABLE `kelas`
   ADD PRIMARY KEY (`id_kelas`);
 
---
--- Indexes for table `kelas_mapel`
---
 ALTER TABLE `kelas_mapel`
   ADD PRIMARY KEY (`id_kelas_mapel`),
   ADD UNIQUE KEY `id_kelas` (`id_kelas`,`id_mapel`),
   ADD KEY `id_mapel` (`id_mapel`);
 
---
--- Indexes for table `mapel`
---
 ALTER TABLE `mapel`
   ADD PRIMARY KEY (`id_mapel`);
 
---
--- Indexes for table `mapel_komponen`
---
 ALTER TABLE `mapel_komponen`
   ADD PRIMARY KEY (`id_komponen`),
   ADD KEY `id_mapel` (`id_mapel`);
 
---
--- Indexes for table `nilai`
---
 ALTER TABLE `nilai`
   ADD PRIMARY KEY (`id_nilai`),
   ADD UNIQUE KEY `uniq_nilai` (`id_enroll`,`id_kelas_mapel`,`id_komponen`),
@@ -209,125 +188,140 @@ ALTER TABLE `nilai`
   ADD KEY `id_komponen` (`id_komponen`),
   ADD KEY `id_guru` (`id_guru`);
 
---
--- Indexes for table `siswa`
---
 ALTER TABLE `siswa`
   ADD PRIMARY KEY (`id_siswa`),
   ADD UNIQUE KEY `nisn` (`nisn`);
 
---
--- Indexes for table `tahun_ajaran`
---
 ALTER TABLE `tahun_ajaran`
   ADD PRIMARY KEY (`id_ta`);
 
---
--- Indexes for table `users`
---
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id_user`),
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT
 --
 
---
--- AUTO_INCREMENT for table `enroll`
---
 ALTER TABLE `enroll`
   MODIFY `id_enroll` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `guru`
---
 ALTER TABLE `guru`
   MODIFY `id_guru` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `kelas`
---
 ALTER TABLE `kelas`
   MODIFY `id_kelas` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `kelas_mapel`
---
 ALTER TABLE `kelas_mapel`
   MODIFY `id_kelas_mapel` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `mapel`
---
 ALTER TABLE `mapel`
   MODIFY `id_mapel` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `mapel_komponen`
---
 ALTER TABLE `mapel_komponen`
   MODIFY `id_komponen` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `nilai`
---
 ALTER TABLE `nilai`
   MODIFY `id_nilai` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `siswa`
---
 ALTER TABLE `siswa`
   MODIFY `id_siswa` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `tahun_ajaran`
---
 ALTER TABLE `tahun_ajaran`
   MODIFY `id_ta` int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `users`
---
 ALTER TABLE `users`
   MODIFY `id_user` int NOT NULL AUTO_INCREMENT;
 
 --
--- Constraints for dumped tables
+-- Constraints
 --
 
---
--- Constraints for table `enroll`
---
 ALTER TABLE `enroll`
   ADD CONSTRAINT `enroll_ibfk_1` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE,
   ADD CONSTRAINT `enroll_ibfk_2` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE,
   ADD CONSTRAINT `enroll_ibfk_3` FOREIGN KEY (`id_ta`) REFERENCES `tahun_ajaran` (`id_ta`) ON DELETE CASCADE;
 
---
--- Constraints for table `kelas_mapel`
---
 ALTER TABLE `kelas_mapel`
   ADD CONSTRAINT `kelas_mapel_ibfk_1` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE,
   ADD CONSTRAINT `kelas_mapel_ibfk_2` FOREIGN KEY (`id_mapel`) REFERENCES `mapel` (`id_mapel`) ON DELETE CASCADE;
 
---
--- Constraints for table `mapel_komponen`
---
 ALTER TABLE `mapel_komponen`
   ADD CONSTRAINT `mapel_komponen_ibfk_1` FOREIGN KEY (`id_mapel`) REFERENCES `mapel` (`id_mapel`) ON DELETE CASCADE;
 
---
--- Constraints for table `nilai`
---
 ALTER TABLE `nilai`
   ADD CONSTRAINT `nilai_ibfk_1` FOREIGN KEY (`id_enroll`) REFERENCES `enroll` (`id_enroll`) ON DELETE CASCADE,
   ADD CONSTRAINT `nilai_ibfk_2` FOREIGN KEY (`id_kelas_mapel`) REFERENCES `kelas_mapel` (`id_kelas_mapel`) ON DELETE CASCADE,
   ADD CONSTRAINT `nilai_ibfk_3` FOREIGN KEY (`id_komponen`) REFERENCES `mapel_komponen` (`id_komponen`) ON DELETE CASCADE,
   ADD CONSTRAINT `nilai_ibfk_4` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+--
+-- Dummy Data
+--
+
+-- tahun ajaran
+INSERT INTO tahun_ajaran (tahun, semester) VALUES
+('2024/2025', 'Ganjil'),
+('2024/2025', 'Genap');
+
+-- kelas
+INSERT INTO kelas (nama_kelas, tingkat, jurusan) VALUES
+('X RPL 1', 'X', 'Rekayasa Perangkat Lunak'),
+('XI RPL 1', 'XI', 'Rekayasa Perangkat Lunak'),
+('XII TKJ 1', 'XII', 'Teknik Komputer Jaringan');
+
+-- siswa
+INSERT INTO siswa (nisn, nama, tgl_lahir, thn_masuk, status) VALUES
+('1234567890', 'Budi Santoso', '2008-01-15', 2023, 'Aktif'),
+('1234567891', 'Siti Aminah', '2007-03-22', 2022, 'Aktif'),
+('1234567892', 'Andi Wijaya', '2006-07-11', 2021, 'Aktif');
+
+-- guru
+INSERT INTO guru (nama_guru) VALUES
+('Pak Ahmad'),
+('Bu Sari'),
+('Pak Joko');
+
+-- mapel
+INSERT INTO mapel (nama_mapel) VALUES
+('Matematika'),
+('Bahasa Indonesia'),
+('Pemrograman Web');
+
+-- kelas_mapel
+INSERT INTO kelas_mapel (id_kelas, id_mapel) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 1),
+(3, 3);
+
+-- mapel_komponen
+INSERT INTO mapel_komponen (id_mapel, nama_komponen, bobot) VALUES
+(1, 'Tugas', 30.00),
+(1, 'UTS', 30.00),
+(1, 'UAS', 40.00),
+(3, 'Proyek', 50.00),
+(3, 'Ujian Praktik', 50.00);
+
+-- enroll
+INSERT INTO enroll (id_siswa, id_kelas, id_ta, tanggal_enroll, status) VALUES
+(1, 1, 1, '2024-07-15 08:00:00', 'aktif'),
+(2, 1, 1, '2024-07-15 08:05:00', 'aktif'),
+(3, 2, 1, '2024-07-15 08:10:00', 'aktif');
+
+-- nilai
+INSERT INTO nilai (id_enroll, id_kelas_mapel, id_komponen, id_guru, skor, tanggal_input) VALUES
+(1, 1, 1, 1, 85.00, '2024-08-10 10:00:00'),
+(1, 1, 2, 1, 78.00, '2024-09-15 10:30:00'),
+(1, 1, 3, 1, 90.00, '2024-11-20 11:00:00'),
+(2, 2, 1, 2, 88.00, '2024-08-12 09:00:00'),
+(2, 2, 2, 2, 80.00, '2024-09-16 10:00:00'),
+(3, 4, 1, 1, 70.00, '2024-08-14 14:00:00');
+
+-- users
+INSERT INTO users (username, password, role, nama) VALUES
+('admin', MD5('admin123'), 'admin', 'Administrator'),
+('kepsek', MD5('kepsek123'), 'kepala_sekolah', 'Kepala Sekolah');
+
+COMMIT;

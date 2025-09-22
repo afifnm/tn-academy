@@ -12,37 +12,35 @@
     <div class="p-5">
         <div class="preview">
             <div class="overflow-x-auto">
-                <table id="kelasTable" class="table table-report table-report--bordered display datatable w-full">
+                <table id="kelasTable" class="table table-auto display datatable w-full">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="text-center border-b-2">NO</th>
-                            <th class="text-left border-b-2">NAMA KELAS</th>
-                            <th class="text-center border-b-2">TINGKAT</th>
-                            <th class="text-center border-b-2">JURUSAN</th>
-                            <th class="text-center border-b-2">AKSI</th>
+                            <th class="w-5">NO</th>
+                            <th class="border-b-2">NAMA KELAS</th>
+                            <th class="border-b-2">TINGKAT</th>
+                            <th class="border-b-2">JURUSAN</th>
+                            <th class="border-b-2">AKSI</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no=1; foreach ($kelas as $kel) { ?>
                         <tr>
-                            <td class="text-center border-b"><?= $no ?></td>
-                            <td class="text-left border-b"><?= $kel['nama_kelas'] ?></td>
-                            <td class="text-center border-b"><?= $kel['tingkat'] ?></td>
-                            <td class="text-center border-b"><?= $kel['jurusan'] ?></td>
-                            <td class="border-b">
-                                <div class="flex justify-center items-center space-x-3">
+                            <td><?= $no ?></td>
+                            <td><?= $kel['nama_kelas'] ?></td>
+                            <td><?= $kel['tingkat'] ?></td>
+                            <td><?= $kel['jurusan'] ?></td>
+                            <td>
+                                <div class="flex space-x-3">
                                     <!-- Edit -->
-                                    <a class="flex items-center text-blue-500" href="javascript:;" 
+                                    <a class="flex text-blue-500 mr-4" href="javascript:;" 
                                        data-tw-toggle="modal" data-tw-target="#edit<?= $kel['id_kelas'] ?>">
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i>Edit
                                     </a>
 
                                     <!-- Delete -->
-                                    <a href="javascript:;" data-tw-toggle="modal" 
-                                       data-tw-target="#delete-confirmation-modal"
-                                       data-url="<?= site_url('admin/kelas/delete/'.$kel['id_kelas']) ?>"
-                                       class="flex items-center text-danger">
-                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Delete
+                                   <a class="flex text-danger delete-btn" href="javascript:;" 
+                                       onclick="confirmDelete('<?= site_url('admin/kelas/delete/'.$kel['id_kelas']) ?>')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
                                     </a>
                                 </div>
                             </td>

@@ -12,34 +12,32 @@
     <div class="p-5">
         <div class="preview">
             <div class="overflow-x-auto">
-                <table id="example1" class="table table-report table-report--bordered w-full">
+                <table id="example1" class="table table-auto display datatable w-full">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="text-center border-b-2">NO</th>
-                            <th class="text-center border-b-2">TAHUN AJARAN</th>
-                            <th class="text-center border-b-2">SEMESTER</th>
-                            <th class="text-center border-b-2">AKSI</th>
+                            <th class="border-b-2">NO</th>
+                            <th class="border-b-2">TAHUN AJARAN</th>
+                            <th class="border-b-2">SEMESTER</th>
+                            <th class="border-b-2">AKSI</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no=1; foreach ($tahun_ajaran as $ta) { ?>
                         <tr>
-                            <td class="text-center border-b"><?= $no ?></td>
-                            <td class="text-center border-b"><?= $ta['tahun'] ?></td>
-                            <td class="text-center border-b"><?= $ta['semester'] ?></td>
+                            <td class="border-b"><?= $no ?></td>
+                            <td class="border-b"><?= $ta['tahun'] ?></td>
+                            <td class="border-b"><?= $ta['semester'] ?></td>
                             <td class="border-b">
-                                <div class="flex justify-center items-center space-x-3">
+                                <div class="flex space-x-3">
                                     <!-- Edit -->
-                                    <a class="flex items-center text-blue-500" href="javascript:;" 
+                                    <a class="flex text-blue-500 mr-4" href="javascript:;" 
                                        data-tw-toggle="modal" data-tw-target="#edit<?= $ta['id_ta'] ?>">
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
                                     </a>
 
                                     <!-- Delete -->
-                                    <a href="javascript:;" data-tw-toggle="modal" 
-                                       data-tw-target="#delete-confirmation-modal"
-                                       data-url="<?= site_url('admin/tahun_ajaran/delete/'.$ta['id_ta']) ?>"
-                                       class="flex items-center text-danger">
+                                    <a class="flex text-danger delete-btn" href="javascript:;" 
+                                       onclick="confirmDelete('<?= site_url('admin/tahun_ajaran/delete/'.$ta['id_ta']) ?>')">
                                         <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
                                     </a>
                                 </div>

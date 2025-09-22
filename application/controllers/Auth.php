@@ -21,7 +21,7 @@ class Auth extends MY_Controller {
             $data = array (
                 'id_user'       =>$user->id_user,
                 'username'      =>$user->username,
-                'name'          =>$user->name,
+                'nama'          =>$user->nama,
                 'role'         =>$user->role,               
             );
             $this -> session->set_userdata($data);

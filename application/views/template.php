@@ -29,7 +29,6 @@
                         <div class="col-span-12 2xl:col-span-9">
                             <div class="grid grid-cols-12 gap-6">
                                 <div class="col-span-12 mt-8">
-                                    <?php $this->load->view('components/alert'); ?>
                                     <?php $this->load->view('components/delete_modal'); ?>
 
                                     <?=$contents?>

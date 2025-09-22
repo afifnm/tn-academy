@@ -15,30 +15,27 @@
                 <table id="guruTable" class="table table-report table-report--bordered display datatable w-full">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="text-center border-b-2">NO</th>
-                            <th class="text-left border-b-2">NAMA GURU</th>
-                            <th class="text-center border-b-2">AKSI</th>
+                            <th class="border-b-2">NO</th>
+                            <th class="border-b-2">NAMA GURU</th>
+                            <th class="border-b-2">AKSI</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no=1; foreach ($guru as $gu) { ?>
                         <tr>
-                            <td class="text-center border-b"><?= $no ?></td>
-                            <td class="text-left border-b"><?= $gu['nama_guru'] ?></td>
+                            <td class="border-b"><?= $no ?></td>
+                            <td class="border-b"><?= $gu['nama_guru'] ?></td>
                             <td class="border-b">
-                                <div class="flex justify-center items-center space-x-3">
+                                <div class="flex space-x-3">
                                     <!-- Edit -->
-                                    <a class="flex items-center text-blue-500" href="javascript:;" 
+                                    <a class="flex text-blue-500 mr-4" href="javascript:;" 
                                        data-tw-toggle="modal" data-tw-target="#edit<?= $gu['id_guru'] ?>">
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i>Edit
                                     </a>
 
-                                    <!-- Delete -->
-                                    <a href="javascript:;" data-tw-toggle="modal" 
-                                       data-tw-target="#delete-confirmation-modal"
-                                       data-url="<?= site_url('admin/guru/delete/'.$gu['id_guru']) ?>"
-                                       class="flex items-center text-danger">
-                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i>Delete
+                                   <a class="flex text-danger delete-btn" href="javascript:;" 
+                                       onclick="confirmDelete('<?= site_url('admin/guru/delete/'.$gu['id_guru']) ?>')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
                                     </a>
                                 </div>
                             </td>

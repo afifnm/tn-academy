@@ -13,27 +13,28 @@ class Enroll extends MY_Controller {
         $siswa        = $this->db->get('siswa')->result();
         $kelas        = $this->db->get('kelas')->result();
         $tahun_ajaran = $this->db->get('tahun_ajaran')->result();
-        
-        $result = $this->paginate('enroll', 'id_enroll DESC', [
-            'join' => [
-                ['siswa', 'siswa.id_siswa = enroll.id_siswa'],
-                ['kelas', 'kelas.id_kelas = enroll.id_kelas'],
-                ['tahun_ajaran', 'tahun_ajaran.id_ta = enroll.id_ta'],
-            ],
-            'select' => 'enroll.*,  DATE(enroll.tanggal_enroll) AS tanggal_enroll,siswa.nama, kelas.nama_kelas, tahun_ajaran.tahun, tahun_ajaran.semester'
-        ]);
+
+        // ambil enroll dengan join
+        $this->db->select('enroll.*, DATE(enroll.tanggal_enroll) AS tanggal_enroll,
+                        siswa.nama, kelas.nama_kelas, tahun_ajaran.tahun, tahun_ajaran.semester');
+        $this->db->from('enroll');
+        $this->db->join('siswa', 'siswa.id_siswa = enroll.id_siswa');
+        $this->db->join('kelas', 'kelas.id_kelas = enroll.id_kelas');
+        $this->db->join('tahun_ajaran', 'tahun_ajaran.id_ta = enroll.id_ta');
+        $this->db->order_by('id_enroll', 'DESC');
+        $result = $this->db->get()->result();
 
         $data = array(
-            'enroll'     => $result['data'],
-            'pagination' => $result['pagination'],
-            'title'      => 'List Enroll',
-            'offset'     => $result['offset'], 
+            'enroll'       => $result,
+            'title'        => 'List Enroll',
             'siswa'        => $siswa,
             'kelas'        => $kelas,
             'tahun_ajaran' => $tahun_ajaran,
         );
-        $this->template->load('template','enroll',$data);
+
+        $this->template->load('template', 'master/enroll', $data);
     }
+
 
     public function add()
     {
@@ -55,11 +56,11 @@ class Enroll extends MY_Controller {
         $this->only_post_allowed();
         $result = $this->Enroll_model->add();
         if($result){
-            $this->set_flash('success', 'Enroll siswa berhasil ditambahkan');
+            $this->set_flash('Enroll siswa berhasil ditambahkan', 'success');
         } else {
-            $this->set_flash('error', 'Siswa sudah terdaftar di kelas/semester ini');
+            $this->set_flash('Siswa sudah terdaftar di kelas/semester ini','error');
         }
-        redirect('admin/enroll');
+		redirect('admin/enroll');
     }
 
     // public function edit($id_enroll)

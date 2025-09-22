@@ -12,79 +12,40 @@
     <div class="p-5">
         <div class="preview">
             <div class="overflow-x-auto">
-                <table id="example1" class="table table-report table-report--bordered display datatable w-full">
+                <table id="example1" class="table table-auto display datatable w-full">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="text-center border-b-2">NO</th>
-                            <th class="text-center border-b-2">NAMA</th>
-                            <th class="text-center border-b-2">USERNAME</th>
-                            <th class="text-center border-b-2">ROLE</th>
-                            <th class="text-center border-b-2">AKSI</th>
+                            <th class="border-b-2">NO</th>
+                            <th class="border-b-2 w-20">NAMA</th>
+                            <th class="border-b-2 w-32">USERNAME</th>
+                            <th class="border-b-2 w-24">ROLE</th>
+                            <th class="border-b-2 w-30">AKSI</th>
+
                         </tr>
                     </thead>
-                    <tbody>
+                   <tbody>
                         <?php $no=1+ ($offset ?? 0); foreach ($users as $ok) { ?>
                         <tr>
-                            <td class="text-center border-b"><?= $no ?></td>
-                            <td class="text-left border-b"><?= $ok['nama'] ?></td>
-                            <td class="text-center border-b"><?= $ok['username'] ?></td>
-                            <td class="text-center border-b"><?= $ok['role'] ?></td>
-                            <td class="border-b">
-                                <div class="flex justify-center items-center space-x-3">
+                            <td class=""><?= $no ?></td>
+                            <td class=""><?= $ok['nama'] ?></td>
+                            <td class=""><?= $ok['username'] ?></td>
+                            <td class=""><?= $ok['role'] ?></td>
+                            <td class="">
+                                <div class="flex space-x-10">
                                     <!-- Edit -->
-                                    <a class="flex items-center text-blue-500 mr-2" href="javascript:;" 
-                                       data-tw-toggle="modal" data-tw-target="#edit<?= $ok['id_user'] ?>">
+                                    <a class="flex text-blue-500 mr-5" href="javascript:;" 
+                                      data-tw-toggle="modal" data-tw-target="#edit<?= $ok['id_user'] ?>">
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
                                     </a>
 
                                     <!-- Delete -->
-                                    <a class="flex items-center text-danger delete-btn" href="javascript:;" 
-                                       onclick="hapusUser(<?= $ok['id_user']; ?>)">
+                                    <a class="flex text-danger delete-btn" href="javascript:;" 
+                                      onclick="confirmDelete('<?= site_url('user/delete/'.$ok['id_user']) ?>')">
                                         <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
                                     </a>
                                 </div>
                             </td>
                         </tr>
-
-                        <!-- Modal Edit -->
-                        <div id="edit<?= $ok['id_user'] ?>" class="modal" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h2 class="font-medium text-base mr-auto">Edit User</h2>
-                                    </div>
-                                    <form action="<?= base_url('user/edit') ?>" method="post">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="id_user" value="<?= $ok['id_user'] ?>">
-                                            <div>
-                                                <label class="form-label">Nama</label>
-                                                <input type="text" class="form-control" name="nama" 
-                                                       value="<?= $ok['nama'] ?>" required>
-                                            </div>
-                                            <div class="mt-3">
-                                                <label class="form-label">Username</label>
-                                                <input type="text" class="form-control" name="username" 
-                                                       value="<?= $ok['username'] ?>" required>
-                                            </div>
-                                            <div class="mt-3">
-                                                <label class="form-label">Role</label>
-                                                <select class="form-select" name="role">
-                                                    <option value="admin" <?=($ok['role']=='admin')?'selected':''?>>Admin</option>
-                                                    <option value="kepala sekolah" <?=($ok['role']=='kepala sekolah')?'selected':''?>>Kepala Sekolah</option>
-                                                    <option value="guru" <?=($ok['role']=='guru')?'selected':''?>>Guru</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-                                            <button type="submit" class="btn btn-primary w-20">Save</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Modal Edit -->
-
                         <?php $no++; } ?>
                     </tbody>
                 </table>
@@ -131,3 +92,42 @@
     </div>
   </div>
 </div>
+
+<?php foreach ($users as $ok) { ?>
+<div id="edit<?= $ok['id_user'] ?>" class="modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="font-medium text-base mr-auto">Edit User</h2>
+            </div>
+            <form action="<?= base_url('user/edit') ?>" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="id_user" value="<?= $ok['id_user'] ?>">
+                    <div>
+                        <label class="form-label">Nama</label>
+                        <input type="text" class="form-control" name="nama" 
+                               value="<?= $ok['nama'] ?>" required>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" 
+                               value="<?= $ok['username'] ?>" required>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" name="role">
+                            <option value="admin" <?=($ok['role']=='admin')?'selected':''?>>Admin</option>
+                            <option value="kepala sekolah" <?=($ok['role']=='kepala sekolah')?'selected':''?>>Kepala Sekolah</option>
+                            <option value="guru" <?=($ok['role']=='guru')?'selected':''?>>Guru</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                    <button type="submit" class="btn btn-primary w-20">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php } ?>

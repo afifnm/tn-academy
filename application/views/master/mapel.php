@@ -12,32 +12,30 @@
     <div class="p-5">
         <div class="preview">
             <div class="overflow-x-auto">
-                <table id="example1" class="table table-report table-report--bordered display datatable w-full">
+                <table id="example1" class="table table-auto display datatable w-full">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="text-center border-b-2">NO</th>
-                            <th class="text-left border-b-2">MATA PELAJARAN</th>
-                            <th class="text-center border-b-2">AKSI</th>
+                            <th class="border-b-2">NO</th>
+                            <th class="border-b-2">MATA PELAJARAN</th>
+                            <th class="border-b-2">AKSI</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no=1; foreach ($mapel as $ma) { ?>
                         <tr>
-                            <td class="text-center border-b"><?= $no ?></td>
-                            <td class="text-left border-b"><?= $ma['nama_mapel'] ?></td>
-                            <td class="border-b">
-                                <div class="flex justify-center items-center space-x-3">
+                            <td><?= $no ?></td>
+                            <td><?= $ma['nama_mapel'] ?></td>
+                            <td>
+                                <div class="flex space-x-10">
                                     <!-- Edit -->
-                                    <a class="flex items-center text-blue-500" href="javascript:;" 
+                                    <a class="flex text-blue-500 mr-4" href="javascript:;" 
                                        data-tw-toggle="modal" data-tw-target="#edit<?= $ma['id_mapel'] ?>">
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
                                     </a>
 
                                     <!-- Delete -->
-                                    <a href="javascript:;" data-tw-toggle="modal" 
-                                       data-tw-target="#delete-confirmation-modal"
-                                       data-url="<?= site_url('admin/mapel/delete/'.$ma['id_mapel']) ?>"
-                                       class="flex items-center text-danger">
+                                    <a class="flex text-danger delete-btn" href="javascript:;" 
+                                       onclick="confirmDelete('<?= site_url('admin/mapel/delete/'.$ma['id_mapel']) ?>')">
                                         <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
                                     </a>
                                 </div>
