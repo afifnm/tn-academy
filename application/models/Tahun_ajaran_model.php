@@ -9,21 +9,24 @@ class Tahun_ajaran_model extends CI_Model {
 	}
     
     public function add()
-	{
-		$this->db->from('tahun_ajaran')->where('tahun',$this->input->post('tahun'));
-		$cek = $this->db->get()->row();
+{
+    $tahun    = $this->input->post('tahun');
+    $semester = $this->input->post('semester');
 
-		if($cek != null){
-        	return false;
-		}
-		$data = array(
-			'tahun'	=>$this->input->post('tahun'),
-            'semester'	=>$this->input->post('semester')
-		);
+    $this->db->where('tahun', $tahun);
+    $this->db->where('semester', $semester);
+    $exists = $this->db->get('tahun_ajaran')->row();
 
-		$this->db->insert('tahun_ajaran',$data);
-        return true;
-	}
+    if ($exists) {
+        return false; 
+    }
+
+    return $this->db->insert('tahun_ajaran', [
+        'tahun'    => $tahun,
+        'semester' => $semester
+    ]);
+}
+
 
     public function update()
 	{
