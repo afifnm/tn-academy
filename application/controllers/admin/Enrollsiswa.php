@@ -20,65 +20,43 @@ class Enrollsiswa extends MY_Controller {
         $this->template->load('template', 'enroll/siswa', $data);
     }
 
-   public function filter()
-    {
-        $data['title'] = 'Penempatan Siswa';
+    public function filter() {
         $id_ta    = $this->input->get('id_ta');
         $id_kelas = $this->input->get('id_kelas');
+        $semester = $this->input->get('semester');
 
-        $data['filter'] = [
-            'id_ta'    => $id_ta,
-            'id_kelas' => $id_kelas
-        ];
+        $data = array(
+            'title'        => 'Penempatan Siswa (Enroll)',
+            'kelas'        => $this->Enroll_model->get_kelas(),
+            'tahun_ajaran' => $this->Enroll_model->get_tahun_ajaran(),
+            'enrolled'     => $this->Enroll_model->get_enroll($id_ta, $id_kelas, $semester),
+            'not_enrolled' => $this->Enroll_model->get_siswa_not_enrolled($id_ta, $id_kelas, $semester)
+        );
 
-        $data['tahun_ajaran'] = $this->db->get('tahun_ajaran')->result_array();
-        $data['kelas'] = $this->db->get('kelas')->result_array();
-
-        $data['enrolled'] = $this->Enroll_model->get_enroll($id_ta, $id_kelas);
-        $data['not_enrolled'] = $this->Enroll_model->get_siswa_not_enrolled($id_ta, $id_kelas);
-
-        $this->template->load('template','enroll/siswa',$data);
+        $this->template->load('template', 'enroll/siswa', $data);
     }
 
+    public function enroll_bulk() {
+        $siswa_ids = $this->input->post('siswa_ids'); // array siswa yang dicentang
+        $id_ta     = $this->input->post('id_ta');
+        $id_kelas  = $this->input->post('id_kelas');
 
-   public function enroll_bulk() {
-    $siswa_ids = $this->input->post('siswa_ids'); 
-    $id_ta     = $this->input->post('id_ta');
-    $id_kelas  = $this->input->post('id_kelas');
-
-    if (!empty($siswa_ids) && $id_ta && $id_kelas) {
-        $success = 0;
-        $duplicate = 0;
-
-        foreach ($siswa_ids as $id_siswa) {
-            $result = $this->Enroll_model->add([
-                'id_siswa'       => $id_siswa,
-                'id_kelas'       => $id_kelas,
-                'id_ta'          => $id_ta,
-                'tanggal_enroll' => date('Y-m-d H:i:s'),
-                'status'         => 'aktif'
-            ]);
-
-            if ($result) {
-                $success++;
-            } else {
-                $duplicate++;
+        if (!empty($siswa_ids) && $id_ta && $id_kelas) {
+            foreach ($siswa_ids as $id_siswa) {
+                $this->Enroll_model->add_enroll([
+                    'id_siswa'   => $id_siswa,
+                    'id_kelas'   => $id_kelas,
+                    'id_ta'      => $id_ta,
+                    'tanggal_enroll' => date('Y-m-d H:i:s')
+                ]);
             }
+            $this->session->set_flashdata('success', 'Siswa berhasil di-enroll.');
+        } else {
+            $this->session->set_flashdata('error', 'Pilih siswa dan pastikan filter terisi.');
         }
 
-        if ($success > 0) {
-            $this->session->set_flashdata('success', "$success siswa berhasil di-enroll.");
-        }
-        if ($duplicate > 0) {
-            $this->session->set_flashdata('error', "$duplicate siswa gagal di-enroll karena sudah ada.");
-        }
-    } else {
-        $this->session->set_flashdata('error', 'Pilih siswa dan pastikan filter terisi.');
+        redirect('admin/enrollsiswa/filter?id_ta='.$id_ta.'&id_kelas='.$id_kelas);
     }
-
-    redirect('admin/enrollsiswa/filter?id_ta='.$id_ta.'&id_kelas='.$id_kelas);
-    }
-
 
     public function delete($id_enroll) {
         $this->Enroll_model->delete($id_enroll);

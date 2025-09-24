@@ -1,38 +1,53 @@
-<div class="p-6">
+<div class="p-4">
     <!-- Filter -->
-    <div class="intro-y box p-5 mb-6">
-        <h2 class="text-lg font-medium mb-4">Pilih Kelas & Tahun Ajaran Enroll Siswa</h2>
-        <form method="GET" action="<?= base_url('admin/enrollsiswa/filter') ?>" 
-              class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label class="form-label">Tahun Ajaran</label>
-                <select name="id_ta" class="form-control w-full">
-                    <option value="">-- Pilih Tahun Ajaran --</option>
-                    <?php foreach ($tahun_ajaran as $ta): ?>
-                        <option value="<?= $ta['id_ta']; ?>" 
-                            <?= isset($filter['id_ta']) && $filter['id_ta'] == $ta['id_ta'] ? 'selected' : '' ?>>
-                            <?= $ta['tahun'] ?> - <?= $ta['semester'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div>
-                <label class="form-label">Kelas</label>
-                <select name="id_kelas" class="form-control w-full">
-                    <option value="">-- Pilih Kelas --</option>
-                    <?php foreach ($kelas as $k): ?>
-                        <option value="<?= $k['id_kelas']; ?>" 
-                            <?= isset($filter['id_kelas']) && $filter['id_kelas'] == $k['id_kelas'] ? 'selected' : '' ?>>
-                            <?= $k['nama_kelas'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="flex items-end">
-                <button type="submit" class="btn btn-primary w-full">Tampilkan</button>
-            </div>
-        </form>
+<div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
+    <!-- Pilihan Tahun Ajaran & Kelas -->
+    <div class="flex w-full sm:w-auto">
+        <div class="w-52 relative text-slate-500">
+            <select name="id_ta" class="form-select box w-52">
+                <option value="">-- Pilih Tahun Ajaran --</option>
+                <?php foreach ($tahun_ajaran as $ta): ?>
+                    <option value="<?= $ta['id_ta']; ?>" 
+                        <?= isset($filter['id_ta']) && $filter['id_ta'] == $ta['id_ta'] ? 'selected' : '' ?>>
+                        <?= $ta['tahun'] ?> - <?= $ta['semester'] ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="w-40 relative text-slate-500 ml-2">
+            <select name="id_kelas" class="form-select box w-40">
+                <option value="">-- Pilih Kelas --</option>
+                <?php foreach ($kelas as $k): ?>
+                    <option value="<?= $k['id_kelas']; ?>" 
+                        <?= isset($filter['id_kelas']) && $filter['id_kelas'] == $k['id_kelas'] ? 'selected' : '' ?>>
+                        <?= $k['nama_kelas'] ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan</button>
     </div>
+
+    <!-- Info tambahan di tengah (opsional) -->
+    <div class="hidden xl:block mx-auto text-slate-500">
+        <?php if (!empty($enrolled)): ?>
+            Showing <?= count($enrolled) ?> siswa sudah enroll
+        <?php endif; ?>
+    </div>
+
+    <!-- Tombol Export (opsional) -->
+    <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
+        <button class="btn btn-primary shadow-md mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-file-text w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+            Export Excel
+        </button>
+        <button class="btn btn-primary shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-file-text w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+            Export PDF
+        </button>
+    </div>
+</div>
+
 
     <!-- Dua Kolom -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
