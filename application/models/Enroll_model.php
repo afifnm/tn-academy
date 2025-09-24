@@ -88,30 +88,30 @@ class Enroll_model extends CI_Model {
     }
 
     public function get_siswa_not_enrolled($id_ta = null, $id_kelas = null, $semester = null)
-{
-    $this->db->select('s.*');
-    $this->db->from('siswa s');
+    {
+        $this->db->select('s.*');
+        $this->db->from('siswa s');
 
-    if ($id_ta && $id_kelas) {
-        if ($semester) {
-            $this->db->where("s.id_siswa NOT IN (
-                SELECT id_siswa FROM enroll 
-                JOIN tahun_ajaran ta ON ta.id_ta = enroll.id_ta
-                WHERE enroll.id_ta = ".$this->db->escape($id_ta)."
-                AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
-                AND ta.semester = ".$this->db->escape($semester)."
-            )", NULL, FALSE);
-        } else {
+        if ($id_ta && $id_kelas) {
+            if ($semester) {
+                $this->db->where("s.id_siswa NOT IN (
+                    SELECT id_siswa FROM enroll 
+                    JOIN tahun_ajaran ta ON ta.id_ta = enroll.id_ta
+                    WHERE enroll.id_ta = ".$this->db->escape($id_ta)."
+                    AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
+                    AND ta.semester = ".$this->db->escape($semester)."
+                )", NULL, FALSE);
+            } else {
 
-            $this->db->where("s.id_siswa NOT IN (
-                SELECT id_siswa FROM enroll
-                WHERE enroll.id_ta = ".$this->db->escape($id_ta)."
-                AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
-            )", NULL, FALSE);
+                $this->db->where("s.id_siswa NOT IN (
+                    SELECT id_siswa FROM enroll
+                    WHERE enroll.id_ta = ".$this->db->escape($id_ta)."
+                    AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
+                )", NULL, FALSE);
+            }
         }
-    }
 
-    return $this->db->get()->result_array();
-}
+        return $this->db->get()->result_array();
+    }
 
 }
