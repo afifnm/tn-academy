@@ -82,7 +82,7 @@
 
   		<!-- Kelola Nilai -->
   		<li>
-  			<a href="javascript:;" class="top-menu">
+  			<a href="<?=base_url('nilai')?>" class="top-menu">
   				<div class="top-menu__icon"> <i data-lucide="file-text"></i> </div>
   				<div class="top-menu__title"> Kelola Nilai </div>
   			</a>

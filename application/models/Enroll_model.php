@@ -61,6 +61,16 @@ class Enroll_model extends CI_Model {
         return $this->db->get('tahun_ajaran')->result_array();
     }
 
+    public function get_siswa_by_kelas($id_kelas, $id_ta) {
+        $this->db->select('e.id_enroll, s.nama');
+        $this->db->from('enroll e');
+        $this->db->join('siswa s', 's.id_siswa = e.id_siswa');
+        $this->db->where('e.id_kelas', $id_kelas);
+        $this->db->where('e.id_ta', $id_ta);
+        $this->db->order_by('s.nama', 'ASC');
+        return $this->db->get()->result();
+    }
+
     public function get_enroll($id_ta = null, $id_kelas = null, $semester = null)
     {
         $this->db->select('enroll.id_enroll, enroll.id_siswa, enroll.id_kelas, enroll.id_ta, 
