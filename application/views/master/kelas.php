@@ -1,7 +1,6 @@
-<h2 class="intro-y text-lg font-medium">List Data Kelas</h2>
 
 <!-- Tombol Tambah -->
-<div class="text-left mt-5">
+<div class="text-left">
     <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#addKelas" class="btn btn-primary">
         Tambah Data Kelas
     </a>
