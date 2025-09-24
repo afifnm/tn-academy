@@ -1,7 +1,6 @@
-<h2 class="intro-y text-lg font-medium">List Mata Pelajaran</h2>
 
 <!-- Tombol Tambah -->
-<div class="text-left mt-5">
+<div class="text-left">
     <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#addMapel" class="btn btn-primary">
         Tambah Mata Pelajaran
     </a>

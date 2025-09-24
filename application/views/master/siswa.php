@@ -1,8 +1,7 @@
-<h2 class="intro-y text-lg font-medium">List Data Siswa</h2>
 
 <!-- Tombol Tambah -->
-<div class="flex items-center gap-2 mt-5">
-    <div class="flex items-center gap-2 mt-5">
+<div class="flex items-center gap-2 ">
+    <div class="flex items-center gap-2 ">
     <!-- Tombol Tambah Data Siswa -->
     <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#addSiswa" class="btn btn-primary">
         Tambah Data Siswa

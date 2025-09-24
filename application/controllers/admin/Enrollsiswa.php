@@ -14,7 +14,8 @@ class Enrollsiswa extends MY_Controller {
             'kelas'        => $this->Enroll_model->get_kelas(),
             'tahun_ajaran' => $this->Enroll_model->get_tahun_ajaran(),
             'enrolled'     => [], 
-            'not_enrolled' => []  
+            'not_enrolled' => []  ,
+            'filter'       => [] 
         );
 
         $this->template->load('template', 'enroll/siswa', $data);
@@ -30,7 +31,12 @@ class Enrollsiswa extends MY_Controller {
             'kelas'        => $this->Enroll_model->get_kelas(),
             'tahun_ajaran' => $this->Enroll_model->get_tahun_ajaran(),
             'enrolled'     => $this->Enroll_model->get_enroll($id_ta, $id_kelas, $semester),
-            'not_enrolled' => $this->Enroll_model->get_siswa_not_enrolled($id_ta, $id_kelas, $semester)
+            'not_enrolled' => $this->Enroll_model->get_siswa_not_enrolled($id_ta, $id_kelas, $semester),
+            'filter'       => [ 
+            'id_ta'    => $id_ta,
+            'id_kelas' => $id_kelas,
+            'semester' => $semester
+        ]
         );
 
         $this->template->load('template', 'enroll/siswa', $data);
@@ -43,7 +49,7 @@ class Enrollsiswa extends MY_Controller {
 
         if (!empty($siswa_ids) && $id_ta && $id_kelas) {
             foreach ($siswa_ids as $id_siswa) {
-                $this->Enroll_model->add_enroll([
+                $this->Enroll_model->add([
                     'id_siswa'   => $id_siswa,
                     'id_kelas'   => $id_kelas,
                     'id_ta'      => $id_ta,

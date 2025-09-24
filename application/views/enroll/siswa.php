@@ -1,61 +1,56 @@
 <div class="p-4">
     <!-- Filter -->
-<div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
-    <!-- Pilihan Tahun Ajaran & Kelas -->
-    <div class="flex w-full sm:w-auto">
-        <div class="w-52 relative text-slate-500">
-            <select name="id_ta" class="form-select box w-52">
-                <option value="">-- Pilih Tahun Ajaran --</option>
-                <?php foreach ($tahun_ajaran as $ta): ?>
-                    <option value="<?= $ta['id_ta']; ?>" 
-                        <?= isset($filter['id_ta']) && $filter['id_ta'] == $ta['id_ta'] ? 'selected' : '' ?>>
-                        <?= $ta['tahun'] ?> - <?= $ta['semester'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+    <form method="GET" action="<?= base_url('admin/enrollsiswa/filter') ?>">
+        <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
+            <!-- Pilihan Tahun Ajaran & Kelas -->
+            <div class="flex w-full sm:w-auto">
+                <div class="w-52 relative text-slate-500">
+                    <select name="id_ta" class="form-select box w-52">
+                        <option value="">-- Pilih Tahun Ajaran --</option>
+                        <?php foreach ($tahun_ajaran as $ta): ?>
+                            <option value="<?= $ta['id_ta']; ?>" 
+                                <?= isset($filter['id_ta']) && $filter['id_ta'] == $ta['id_ta'] ? 'selected' : '' ?>>
+                                <?= $ta['tahun'] ?> - <?= $ta['semester'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="w-40 relative text-slate-500 ml-2">
+                    <select name="id_kelas" class="form-select box w-40">
+                        <option value="">-- Pilih Kelas --</option>
+                        <?php foreach ($kelas as $k): ?>
+                            <option value="<?= $k['id_kelas']; ?>" 
+                                <?= isset($filter['id_kelas']) && $filter['id_kelas'] == $k['id_kelas'] ? 'selected' : '' ?>>
+                                <?= $k['nama_kelas'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan</button>
+            </div>
+
+            <!-- Info tambahan -->
+            <div class="hidden xl:block mx-auto text-slate-500">
+                <?php if (!empty($enrolled)): ?>
+                    Showing <?= count($enrolled) ?> siswa sudah enroll
+                <?php endif; ?>
+            </div>
+
+            <!-- Tombol Export (opsional) -->
+            <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
+                <button class="btn btn-primary shadow-md mr-2">Export Excel</button>
+                <button class="btn btn-primary shadow-md">Export PDF</button>
+            </div>
         </div>
-        <div class="w-40 relative text-slate-500 ml-2">
-            <select name="id_kelas" class="form-select box w-40">
-                <option value="">-- Pilih Kelas --</option>
-                <?php foreach ($kelas as $k): ?>
-                    <option value="<?= $k['id_kelas']; ?>" 
-                        <?= isset($filter['id_kelas']) && $filter['id_kelas'] == $k['id_kelas'] ? 'selected' : '' ?>>
-                        <?= $k['nama_kelas'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan</button>
-    </div>
-
-    <!-- Info tambahan di tengah (opsional) -->
-    <div class="hidden xl:block mx-auto text-slate-500">
-        <?php if (!empty($enrolled)): ?>
-            Showing <?= count($enrolled) ?> siswa sudah enroll
-        <?php endif; ?>
-    </div>
-
-    <!-- Tombol Export (opsional) -->
-    <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
-        <button class="btn btn-primary shadow-md mr-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-file-text w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
-            Export Excel
-        </button>
-        <button class="btn btn-primary shadow-md">
-            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-file-text w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
-            Export PDF
-        </button>
-    </div>
-</div>
-
+    </form>
 
     <!-- Dua Kolom -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-3 gap-6">
         
         <!-- Siswa Sudah Enroll -->
-        <div class="intro-y box p-5 w-full overflow-auto">
+        <div class="intro-y box p-5 w-full overflow-auto col-span-2">
             <h2 class="text-lg font-medium mb-4">Siswa Sudah Enroll</h2>
-            <table class="table table-bordered w-full">
+            <table class="table datatable w-full">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -78,9 +73,10 @@
                                 <td><?= $row['tahun']; ?> - <?= $row['semester']; ?></td>
                                 <td><?= $row['tanggal_enroll']; ?></td>
                                 <td>
-                                    <a href="<?= base_url('admin/enrollsiswa/delete/'.$row['id_enroll']); ?>" 
-                                       class="btn btn-danger btn-sm"
-                                       onclick="return confirm('Hapus siswa dari enroll?')">Hapus</a>
+                                    <a class="flex text-danger delete-btn" href="javascript:;" 
+                                        onclick="confirmDelete('<?= site_url('admin/enrollsiswa/delete/'.$row['id_enroll']) ?>')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -92,13 +88,13 @@
         </div>
 
         <!-- Siswa Belum Enroll -->
-        <div class="intro-y box p-5 w-full overflow-auto">
+        <div class="intro-y box p-5 w-full overflow-auto col-span-1">
             <h2 class="text-lg font-medium mb-4">Siswa Belum Enroll</h2>
             <form method="POST" action="<?= base_url('admin/enrollsiswa/enroll_bulk') ?>">
                 <input type="hidden" name="id_ta" value="<?= $filter['id_ta'] ?? '' ?>">
                 <input type="hidden" name="id_kelas" value="<?= $filter['id_kelas'] ?? '' ?>">
 
-                <table class="table table-bordered w-full">
+                <table class="table datatable w-full">
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="checkAll" class="mr-2">Pilih</th>
@@ -120,7 +116,7 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
-                <button type="submit" class="btn btn-success mt-3 w-full">Enroll Siswa Terpilih</button>
+                <button type="submit" class="btn btn-primary mt-3 w-full">Enroll Siswa Terpilih</button>
             </form>
         </div>
     </div>
@@ -133,5 +129,13 @@
         for (let checkbox of checkboxes) {
             checkbox.checked = this.checked;
         }
+    });
+
+    // DataTables init untuk semua tabel dengan class .datatable
+    $(document).ready(function () {
+        $('.datatable').DataTable({
+            pageLength: 50,
+            responsive: true
+        });
     });
 </script>
