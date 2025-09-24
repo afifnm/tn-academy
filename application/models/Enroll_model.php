@@ -1,46 +1,6 @@
 <?php
 class Enroll_model extends CI_Model {
 
-    public function add($data = null)
-    {
-        // kalau data tidak dikirim lewat parameter, fallback ke input->post()
-        if ($data === null) {
-            $data = array(
-                'id_siswa'       => $this->input->post('id_siswa'),
-                'id_kelas'       => $this->input->post('id_kelas'),
-                'id_ta'          => $this->input->post('id_ta'),
-                'tanggal_enroll' => date('Y-m-d'),
-                'status'         => $this->input->post('status') ?? 'aktif'
-            );
-        }
-
-        // cek duplikasi
-        $this->db->from('enroll')
-                ->where('id_siswa', $data['id_siswa'])
-                ->where('id_kelas', $data['id_kelas'])
-                ->where('id_ta', $data['id_ta']);
-        $cek = $this->db->get()->row();
-
-        if ($cek != null) {
-            return false;
-        }
-
-        $this->db->insert('enroll', $data);
-        return true;
-    }
-
-
-    public function update($id_enroll)
-    {
-        $data = array(
-            'id_siswa' => $this->input->post('id_siswa'),
-            'id_kelas' => $this->input->post('id_kelas'),
-            'id_ta'    => $this->input->post('id_ta'),
-            'status'   => $this->input->post('status')
-        );
-        $this->db->where('id_enroll', $id_enroll)->update('enroll', $data);
-    }
-
     public function delete($id_enroll)
     {
         $this->db->delete('enroll', ['id_enroll' => $id_enroll]);
@@ -88,12 +48,11 @@ class Enroll_model extends CI_Model {
     }
 
     public function get_siswa_not_enrolled($id_ta = null, $id_kelas = null, $semester = null)
-{
-    $this->db->select('s.*');
-    $this->db->from('siswa s');
+    {
+        $this->db->select('s.*');
+        $this->db->from('siswa s');
 
-    if ($id_ta && $id_kelas) {
-        if ($semester) {
+        if ($id_ta && $id_kelas && $semester) {
             $this->db->where("s.id_siswa NOT IN (
                 SELECT id_siswa FROM enroll 
                 JOIN tahun_ajaran ta ON ta.id_ta = enroll.id_ta
@@ -101,17 +60,8 @@ class Enroll_model extends CI_Model {
                 AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
                 AND ta.semester = ".$this->db->escape($semester)."
             )", NULL, FALSE);
-        } else {
-
-            $this->db->where("s.id_siswa NOT IN (
-                SELECT id_siswa FROM enroll
-                WHERE enroll.id_ta = ".$this->db->escape($id_ta)."
-                AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
-            )", NULL, FALSE);
         }
+
+        return $this->db->get()->result_array();
     }
-
-    return $this->db->get()->result_array();
-}
-
 }
