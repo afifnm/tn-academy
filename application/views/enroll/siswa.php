@@ -36,7 +36,7 @@
 <div class="intro-y box mt-5 p-5">
     <h2 class="text-lg font-medium mb-4">Siswa Sudah Enroll</h2>
     <div class="overflow-x-auto">
-        <table class="table table-bordered">
+        <table  id="example1" class="table table-auto display datatable w-full table-striped">
             <thead>
                 <tr>
                     <th>No</th>
@@ -59,7 +59,11 @@
                             <td><?= $row['tahun']; ?> - <?= $row['semester']; ?></td>
                             <td><?= $row['tanggal_enroll']; ?></td>
                             <td>
-                                <a href="<?= base_url('admin/enrollsiswa/delete/'.$row['id_enroll']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Hapus siswa dari enroll?')">Hapus</a>
+                                <!-- <a href="<?= base_url('admin/enrollsiswa/delete/'.$row['id_enroll']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Hapus siswa dari enroll?')">Hapus</a> -->
+                                <a class="flex text-danger delete-btn" href="javascript:;" 
+                                    onclick="confirmDelete('<?= site_url('admin/enrollsiswa/delete/'.$row['id_enroll']) ?>')">
+                                    <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -79,7 +83,7 @@
         <input type="hidden" name="id_kelas" value="<?= $filter['id_kelas'] ?? '' ?>">
         
         <div class="overflow-x-auto">
-            <table class="table table-bordered">
+            <table  id="example1" class="table table-auto display datatable w-full">
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="checkAll" class="mr-2">Pilih</th>
