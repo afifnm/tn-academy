@@ -82,7 +82,8 @@
 
   		<!-- Kelola Nilai -->
   		<li>
-  			<a href="<?=base_url('nilai')?>" class="top-menu">
+  			<a href="<?=base_url('nilai')?>" 
+  				class="top-menu <?= (strpos($this->uri->uri_string(), 'nilai') === 0) ? 'top-menu--active' : '' ?>">
   				<div class="top-menu__icon"> <i data-lucide="file-text"></i> </div>
   				<div class="top-menu__title"> Kelola Nilai </div>
   			</a>
