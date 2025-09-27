@@ -102,13 +102,12 @@ class Enroll_model extends CI_Model {
         $this->db->select('s.*');
         $this->db->from('siswa s');
 
-        if ($id_ta && $id_kelas) {
+        if ($id_ta) {
             if ($semester) {
                 $this->db->where("s.id_siswa NOT IN (
                     SELECT id_siswa FROM enroll 
                     JOIN tahun_ajaran ta ON ta.id_ta = enroll.id_ta
                     WHERE enroll.id_ta = ".$this->db->escape($id_ta)."
-                    AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
                     AND ta.semester = ".$this->db->escape($semester)."
                 )", NULL, FALSE);
             } else {
@@ -116,7 +115,6 @@ class Enroll_model extends CI_Model {
                 $this->db->where("s.id_siswa NOT IN (
                     SELECT id_siswa FROM enroll
                     WHERE enroll.id_ta = ".$this->db->escape($id_ta)."
-                    AND enroll.id_kelas = ".$this->db->escape($id_kelas)."
                 )", NULL, FALSE);
             }
         }
