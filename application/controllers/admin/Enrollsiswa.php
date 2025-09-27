@@ -56,9 +56,9 @@ class Enrollsiswa extends MY_Controller {
                     'tanggal_enroll' => date('Y-m-d H:i:s')
                 ]);
             }
-            $this->session->set_flashdata('success', 'Siswa berhasil di-enroll.');
+            $this->set_flash( 'Siswa berhasil di-enroll.', 'success');
         } else {
-            $this->session->set_flashdata('error', 'Pilih siswa dan pastikan filter terisi.');
+            $this->set_flash( 'Pilih siswa dan pastikan filter terisi.','error');
         }
 
         redirect('admin/enrollsiswa/filter?id_ta='.$id_ta.'&id_kelas='.$id_kelas);
@@ -66,6 +66,6 @@ class Enrollsiswa extends MY_Controller {
 
     public function delete($id_enroll) {
         $this->Enroll_model->delete($id_enroll);
-        $this->session->set_flashdata('success', 'Data enroll berhasil dihapus.');
+        $this->set_flash('Data enroll berhasil dihapus.','success' );
         redirect($_SERVER['HTTP_REFERER']);}
 }

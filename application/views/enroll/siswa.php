@@ -50,7 +50,7 @@
         <!-- Siswa Sudah Enroll -->
         <div class="intro-y box p-5 w-full overflow-auto col-span-2">
             <h2 class="text-lg font-medium mb-4">Siswa Sudah Enroll</h2>
-            <table class="table datatable w-full">
+            <table id="tblEnrolled" class="table datatable w-full">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -94,7 +94,7 @@
                 <input type="hidden" name="id_ta" value="<?= $filter['id_ta'] ?? '' ?>">
                 <input type="hidden" name="id_kelas" value="<?= $filter['id_kelas'] ?? '' ?>">
 
-                <table class="table datatable w-full">
+                <table id="tblNotEnrolled" class="table datatable w-full">
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="checkAll" class="mr-2">Pilih</th>
@@ -133,9 +133,22 @@
 
     // DataTables init untuk semua tabel dengan class .datatable
     $(document).ready(function () {
-        $('.datatable').DataTable({
+        $('#tblEnrolled').DataTable({
             pageLength: 50,
-            responsive: true
+            responsive: true,
+            language:{
+                emptyTable: "Tidak ada data tersedia pada tabel ini",
+            }
+        });
+    });
+
+     $(document).ready(function () {
+        $('#tblNotEnrolled').DataTable({
+            pageLength: 50,
+            responsive: true,
+            language:{
+                emptyTable: "Tidak ada data tersedia pada tabel ini",
+            }
         });
     });
 </script>
