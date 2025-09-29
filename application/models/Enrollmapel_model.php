@@ -48,7 +48,6 @@ class EnrollMapel_model extends CI_Model {
             $this->db->where("m.id_mapel NOT IN (
                 SELECT id_mapel FROM enroll_mapel 
                 WHERE id_ta = ".$this->db->escape($id_ta)." 
-                AND id_kelas = ".$this->db->escape($id_kelas)."
             )", NULL, FALSE);
         }
 

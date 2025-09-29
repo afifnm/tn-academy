@@ -8,6 +8,13 @@ class Siswa_model extends CI_Model {
 		return $this->db->get('siswa')->result_array();
 	}
 
+	public function search($keyword) {
+        $this->db->like('nama', $keyword);
+        $this->db->or_like('nisn', $keyword);
+        $query = $this->db->get('siswa');
+        return $query->result();
+    }
+
     public function add()
 	{
 		$this->db->from('siswa')->where('nisn',$this->input->post('nisn'));

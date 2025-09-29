@@ -3,7 +3,7 @@
 <div class="flex items-center gap-2 ">
     <div class="flex items-center gap-2 ">
     <!-- Tombol Tambah Data Siswa -->
-    <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#addSiswa" class="btn btn-primary">
+    <a href="<?=base_url('admin/siswa/add')?>" class="btn btn-primary">
         Tambah Data Siswa
     </a>
 
@@ -80,9 +80,15 @@
                             <td><?= $sis['thn_masuk'] ?></td>
                             <td><?= $sis['status'] ?></td>
                             <td>
-                                <div class="flex space-x-10">
+                                <div class="flex space-x-15">
+                                    <!-- Detail -->
+                                    <a class="flex text-blue-500 mr-4" href="javascript:      ;" 
+                                       data-tw-toggle="modal" data-tw-target="#edit<?= $sis['id_siswa'] ?>">
+                                        <i data-lucide="external-link" class="w-4 h-4 mr-1"></i> Detail
+                                    </a>
+
                                     <!-- Edit -->
-                                    <a class="flex text-blue-500 mr-4" href="javascript:;" 
+                                    <a class="flex text-blue-500 mr-4" href="javascript:      ;" 
                                        data-tw-toggle="modal" data-tw-target="#edit<?= $sis['id_siswa'] ?>">
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
                                     </a>

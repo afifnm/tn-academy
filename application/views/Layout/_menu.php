@@ -10,6 +10,7 @@
   		</li>
 
   		<!-- Data Master -->
+		<?php if($this->session->userdata('role')=='admin'){ ?>
   		<li>
   			<a href="javascript:;" class="top-menu">
   				<div class="top-menu__icon"> <i data-lucide="monitor"></i> </div>
@@ -72,32 +73,39 @@
 			</li>
 			<li>
 				<a href="<?=base_url('admin/enrollmapel')?>" 
-				class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/enrollmapel') === 0) ? 'side-menu--active' : '' ?>">
-				<div class="top-menu__icon"> <i data-lucide="layers"></i> </div>
-				<div class="top-menu__title"> Penetapan Mapel </div>
+					class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/enrollmapel') === 0) ? 'side-menu--active' : '' ?>">
+					<div class="top-menu__icon"> <i data-lucide="layers"></i> </div>
+					<div class="top-menu__title"> Penetapan Mapel </div>
 				</a>
 			</li>
 			</ul>
   		</li>
+		<?php } ?>
+
 
   		<!-- Kelola Nilai -->
   		<li>
+			<?php if($this->session->userdata('role')=='admin'){ ?>
   			<a href="<?=base_url('nilai')?>" 
   				class="top-menu <?= (strpos($this->uri->uri_string(), 'nilai') === 0) ? 'top-menu--active' : '' ?>">
   				<div class="top-menu__icon"> <i data-lucide="file-text"></i> </div>
   				<div class="top-menu__title"> Kelola Nilai </div>
   			</a>
+			<?php } ?>
   		</li>
 
   		<!-- Laporan -->
   		<li>
-  			<a href="javascript:;" class="top-menu">
+			<?php if($this->session->userdata('role')=='kepala sekolah'){ ?>
+  			<a href="<?=base_url('laporan')?>" class="top-menu">
   				<div class="top-menu__icon"> <i data-lucide="book-open"></i> </div>
   				<div class="top-menu__title"> Laporan</div>
   			</a>
+			<?php } ?>
   		</li>
 
   		<!-- User -->
+		<?php if($this->session->userdata('role')=='admin'){ ?>
   		<li>
   			<a href="<?=base_url('user')?>"
   				class="top-menu <?= (strpos($this->uri->uri_string(), 'user') === 0) ? 'top-menu--active' : '' ?>">
@@ -105,5 +113,7 @@
   				<div class="top-menu__title"> User </div>
   			</a>
   		</li>
+		<?php } ?>
+
   	</ul>
 </nav>

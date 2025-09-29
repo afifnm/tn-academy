@@ -42,7 +42,7 @@
         <!-- Mapel Sudah Enroll -->
         <div class="intro-y box p-5 w-full overflow-auto col-span-2">
             <h2 class="text-lg font-medium mb-4">Mapel Sudah Enroll</h2>
-            <table class="table datatable w-full table-auto">
+            <table class="table datatable w-full table-auto" id="tblEnrolledM">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -99,7 +99,7 @@
                 <input type="hidden" name="id_ta" value="<?= $filter['id_ta'] ?? '' ?>">
                 <input type="hidden" name="id_kelas" value="<?= $filter['id_kelas'] ?? '' ?>">
 
-                <table class="table datatable w-full table-auto">
+                <table class="table datatable w-full table-auto" id="tblNotEnrolledM">
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="checkAllMapel" class="mr-2">Pilih</th>
@@ -135,10 +135,25 @@
         }
     });
 
+    // DataTables init untuk semua tabel dengan class .datatable
     $(document).ready(function () {
-        $('.datatable').DataTable({
+        $('#tblEnrolledM').DataTable({
             pageLength: 50,
-            responsive: true
+            responsive: true,
+            language:{
+                emptyTable: "Tidak ada data tersedia pada tabel ini",
+            }
         });
     });
+
+     $(document).ready(function () {
+        $('#tblNotEnrolledM').DataTable({
+            pageLength: 50,
+            responsive: true,
+            language:{
+                emptyTable: "Tidak ada data tersedia pada tabel ini",
+            }
+        });
+    });
+   
 </script>

@@ -26,7 +26,7 @@ class MY_Controller extends CI_Controller {
 
     protected function only_principal_allowed()
     {
-        if ($this->session->userdata('role') !== 'admin') {
+        if ($this->session->userdata('role') !== 'kepala sekolah') {
             $this->set_flash('error', 'Kamu bukan kepala sekolah ');
             redirect('auth');
             exit;

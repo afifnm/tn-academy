@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xls;
 class Siswa extends MY_Controller {
     public function __construct() {
         parent::__construct();
-        //$this->only_admin_allowed();
+        $this->only_admin_allowed();
 
         $this->load->model('Siswa_model');
     }
@@ -18,10 +18,19 @@ class Siswa extends MY_Controller {
             'siswa'      => $this->Siswa_model->get_all(),
             'title'      => 'List Siswa'
         );
-        $this->template->load('template','master/siswa',$data);
+        $this->template->load('template','master/siswa/index',$data);
     }
     
     public function add()
+	{
+		 $data = array(
+            // 'siswa'      => $this->Siswa_model->get_all(),
+            'title'      => 'Tambah Data Siswa'
+        );
+        $this->template->load('template','master/siswa/siswa_add',$data);
+	}
+
+    public function save()
 	{
 		$this->only_post_allowed();
 		$result = $this->Siswa_model->add();

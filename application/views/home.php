@@ -8,6 +8,29 @@
     <p class="text-gray-600">Selamat datang di sistem raport akademik TN Malang</p>
   </div>
 
+  <!-- Pencarian Siswa -->
+<!-- Pencarian Siswa -->
+<div class="mb-6 relative w-full">
+  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+    <i data-lucide="search" class="w-5 h-5"></i>
+  </span>
+  <input 
+    type="text" 
+    id="searchSiswa" 
+    placeholder="Cari siswa berdasarkan nama atau NISN..." 
+    class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-2xl shadow-sm 
+           focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+           text-gray-700 placeholder-gray-400 text-base"
+  >
+
+  <!-- Hasil AJAX -->
+  <ul id="resultSiswa" 
+      class="hidden absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+  </ul>
+</div>
+
+
+
   <!-- Statistik Utama -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     <div class="bg-white rounded-2xl shadow p-6 hover:shadow-md transition">
@@ -137,4 +160,46 @@
 
 <script>
   lucide.createIcons();
+</script>
+
+<script>
+  $(document).ready(function() {
+    $("#searchSiswa").on("keyup", function() {
+      let query = $(this).val();
+        // console.log("Ketik:", query); 
+
+      if(query.length > 2) { // mulai cari setelah ketik >= 3 huruf
+        jQuery.ajax({
+          url: "<?= base_url('home/search') ?>",
+          type: "GET",
+          data: { q: query },
+          success: function(data) {
+            let siswa = JSON.parse(data);
+            let list = "";
+            // console.log("Response:", data); 
+
+            if(siswa.length > 0){
+              siswa.forEach(function(item) {
+               list += `<li 
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                onclick="window.location.href='<?= base_url('siswa/profil/') ?>${item.id_siswa}'">
+                ${item.nama} (${item.nisn})
+              </li>`;
+
+              });
+            } else {
+              list = `<li class="px-4 py-2 text-gray-400">Tidak ditemukan</li>`;
+            }
+
+            $("#resultSiswa").html(list).removeClass("hidden");
+          },
+          error: function(err) {
+            console.error("AJAX Error:", err);
+          }
+        });
+      } else {
+        $("#resultSiswa").addClass("hidden");
+      }
+    });
+  });
 </script>
