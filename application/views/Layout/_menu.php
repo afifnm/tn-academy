@@ -96,12 +96,10 @@
 
   		<!-- Laporan -->
   		<li>
-			<?php if($this->session->userdata('role')=='kepala sekolah'){ ?>
   			<a href="<?=base_url('laporan')?>" class="top-menu">
   				<div class="top-menu__icon"> <i data-lucide="book-open"></i> </div>
   				<div class="top-menu__title"> Laporan</div>
   			</a>
-			<?php } ?>
   		</li>
 
   		<!-- User -->
