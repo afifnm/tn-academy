@@ -63,8 +63,9 @@
                         <tr>
                             <th class="border-b-2">NO</th>
                             <th class="border-b-2">NISN</th>
+                            <th class="border-b-2">NIS</th>
                             <th class="border-b-2">NAMA</th>
-                            <th class="border-b-2">TANGGAL LAHIR</th>
+                            <th class="border-b-2">JALUR PENDIDIKAN</th>
                             <th class="border-b-2">TAHUN MASUK</th>
                             <th class="border-b-2">STATUS</th>
                             <th class="border-b-2">AKSI</th>
@@ -75,23 +76,23 @@
                         <tr>
                             <td><?= $no ?></td>
                             <td><?= $sis['nisn'] ?></td>
+                            <td><?= $sis['nis'] ?></td>
                             <td><?= $sis['nama'] ?></td>
-                            <td><?= $sis['tgl_lahir'] ?></td>
+                            <td><?= $sis['jalur_pendidikan'] ?></td>
                             <td><?= $sis['thn_masuk'] ?></td>
                             <td><?= $sis['status'] ?></td>
                             <td>
                                 <div class="flex space-x-15">
                                     <!-- Detail -->
-                                    <a class="flex text-blue-500 mr-4" href="javascript:      ;" 
-                                       data-tw-toggle="modal" data-tw-target="#edit<?= $sis['id_siswa'] ?>">
+                                    <a class="flex text-blue-500 mr-4" href="<?= base_url('admin/siswa/detail/'.$sis['id_siswa']) ?>" >
                                         <i data-lucide="external-link" class="w-4 h-4 mr-1"></i> Detail
                                     </a>
 
-                                    <!-- Edit -->
+                                    <!-- Edit
                                     <a class="flex text-blue-500 mr-4" href="javascript:      ;" 
                                        data-tw-toggle="modal" data-tw-target="#edit<?= $sis['id_siswa'] ?>">
                                         <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
-                                    </a>
+                                    </a> -->
 
                                     <!-- Delete -->
                                    <a class="flex text-danger delete-btn" href="javascript:;" 
@@ -158,47 +159,4 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- Modal Add Siswa -->
-<div id="addSiswa" class="modal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="font-medium text-base mr-auto">Tambah Data Siswa</h2>
-      </div>
-      <form action="<?= base_url('admin/siswa/add') ?>" method="post">
-        <div class="modal-body">
-          <div>
-            <label class="form-label">NISN</label>
-            <input type="text" class="form-control" name="nisn" placeholder="NISN" required>
-          </div>
-          <div class="mt-3">
-            <label class="form-label">Nama Siswa</label>
-            <input type="text" class="form-control" name="nama" placeholder="Nama" required>
-          </div>
-          <div class="mt-3">
-            <label class="form-label">Tanggal Lahir</label>
-            <input type="text" class="datepicker form-control" data-single-mode="true" name="tgl_lahir" required>
-          </div>
-          <div class="mt-3">
-            <label class="form-label">Tahun Masuk</label>
-            <input type="number" class="form-control" name="thn_masuk" placeholder="Tahun Masuk" min="2000" max="2025" required>
-          </div>
-          <div class="mt-3">
-            <label class="form-label">Status</label>
-            <select class="form-select" name="status" required>
-              <option value="aktif">Aktif</option>
-              <option value="lulus">Lulus</option>
-              <option value="keluar">Keluar</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-          <button type="submit" class="btn btn-primary w-20">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
 </div>

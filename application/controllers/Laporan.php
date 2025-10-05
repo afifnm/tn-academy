@@ -5,7 +5,7 @@ class Laporan extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-            $this->only_principal_allowed();
+            // $this->only_principal_allowed();
 
     }
 
