@@ -182,7 +182,7 @@
               siswa.forEach(function(item) {
                list += `<li 
                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                onclick="window.location.href='<?= base_url('siswa/profil/') ?>${item.id_siswa}'">
+                onclick="window.location.href='<?= base_url('admin/siswa/detail/') ?>${item.id_siswa}'">
                 ${item.nama} (${item.nisn})
               </li>`;
 

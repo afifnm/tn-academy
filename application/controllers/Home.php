@@ -11,7 +11,7 @@ class Home extends CI_Controller {
 	}
 
 	
-    public function search() {
+   public function search() {
         $q = $this->input->get('q');
         $this->db->like('nama', $q);
         $this->db->or_like('nisn', $q);
@@ -20,12 +20,14 @@ class Home extends CI_Controller {
         $output = [];
         foreach ($result as $row) {
             $output[] = [
+                "id_siswa" => $row->id_siswa, 
                 "nama" => $row->nama,
                 "nisn" => $row->nisn
             ];
         }
         echo json_encode($output);
     }
+
 
 
 }
