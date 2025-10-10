@@ -3,15 +3,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Siswa_model extends CI_Model {
 
-	public function get_all()
+	public function get_all($thn_masuk = null)
 	{
+		if ($thn_masuk) {
+			$this->db->where('thn_masuk', $thn_masuk);
+		}
+		$this->db->order_by('nama', 'ASC');
 		return $this->db->get('siswa')->result_array();
 	}
+
 
 	public function get_by_id($id_siswa)
 	{
 	    return $this->db->get_where('siswa', ['id_siswa' => $id_siswa])->row_array();
 		
+	}
+
+	public function get_by_thn_masuk($thn_masuk = null)
+	{
+		if ($thn_masuk) {
+			$this->db->where('thn_masuk', $thn_masuk);
+		}
+		return $this->db->get('siswa')->result_array();
+	}
+
+	public function get_all_tahun_masuk()
+	{
+		$this->db->select('DISTINCT (thn_masuk) as thn_masuk', false);
+		$this->db->order_by('thn_masuk', 'DESC');
+		return $this->db->get('siswa')->result_array();
 	}
 
 	public function search($keyword) {

@@ -14,8 +14,11 @@ class Siswa extends MY_Controller {
 
     public function index()
     {
+        $thn_masuk = $this->input->get('thn_masuk');
         $data = array(
-            'siswa'      => $this->Siswa_model->get_all(),
+            'thn_masuk' => $thn_masuk,
+            'daftar_thn'=> $this->Siswa_model->get_all_tahun_masuk(),
+            'siswa'      => $thn_masuk ? $this->Siswa_model->get_by_thn_masuk($thn_masuk) : [],
             'title'      => 'List Siswa'
         );
         $this->template->load('template','master/siswa/index',$data);
