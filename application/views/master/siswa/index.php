@@ -14,29 +14,30 @@
     </div>
     
 </div>
-<!-- Filter Tahun Masuk -->
-<div class="intro-y box p-5 mb-5">
-    <form action="<?= base_url('admin/siswa') ?>" method="get" class="flex items-center gap-3">
-        <label for="thn_masuk" class="font-medium text-gray-700">Filter Tahun Masuk:</label>
-        <select name="thn_masuk" id="thn_masuk" class="form-select w-44" onchange="this.form.submit()">
-        <option value="">Pilih Tahun Masuk</option>
-        <?php foreach ($daftar_thn as $t): ?>
-            <option value="<?= $t['thn_masuk'] ?>" <?= ($t['thn_masuk'] == $thn_masuk) ? 'selected' : '' ?>>
-            <?= $t['thn_masuk'] ?>
-            </option>
-        <?php endforeach; ?>
-        </select>
-        <?php if ($thn_masuk): ?>
-        <a href="<?= base_url('admin/siswa') ?>" class="btn btn-outline-secondary ml-2">Reset</a>
-        <?php endif; ?>
-    </form>
-</div>
 
 <!-- Box List Siswa -->
-<div class="intro-y box mt-3">
+<div class="intro-y box mt-4">
     <div class="p-5">
         <div class="preview">
             <div class="overflow-x-auto">
+                <!-- Filter Tahun Masuk -->
+                <div class="mb-4">
+                    <form action="<?= base_url('admin/siswa') ?>" method="get" class=" gap-3">
+                        <label for="thn_masuk" class="font-medium text-gray-700">Filter Tahun Masuk:</label>
+                        <select name="thn_masuk" id="thn_masuk" class="form-select w-44" onchange="this.form.submit()">
+                        <option value="">Pilih Tahun Masuk</option>
+                        <?php foreach ($daftar_thn as $t): ?>
+                            <option value="<?= $t['thn_masuk'] ?>" <?= ($t['thn_masuk'] == $thn_masuk) ? 'selected' : '' ?>>
+                            <?= $t['thn_masuk'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                        </select>
+                        <?php if ($thn_masuk): ?>
+                        <a href="<?= base_url('admin/siswa') ?>" class="btn btn-outline-secondary ml-2">Reset</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
+
                 <table id="example1" class="table table-report table-report--bordered display datatable w-full">
                     <thead class="bg-gray-100">
                         <tr>
