@@ -2,9 +2,7 @@
 class Enroll_model extends CI_Model {
 
     public function add($data = null)
-    {
-        // kalau data tidak dikirim lewat parameter, fallback ke input->post()
-        if ($data === null) {
+    {        if ($data === null) {
             $data = array(
                 'id_siswa'       => $this->input->post('id_siswa'),
                 'id_kelas'       => $this->input->post('id_kelas'),

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 05, 2025 at 12:54 PM
+-- Generation Time: Oct 13, 2025 at 06:18 AM
 -- Server version: 8.0.35
 -- PHP Version: 7.4.9
 
@@ -47,6 +47,8 @@ CREATE TABLE `enroll_mapel` (
   `id_mapel` int NOT NULL,
   `id_kelas` int NOT NULL,
   `id_ta` int NOT NULL,
+  `id_guru` int DEFAULT NULL,
+  `id_komponen` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -54,12 +56,11 @@ CREATE TABLE `enroll_mapel` (
 -- Dumping data for table `enroll_mapel`
 --
 
-INSERT INTO `enroll_mapel` (`id_enroll_mapel`, `id_mapel`, `id_kelas`, `id_ta`, `created_at`) VALUES
-(3, 5, 4, 3, '2025-09-23 17:00:00'),
-(5, 5, 4, 6, '2025-09-23 17:00:00'),
-(7, 5, 4, 4, '2025-09-23 17:00:00'),
-(9, 3, 4, 4, '2025-09-23 17:00:00'),
-(11, 1, 5, 4, '2025-09-25 17:00:00');
+INSERT INTO `enroll_mapel` (`id_enroll_mapel`, `id_mapel`, `id_kelas`, `id_ta`, `id_guru`, `id_komponen`, `created_at`) VALUES
+(2, 1, 4, 3, NULL, NULL, '2025-10-13 03:25:51'),
+(3, 2, 4, 4, NULL, NULL, '2025-10-13 03:26:06'),
+(4, 2, 5, 4, 4, NULL, '2025-10-13 03:57:24'),
+(6, 2, 4, 5, NULL, NULL, '2025-10-13 06:17:17');
 
 -- --------------------------------------------------------
 
@@ -68,24 +69,16 @@ INSERT INTO `enroll_mapel` (`id_enroll_mapel`, `id_mapel`, `id_kelas`, `id_ta`, 
 --
 
 CREATE TABLE `enroll_mapel_komponen` (
-  `id_komponen` int NOT NULL,
   `id_enroll_mapel` int NOT NULL,
-  `nama_komponen` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `bobot` decimal(5,2) DEFAULT '0.00'
+  `id_komponen` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `enroll_mapel_komponen`
 --
 
-INSERT INTO `enroll_mapel_komponen` (`id_komponen`, `id_enroll_mapel`, `nama_komponen`, `bobot`) VALUES
-(9, 11, '', 30.00),
-(10, 11, '', 40.00),
-(11, 11, '', 20.00),
-(12, 11, '', 10.00),
-(16, 9, '', 25.00),
-(17, 9, '', 25.00),
-(18, 9, '', 50.00);
+INSERT INTO `enroll_mapel_komponen` (`id_enroll_mapel`, `id_komponen`) VALUES
+(4, 13);
 
 -- --------------------------------------------------------
 
@@ -164,8 +157,7 @@ CREATE TABLE `mapel` (
 INSERT INTO `mapel` (`id_mapel`, `nama_mapel`) VALUES
 (1, 'Matematika'),
 (2, 'Bahasa Indonesia'),
-(3, 'Fisika'),
-(5, 'BAHASA PANDA');
+(3, 'Fisika');
 
 -- --------------------------------------------------------
 
@@ -254,7 +246,7 @@ CREATE TABLE `siswa` (
 INSERT INTO `siswa` (`id_siswa`, `nisn`, `nis`, `nama`, `tgl_lahir`, `tempat_lahir`, `graha`, `agama`, `cita_cita`, `nama_smp`, `email`, `tinggi`, `berat_badan`, `hobi`, `nama_ayah`, `nama_ibu`, `pekerjaan_ayah`, `pekerjaan_ibu`, `penghasilan_ayah`, `penghasilan_ibu`, `nama_provinsi`, `thn_masuk`, `status`, `foto`, `jenis_kelamin`, `jalur_pendidikan`) VALUES
 (1014, '89898989898', '321234', 'Sean Kaufman', '2025-10-17', 'Karanganyar', 'Doplang', 'islam', 'dokter', 'smp tarakanita', 'sean@gmail.com', 123, 56, 'padel', 'Kendrick', 'Julia', 'Lawyer', 'Atlit', '< 1 juta', '1 - 3 juta', 'Jawa tengah', '2000', 'lulus', NULL, 'Perempuan', 'kontribusi'),
 (1017, '8818887771', '0983', 'Mipan', '2009-08-20', 'Karanganyar', 'Los Angeles', 'islam', 'Dokter Anak', 'smp tarakanita', 'mipan@gmail.com', 170, 35, 'padel', 'Adam', 'Jeni', 'Petani', 'Dokter', '5 - 10 juta', '10 - 15 juta', 'Jawa timur', '2025', 'aktif', 'siswa_1017_1759659925.jpg', 'Laki-laki', 'reguler'),
-(1019, '21212233', '21345', 'Isabel Conklin', '2000-03-28', 'New York', NULL, 'budha', 'Psikologi Olahraga', 'smp mentari', 'isabel@gmail.com', 188, 56, 'Menangis', 'Ali', 'Laurel', 'Karyawan Swasta', 'Karyawan Swasta', '5 - 10 juta', '5 - 10 juta', 'Jawa Timur', '2021', 'lulus', '20251003140548.jpg', '', 'beasiswa');
+(1019, '21212233', '21345', 'Isabel Conklin', '2000-03-28', 'New York', 'Doplang', 'budha', 'Psikologi Olahraga', 'smp mentari', 'isabel@gmail.com', 188, 56, 'Menangis', 'Ali ', 'Laurel', 'Karyawan Swasta', 'Karyawan Swasta', '5 - 10 juta', '5 - 10 juta', 'Jawa Timur', '2021', 'lulus', '20251003140548.jpg', 'Laki-laki', 'beasiswa');
 
 -- --------------------------------------------------------
 
@@ -318,16 +310,18 @@ ALTER TABLE `enroll`
 --
 ALTER TABLE `enroll_mapel`
   ADD PRIMARY KEY (`id_enroll_mapel`),
-  ADD KEY `fk_enroll_mapel_mapel` (`id_mapel`),
-  ADD KEY `fk_enroll_mapel_kelas` (`id_kelas`),
-  ADD KEY `fk_enroll_mapel_ta` (`id_ta`);
+  ADD UNIQUE KEY `id_mapel` (`id_mapel`,`id_kelas`,`id_ta`,`id_komponen`),
+  ADD KEY `id_kelas` (`id_kelas`),
+  ADD KEY `id_ta` (`id_ta`),
+  ADD KEY `id_guru` (`id_guru`),
+  ADD KEY `id_komponen` (`id_komponen`);
 
 --
 -- Indexes for table `enroll_mapel_komponen`
 --
 ALTER TABLE `enroll_mapel_komponen`
-  ADD PRIMARY KEY (`id_komponen`),
-  ADD KEY `id_enroll_mapel` (`id_enroll_mapel`);
+  ADD PRIMARY KEY (`id_enroll_mapel`,`id_komponen`),
+  ADD KEY `id_komponen` (`id_komponen`);
 
 --
 -- Indexes for table `guru`
@@ -407,13 +401,7 @@ ALTER TABLE `enroll`
 -- AUTO_INCREMENT for table `enroll_mapel`
 --
 ALTER TABLE `enroll_mapel`
-  MODIFY `id_enroll_mapel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT for table `enroll_mapel_komponen`
---
-ALTER TABLE `enroll_mapel_komponen`
-  MODIFY `id_komponen` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_enroll_mapel` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `guru`
@@ -485,15 +473,18 @@ ALTER TABLE `enroll`
 -- Constraints for table `enroll_mapel`
 --
 ALTER TABLE `enroll_mapel`
-  ADD CONSTRAINT `fk_enroll_mapel_kelas` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_enroll_mapel_mapel` FOREIGN KEY (`id_mapel`) REFERENCES `mapel` (`id_mapel`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_enroll_mapel_ta` FOREIGN KEY (`id_ta`) REFERENCES `tahun_ajaran` (`id_ta`) ON DELETE CASCADE;
+  ADD CONSTRAINT `enroll_mapel_ibfk_1` FOREIGN KEY (`id_mapel`) REFERENCES `mapel` (`id_mapel`) ON DELETE CASCADE,
+  ADD CONSTRAINT `enroll_mapel_ibfk_2` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE,
+  ADD CONSTRAINT `enroll_mapel_ibfk_3` FOREIGN KEY (`id_ta`) REFERENCES `tahun_ajaran` (`id_ta`) ON DELETE CASCADE,
+  ADD CONSTRAINT `enroll_mapel_ibfk_4` FOREIGN KEY (`id_guru`) REFERENCES `guru` (`id_guru`) ON DELETE SET NULL,
+  ADD CONSTRAINT `enroll_mapel_ibfk_5` FOREIGN KEY (`id_komponen`) REFERENCES `mapel_komponen` (`id_komponen`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `enroll_mapel_komponen`
 --
 ALTER TABLE `enroll_mapel_komponen`
-  ADD CONSTRAINT `enroll_mapel_komponen_ibfk_1` FOREIGN KEY (`id_enroll_mapel`) REFERENCES `enroll_mapel` (`id_enroll_mapel`) ON DELETE CASCADE;
+  ADD CONSTRAINT `enroll_mapel_komponen_ibfk_1` FOREIGN KEY (`id_enroll_mapel`) REFERENCES `enroll_mapel` (`id_enroll_mapel`) ON DELETE CASCADE,
+  ADD CONSTRAINT `enroll_mapel_komponen_ibfk_2` FOREIGN KEY (`id_komponen`) REFERENCES `mapel_komponen` (`id_komponen`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `kelas_mapel`
