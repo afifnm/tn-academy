@@ -27,6 +27,11 @@ class Enrollmapel extends MY_Controller {
         $id_ta    = $this->input->get('id_ta');
         $id_kelas = $this->input->get('id_kelas');
 
+        if (!$id_ta || !$id_kelas) {
+            $this->set_flash('Pilih Tahun Ajaran dan Kelas.', 'error');
+            redirect('admin/enrollmapel');
+        }
+
         $data = [
             'title'        => 'Enroll Mapel',
             'kelas'        => $this->EnrollMapel_model->get_kelas(),
@@ -45,31 +50,86 @@ class Enrollmapel extends MY_Controller {
         $id_ta     = $this->input->post('id_ta');
         $id_kelas  = $this->input->post('id_kelas');
 
-        if (!empty($mapel_ids) && $id_ta && $id_kelas) {
-            $success_count = 0;
-
-            foreach ($mapel_ids as $id_mapel) {
-                if ($this->EnrollMapel_model->add([
-                    'id_mapel' => $id_mapel,
-                    'id_kelas' => $id_kelas,
-                    'id_ta'    => $id_ta
-                ])) $success_count++;
-            }
-
-            if ($success_count > 0)
-                $this->session->set_flashdata('success', "$success_count mapel berhasil di-enroll.");
-            else
-                $this->session->set_flashdata('error', "Semua mapel sudah ter-enroll sebelumnya.");
-        } else {
-            $this->session->set_flashdata('error', 'Pilih mapel dan pastikan filter terisi.');
+        if (empty($mapel_ids) || !$id_ta || !$id_kelas) {
+            $this->set_flash('Pilih mapel dan pastikan filter terisi.', 'error');
+            redirect('admin/enrollmapel');
         }
 
+        $success_count = 0;
+        foreach ($mapel_ids as $id_mapel) {
+            $data = [
+                'id_mapel' => $id_mapel,
+                'id_kelas' => $id_kelas,
+                'id_ta'    => $id_ta
+            ];
+
+            if ($this->EnrollMapel_model->add($data)) {
+                $success_count++;
+            }
+        }  
+        if ($success_count > 0) {
+            $this->set_flash( "$success_count mapel berhasil di-enroll.", 'success');
+        } else {
+            $this->set_flash("Semua mapel sudah ter-enroll di kelas ini.", 'warning');
+        } 
         redirect('admin/enrollmapel/filter?id_ta='.$id_ta.'&id_kelas='.$id_kelas);
     }
 
     public function delete($id_enroll_mapel) {
         $this->EnrollMapel_model->delete($id_enroll_mapel);
-        $this->session->set_flashdata('success', 'Enroll mapel berhasil dihapus.');
-        redirect($_SERVER['HTTP_REFERER']);
+        $this->set_flash( 'Enroll mapel berhasil dihapus.', 'success',);
+
+        $referer = $_SERVER['HTTP_REFERER'] ?? site_url('admin/enrollmapel');
+        redirect($referer);
     }
+
+    public function edit_detail($id_enroll_mapel) {
+        if (!is_numeric($id_enroll_mapel)) show_404();
+
+        $enroll = $this->EnrollMapel_model->get_by_id($id_enroll_mapel);
+        if (!$enroll) {
+            $this->set_flash('Data tidak ditemukan.', 'error');
+            redirect('admin/enrollmapel');
+        }
+
+        // Ambil komponen yang sudah dipilih
+        $selected_komponen = $this->EnrollMapel_model->get_komponen_by_enroll($id_enroll_mapel);
+
+        $data = [
+            'title' => 'Atur Detail Mapel: ' . $enroll['nama_mapel'],
+            'enroll' => $enroll,
+            'guru' => $this->db->get('guru')->result_array(),
+            'all_komponen' => $this->db->get_where('mapel_komponen', ['id_mapel' => $enroll['id_mapel']])->result_array(),
+            'selected_komponen' => $selected_komponen,
+            'filter' => [
+                'id_ta' => $enroll['id_ta'],
+                'id_kelas' => $enroll['id_kelas']
+            ]
+        ];
+
+        $this->template->load('template', 'enroll/mapel_detail', $data);
+    }
+
+    public function update_detail() {
+        $id = $this->input->post('id_enroll_mapel');
+        $id_guru = $this->input->post('id_guru') ?: null;
+        $komponen_ids = $this->input->post('komponen_ids');
+
+        if (!$id) {
+            $this->set_flash('ID tidak valid.', 'error');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'admin/enrollmapel');
+        }
+
+        $this->EnrollMapel_model->update($id, ['id_guru' => $id_guru]);
+
+        // Simpan relasi komponen
+        $this->EnrollMapel_model->save_komponen($id, $komponen_ids);
+
+        $this->set_flash( 'Detail mapel berhasil diperbarui.','success');
+        
+        $id_ta = $this->input->post('id_ta');
+        $id_kelas = $this->input->post('id_kelas');
+        redirect("admin/enrollmapel/filter?id_ta={$id_ta}&id_kelas={$id_kelas}");
+    }
+
 }

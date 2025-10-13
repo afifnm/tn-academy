@@ -28,11 +28,6 @@
                 <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan</button>
             </div>
 
-            <div class="hidden xl:block mx-auto text-slate-500">
-                <?php if (!empty($enrolled)): ?>
-                    Showing <?= count($enrolled) ?> mapel sudah enroll
-                <?php endif; ?>
-            </div>
         </div>
     </form>
 
@@ -50,7 +45,6 @@
                         <th>Kelas</th>
                         <th>Tahun Ajaran</th>
                         <th>Semester</th>
-                        <th>Komponen</th>
                         <th>Tanggal Enroll</th>
                         <th>Aksi</th>
                     </tr>
@@ -58,29 +52,22 @@
                 <tbody>
                     <?php if (!empty($enrolled)): ?>
                         <?php $no = 1; foreach ($enrolled as $row): ?>
-                            <?php $komponen = $this->EnrollMapel_model->get_komponen($row['id_enroll_mapel']); ?>
                             <tr>
                                 <td><?= $no++; ?></td>
                                 <td><?= $row['nama_mapel']; ?></td>
                                 <td><?= $row['nama_kelas']; ?></td>
                                 <td><?= $row['tahun']; ?></td>
                                 <td><?= $row['semester']; ?></td>
-                                <td>
-                                    <?php if (!empty($komponen)): ?>
-                                        <ul class="list-disc ml-4">
-                                        <?php foreach ($komponen as $k): ?>
-                                            <li><?= $k['nama_komponen']; ?> (<?= $k['bobot']; ?>)</li>
-                                        <?php endforeach; ?>
-                                        </ul>
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </td>
+                                
                                 <td><?= $row['tanggal_enroll']; ?></td>
-                                <td>
-                                    <a class="flex text-danger delete-btn" href="javascript:;" 
-                                        onclick="confirmDelete('<?= site_url('admin/enrollmapel/delete/'.$row['id_enroll_mapel']) ?>')">
-                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
+                                <td class="flex items-center gap-2">
+                                    <a href="<?= site_url('admin/enrollmapel/edit_detail/' . $row['id_enroll_mapel']) ?>" 
+                                    class="flex items-center text-blue-600 hover:text-blue-800">
+                                        <i data-lucide="settings" class="w-4 h-4 mr-1"></i> Atur
+                                    </a>
+                                    <a class="flex items-center text-danger hover:text-red-700 delete-btn" href="javascript:;" 
+                                    onclick="confirmDelete('<?= site_url('admin/enrollmapel/delete/'.$row['id_enroll_mapel']) ?>')">
+                                        <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Hapus
                                     </a>
                                 </td>
                             </tr>
