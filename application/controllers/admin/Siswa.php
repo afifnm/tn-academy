@@ -84,9 +84,18 @@ class Siswa extends MY_Controller {
     {
         $data = array(
             'siswa'      => $this->Siswa_model->get_by_id($id_siswa),
-            'title'      => 'Detail Siswa'
+            'title'      => 'Detail Siswa',
+            'id_siswa'   => $id_siswa
         );
         $this->template->load('template','master/siswa/siswa_detail',$data);
+    }
+    public function raport($id_siswa)
+    {
+        $data = array(
+            'siswa'      => $this->Siswa_model->get_by_id($id_siswa),
+            'title'      => 'Raport Siswa'
+        );
+        $this->template->load('template','master/siswa/raport',$data);
     }
 
     public function update_siswa($id_siswa)

@@ -30,7 +30,7 @@
                 </a> -->
             </div>
 			<div class="p-5 border-t border-slate-200/60 dark:border-darkmode-400 flex p-2 ">
-                <a href="" class="py-1 px-1">
+                <a href="<?= base_url('admin/siswa/raport/'.$id_siswa) ?>" class="py-1 px-1">
                 	<button type="button" class="btn btn-primary">Nilai Raport</button>
                 </a>
                 <a href="<?=base_url('admin/siswa')?>" class="py-1 px-1 ml-auto">
