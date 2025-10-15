@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'tn-academy',
+	'hostname' => 'srv1412.hstgr.io',
+	'username' => 'u292051053_demo',
+	'password' => 'W3JqNPB#Pb?',
+	'database' => 'u292051053_demo',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
