@@ -45,33 +45,13 @@
     <div class="intro-y box p-5 mt-5" x-data="{ tab: 1 }">
       <h2 class="text-lg font-medium">Nilai Raport Siswa</h2>
 
-      <?php
-      $semesterData = [
-        ['id' => 1, 'semester' => 1, 'tahun' => '2022/2023'],
-        ['id' => 2, 'semester' => 2, 'tahun' => '2022/2023'],
-        ['id' => 3, 'semester' => 3, 'tahun' => '2023/2024'],
-        ['id' => 4, 'semester' => 4, 'tahun' => '2023/2024'],
-        ['id' => 5, 'semester' => 5, 'tahun' => '2024/2025'],
-      ];
-
-      $mapelData = [
-        ['nama' => 'Matematika', 'komponen' => [['nama' => 'Tugas', 'nilai' => 85], ['nama' => 'UTS', 'nilai' => 88], ['nama' => 'UAS', 'nilai' => 90]]],
-        ['nama' => 'Bahasa Indonesia', 'komponen' => [['nama' => 'Tugas', 'nilai' => 82], ['nama' => 'UTS', 'nilai' => 80], ['nama' => 'UAS', 'nilai' => 84]]],
-        ['nama' => 'Bahasa Inggris', 'komponen' => [['nama' => 'Tugas', 'nilai' => 87], ['nama' => 'UTS', 'nilai' => 85], ['nama' => 'UAS', 'nilai' => 89]]],
-        ['nama' => 'Informatika', 'komponen' => [['nama' => 'Proyek', 'nilai' => 92], ['nama' => 'UTS', 'nilai' => 95], ['nama' => 'UAS', 'nilai' => 93]]],
-        ['nama' => 'Fisika', 'komponen' => [['nama' => 'Tugas', 'nilai' => 83], ['nama' => 'UTS', 'nilai' => 81], ['nama' => 'UAS', 'nilai' => 86]]],
-        ['nama' => 'Kimia', 'komponen' => [['nama' => 'Tugas', 'nilai' => 79], ['nama' => 'UTS', 'nilai' => 82], ['nama' => 'UAS', 'nilai' => 80]]],
-        ['nama' => 'Biologi', 'komponen' => [['nama' => 'Tugas', 'nilai' => 88], ['nama' => 'UTS', 'nilai' => 85], ['nama' => 'UAS', 'nilai' => 89]]],
-        ['nama' => 'Pendidikan Pancasila', 'komponen' => [['nama' => 'Tugas', 'nilai' => 91], ['nama' => 'UTS', 'nilai' => 92], ['nama' => 'UAS', 'nilai' => 90]]],
-      ];
-      ?>
 
       <!-- TABS -->
       <div class="nav nav-tabs flex flex-wrap gap-2 mt-5" role="tablist">
-        <?php foreach ($semesterData as $sem): ?>
+        <?php foreach ($semesterData as $sem_id => $sem): ?>
           <button
-            @click="tab = <?= $sem['id'] ?>"
-            :class="{ 'bg-primary text-white': tab === <?= $sem['id'] ?>, 'bg-slate-200 text-slate-600 hover:bg-slate-300': tab !== <?= $sem['id'] ?> }"
+            @click="tab = <?= $sem_id ?>"
+            :class="{ 'bg-primary text-white': tab === <?= $sem_id ?>, 'bg-slate-200 text-slate-600 hover:bg-slate-300': tab !== <?= $sem_id ?> }"
             class="py-2 px-4 rounded-md text-sm font-medium transition-colors"
             type="button"
           >
@@ -82,54 +62,62 @@
       </div>
 
       <!-- TAB CONTENT -->
-      <?php foreach ($semesterData as $sem): ?>
-        <div x-show="tab === <?= $sem['id'] ?>" class="mt-6" x-cloak>
-          <div class="overflow-x-auto">
-            <table class="table table-report -mt-2">
-              <thead>
-                <tr>
-                  <th class="whitespace-nowrap text-center w-10">#</th>
-                  <th class="whitespace-nowrap">Mata Pelajaran</th>
-                  <th class="whitespace-nowrap min-w-[220px]">Komponen & Nilai</th>
-                  <th class="whitespace-nowrap text-center w-20">Rata-rata</th>
-                  <th class="whitespace-nowrap text-center w-24">Predikat</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                $no = 1;
-                foreach ($mapelData as $mapel):
-                  $total = array_sum(array_column($mapel['komponen'], 'nilai'));
-                  $rata = round($total / count($mapel['komponen']), 1);
-                  $predikat = $rata >= 85 ? 'A' : ($rata >= 75 ? 'B' : 'C');
-                  $badgeColor = $rata >= 85 ? 'bg-success/20 text-success' : ($rata >= 75 ? 'bg-warning/20 text-warning' : 'bg-danger/20 text-danger');
-                ?>
-                  <tr class="intro-x hover:bg-slate-50 dark:hover:bg-darkmode-600/50">
-                    <td class="text-center"><?= $no++ ?></td>
-                    <td>
-                      <div class="font-medium whitespace-nowrap"><?= $mapel['nama'] ?></div>
-                    </td>
-                    <td>
-                      <div class="flex flex-wrap gap-2 mt-1">
-                        <?php foreach ($mapel['komponen'] as $komp): ?>
-                          <span class="flex items-center bg-slate-100 dark:bg-darkmode-400/30 text-slate-700 dark:text-slate-300 text-xs px-2 py-1 rounded">
-                            <span><?= $komp['nama'] ?></span>
-                            <span class="font-medium ml-1"><?= $komp['nilai'] ?></span>
-                          </span>
-                        <?php endforeach; ?>
-                      </div>
-                    </td>
-                    <td class="text-center font-medium"><?= $rata ?></td>
-                    <td class="text-center">
-                      <span class="px-2 py-1 rounded-full text-xs font-medium <?= $badgeColor ?>">
-                        <?= $predikat ?>
-                      </span>
-                    </td>
+      <?php foreach ($semesterData as $sem_id => $sem): ?>
+        <div x-show="tab === <?= $sem_id ?>" class="mt-6" x-cloak>
+          <?php if (empty($sem['mapel'])): ?>
+            <div class="text-center py-10 text-slate-500">
+              <i data-lucide="file-text" class="w-12 h-12 mx-auto mb-3"></i>
+              <p class="text-lg">Belum ada data nilai untuk semester ini.</p>
+            </div>
+          <?php else: ?>
+            <div class="overflow-x-auto">
+              <table class="table table-report -mt-2">
+                <thead>
+                  <tr>
+                    <th class="whitespace-nowrap text-center w-10">#</th>
+                    <th class="whitespace-nowrap">Mata Pelajaran</th>
+                    <th class="whitespace-nowrap min-w-[220px]">Komponen & Nilai</th>
+                    <th class="whitespace-nowrap text-center w-20">Rata-rata</th>
+                    <th class="whitespace-nowrap text-center w-24">Predikat</th>
                   </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  <?php
+                  $no = 1;
+                  foreach ($sem['mapel'] as $mapel):
+                    $nilai_list = array_column($mapel['komponen'], 'nilai');
+                    $total = array_sum($nilai_list);
+                    $rata = !empty($nilai_list) ? round($total / count($nilai_list), 1) : 0;
+                    $predikat = $rata >= 85 ? 'A' : ($rata >= 75 ? 'B' : 'C');
+                    $badgeColor = $rata >= 85 ? 'bg-success/20 text-success' : ($rata >= 75 ? 'bg-warning/20 text-warning' : 'bg-danger/20 text-danger');
+                  ?>
+                    <tr class="intro-x hover:bg-slate-50 dark:hover:bg-darkmode-600/50">
+                      <td class="text-center"><?= $no++ ?></td>
+                      <td>
+                        <div class="font-medium whitespace-nowrap"><?= htmlspecialchars($mapel['nama']) ?></div>
+                      </td>
+                      <td>
+                        <div class="flex flex-wrap gap-2 mt-1">
+                          <?php foreach ($mapel['komponen'] as $komp): ?>
+                            <span class="flex items-center bg-slate-100 dark:bg-darkmode-400/30 text-slate-700 dark:text-slate-300 text-xs px-2 py-1 rounded">
+                              <span><?= htmlspecialchars($komp['nama']) ?></span>
+                              <span class="font-medium ml-1"><?= number_format($komp['nilai'], 0) ?></span>
+                            </span>
+                          <?php endforeach; ?>
+                        </div>
+                      </td>
+                      <td class="text-center font-medium"><?= $rata ?></td>
+                      <td class="text-center">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium <?= $badgeColor ?>">
+                          <?= $predikat ?>
+                        </span>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          <?php endif; ?>
         </div>
       <?php endforeach; ?>
     </div>

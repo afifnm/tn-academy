@@ -10,6 +10,7 @@ class Siswa extends MY_Controller {
         $this->only_admin_allowed();
 
         $this->load->model('Siswa_model');
+        $this->load->model('Nilai_model');
     }
 
     public function index()
@@ -89,14 +90,89 @@ class Siswa extends MY_Controller {
         );
         $this->template->load('template','master/siswa/siswa_detail',$data);
     }
+    
     public function raport($id_siswa)
     {
-        $data = array(
-            'siswa'      => $this->Siswa_model->get_by_id($id_siswa),
-            'title'      => 'Raport Siswa'
-        );
-        $this->template->load('template','master/siswa/raport',$data);
+        $siswa = $this->Siswa_model->get_by_id($id_siswa);
+        $tahun_masuk = (int)$siswa['thn_masuk']; 
+
+        $nilai_raw = $this->Nilai_model->get_raport_by_siswa($id_siswa);
+
+        // echo "<pre>";
+        // print_r($nilai_raw);
+        // echo "</pre>";
+        // exit; // hentikan sementara
+
+
+        $semesterData = [];
+        foreach ($nilai_raw as $row) {
+            $tahun_awal = (int)substr($row['tahun_ajaran'], 0, 4); 
+            $semester_nomor = ($tahun_awal - $tahun_masuk) * 2 + 
+                            ($row['jenis_semester'] == 'Ganjil' ? 1 : 2);
+
+            // Batasi hanya semester 1-5
+            if ($semester_nomor < 1 || $semester_nomor > 5) continue;
+
+            $mapel = $row['nama_mapel'];
+            
+            if (!isset($semesterData[$semester_nomor])) {
+                $semesterData[$semester_nomor] = [
+                    'semester' => $semester_nomor,
+                    'tahun' => $row['tahun_ajaran'] . ' (' . $row['jenis_semester'] . ')',
+                    'mapel' => []
+                ];
+            }
+            
+            if (!isset($semesterData[$semester_nomor]['mapel'][$mapel])) {
+                $semesterData[$semester_nomor]['mapel'][$mapel] = [
+                    'nama' => $mapel,
+                    'komponen' => []
+                ];
+            }
+            
+            $semesterData[$semester_nomor]['mapel'][$mapel]['komponen'][] = [
+                'nama' => $row['nama_komponen'],
+                'nilai' => (float)$row['skor']
+            ];
+        }
+
+        foreach ($semesterData as $sem => $data) {
+            $semesterData[$sem]['mapel'] = array_values($data['mapel']);
+        }
+
+        $final = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $final[$i] = $semesterData[$i] ?? [
+                'semester' => $i,
+                'tahun' => $this->format_tahun_semester($tahun_masuk, $i),
+                'mapel' => []
+            ];
+        }
+
+        $data = [
+            'siswa' => $siswa,
+            'semesterData' => $final,
+            'title' => 'Raport Siswa'
+        ];
+
+        // echo "<pre>";
+        // print_r($semesterData);
+        // echo "</pre>";
+        // exit;
+
+        $this->template->load('template', 'master/siswa/raport', $data);
     }
+
+    private function format_tahun_semester($tahun_masuk, $semester)
+    {
+        $kelas = ceil($semester / 2);
+        $tahun_awal = $tahun_masuk + $kelas - 1;
+        $tahun_ajaran = $tahun_awal . '/' . ($tahun_awal + 1);
+        $jenis = ($semester % 2 == 1) ? 'Ganjil' : 'Genap';
+        return $tahun_ajaran . ' (' . $jenis . ')';
+    }
+
+    
 
     public function update_siswa($id_siswa)
     {
