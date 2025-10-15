@@ -81,6 +81,15 @@ INSERT INTO `enroll_mapel_komponen` (`id_enroll_mapel`, `id_komponen`) VALUES
 (4, 13);
 
 -- --------------------------------------------------------
+-- Table structure for table `enroll_mapel_komponen`
+--
+
+CREATE TABLE `enroll_mapel_komponen` (
+  `id_komponen` int NOT NULL,
+  `id_enroll_mapel` int NOT NULL,
+  `nama_komponen` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `bobot` decimal(5,2) DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Table structure for table `guru`
