@@ -7,14 +7,12 @@ use PhpOffice\PhpSpreadsheet\Reader\Xls;
 class Siswa extends MY_Controller {
     public function __construct() {
         parent::__construct();
-        $this->only_admin_allowed();
-
         $this->load->model('Siswa_model');
     }
 
     public function index()
     {
-        $thn_masuk = $this->input->get('thn_masuk');
+        $thn_masuk = $this->input->get('thn_masuk') ?? date('Y');
         $data = array(
             'thn_masuk' => $thn_masuk,
             'daftar_thn'=> $this->Siswa_model->get_all_tahun_masuk(),
