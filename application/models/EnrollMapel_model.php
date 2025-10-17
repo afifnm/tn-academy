@@ -24,6 +24,8 @@ class EnrollMapel_model extends CI_Model {
     }
 
     public function get_tahun_ajaran() {
+        $this->db->order_by('tahun', 'DESC');
+        $this->db->order_by('semester', 'DESC');
         return $this->db->get('tahun_ajaran')->result_array();
     }
 
