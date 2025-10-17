@@ -140,10 +140,10 @@
 
       <!-- TABS -->
       <div class="nav nav-tabs flex flex-wrap gap-2 mt-5" role="tablist">
-        <?php foreach ($semesterData as $sem): ?>
+        <?php foreach ($semesterData as $sem_id => $sem): ?>
           <button
-            @click="tab = <?= $sem['id'] ?>"
-            :class="{ 'bg-primary text-white': tab === <?= $sem['id'] ?>, 'bg-slate-200 text-slate-600 hover:bg-slate-300': tab !== <?= $sem['id'] ?> }"
+            @click="tab = <?= $sem_id ?>"
+            :class="{ 'bg-primary text-white': tab === <?= $sem_id ?>, 'bg-slate-200 text-slate-600 hover:bg-slate-300': tab !== <?= $sem_id ?> }"
             class="py-2 px-4 rounded-md text-sm font-medium transition-colors"
             type="button"
           >
