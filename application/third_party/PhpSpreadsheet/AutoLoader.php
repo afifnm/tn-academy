@@ -1,10 +1,12 @@
 <?php
-spl_autoload_register(function ($class) {
-    $prefixes = [
-        'PhpOffice\\PhpSpreadsheet\\' => __DIR__ . '/src/PhpSpreadsheet/',
-        'Psr\\SimpleCache\\' => APPPATH . 'third_party/Psr/SimpleCache/',
-    ];
+$thirdPartyDir = dirname(__DIR__) . DIRECTORY_SEPARATOR;
 
+$prefixes = [
+    'PhpOffice\\PhpSpreadsheet\\' => $thirdPartyDir . 'PhpSpreadsheet' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'PhpSpreadsheet' . DIRECTORY_SEPARATOR,
+    'Psr\\SimpleCache\\' => $thirdPartyDir . 'Psr' . DIRECTORY_SEPARATOR . 'SimpleCache' . DIRECTORY_SEPARATOR,
+];
+
+spl_autoload_register(function ($class) use ($prefixes) {
     foreach ($prefixes as $prefix => $base_dir) {
         $len = strlen($prefix);
         if (strncmp($prefix, $class, $len) !== 0) {

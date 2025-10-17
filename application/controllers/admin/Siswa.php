@@ -204,15 +204,30 @@ class Siswa extends MY_Controller {
 
     public function importExcel()
     {
+        if (empty($_FILES['file_excel']['tmp_name'])) {
+            $this->set_flash('Silakan pilih file Excel terlebih dahulu.', 'error');
+            redirect('admin/siswa');
+        }
+
         $this->load->library('Spreadsheet_loader');
 
         $file_tmp = $_FILES['file_excel']['tmp_name'];
         $ext = pathinfo($_FILES['file_excel']['name'], PATHINFO_EXTENSION);
 
-        if ($ext == 'xlsx') {
-            $spreadsheet = $this->spreadsheet_loader->loadXlsx($file_tmp);
-        } else {
-            $spreadsheet = $this->spreadsheet_loader->loadXls($file_tmp);
+        if (!in_array(strtolower($ext), ['xlsx', 'xls'])) {
+            $this->set_flash('Format file tidak didukung. Gunakan .xlsx atau .xls', 'error');
+            redirect('admin/siswa');
+        }
+
+        try {
+            if ($ext == 'xlsx') {
+                $spreadsheet = $this->spreadsheet_loader->loadXlsx($file_tmp);
+            } else {
+                $spreadsheet = $this->spreadsheet_loader->loadXls($file_tmp);
+            }
+        } catch (Exception $e) {
+            $this->set_flash('File Excel rusak atau tidak valid.', 'error');
+            redirect('admin/siswa');
         }
 
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
@@ -221,62 +236,75 @@ class Siswa extends MY_Controller {
         $countUpdate = 0;
 
         foreach ($sheetData as $key => $row) {
-            if ($key == 1) continue; // skip header
+            // Skip baris 1-4 (1: judul, 2-3: kosong, 4: header)
+            if ($key <= 4) continue;
 
-            $nis          = trim($row['B']);
-            $nama         = trim($row['C']);
-            $jk           = trim($row['D']);
-            $jalur        = trim($row['E']);
-            $kelas        = trim($row['F']);
-            $nisn         = trim($row['G']);
-            $tmp_lahir    = trim($row['H']);
-            $tgl_lahir    = trim($row['I']);
-            $graha        = trim($row['J']);
-            $email        = trim($row['K']);
-            $agama        = trim($row['L']);
-            $cita_cita    = trim($row['M']);
-            $nama_smp     = trim($row['N']);
-            $tinggi       = trim($row['O']);
-            $berat        = trim($row['P']);
-            $hobi         = trim($row['Q']);
-            $nama_ayah    = trim($row['R']);
-            $nama_ibu     = trim($row['S']);
-            $pekerjaan_ayah = trim($row['T']);
-            $pekerjaan_ibu  = trim($row['U']);
-            $penghasilan_ayah = trim($row['V']);
-            $penghasilan_ibu  = trim($row['W']);
-            $provinsi     = trim($row['X']);
-
+            $nis          = trim($row['B'] ?? '');
             if ($nis == '') continue;
 
+            $nisn         = trim($row['C'] ?? '');
+            $nama         = trim($row['D'] ?? '');
+            $email        = trim($row['E'] ?? '');
+            $jk           = trim($row['F'] ?? '');
+            $jalur        = trim($row['G'] ?? '');
+            $tmp_lahir    = trim($row['H'] ?? '');
+            $tgl_lahir    = trim($row['I'] ?? '');
+            $graha        = trim($row['J'] ?? '');
+            $agama        = trim($row['K'] ?? '');
+            $cita_cita    = trim($row['L'] ?? '');
+            $nama_smp     = trim($row['M'] ?? '');
+            $tinggi       = trim($row['N'] ?? '');
+            $berat        = trim($row['O'] ?? '');
+            $hobi         = trim($row['P'] ?? '');
+            $nama_ayah    = trim($row['Q'] ?? '');
+            $nama_ibu     = trim($row['R'] ?? '');
+            $pekerjaan_ayah = trim($row['S'] ?? '');
+            $pekerjaan_ibu  = trim($row['T'] ?? '');
+            $penghasilan_ayah = trim($row['U'] ?? '');
+            $penghasilan_ibu  = trim($row['V'] ?? '');
+            $provinsi     = trim($row['W'] ?? '');
+            $tahun_masuk  = trim($row['X'] ?? '');
+
+            // Validasi tanggal
+            $tgl_lahir_db = null;
+            if (!empty($tgl_lahir)) {
+                $formats = ['Y-m-d', 'd/m/Y', 'd-m-Y'];
+                foreach ($formats as $format) {
+                    $date = \DateTime::createFromFormat($format, $tgl_lahir);
+                    if ($date) {
+                        $tgl_lahir_db = $date->format('Y-m-d');
+                        break;
+                    }
+                }
+            }
+
             $data = [
-                'nis'            => $nis,
-                'nisn'           => $nisn,
-                'nama'           => $nama,
-                'email'          => $email,
-                'jenis_kelamin'  => $jk,
-                'agama'          => $agama,
-                'jalur_pendidikan' => $jalur,
-                'tempat_lahir'   => $tmp_lahir,
-                'tgl_lahir'      => date('Y-m-d', strtotime($tgl_lahir)),
-                'status'         => 'Aktif', // default kalau tidak ada di excel
-                'nama_ayah'      => $nama_ayah,
-                'pekerjaan_ayah' => $pekerjaan_ayah,
-                'penghasilan_ayah' => $penghasilan_ayah,
-                'nama_ibu'       => $nama_ibu,
-                'pekerjaan_ibu'  => $pekerjaan_ibu,
-                'penghasilan_ibu'=> $penghasilan_ibu,
-                'cita_cita'      => $cita_cita,
-                'nama_smp'       => $nama_smp,
-                'tinggi'         => $tinggi,
-                'berat_badan'    => $berat,
-                'hobi'           => $hobi,
-                'nama_provinsi'  => $provinsi
+                'nis'               => $nis,
+                'nisn'              => $nisn,
+                'nama'              => $nama,
+                'email'             => $email,
+                'jenis_kelamin'     => $jk,
+                'agama'             => $agama,
+                'jalur_pendidikan'  => $jalur,
+                'tempat_lahir'      => $tmp_lahir,
+                'tgl_lahir'         => $tgl_lahir_db,
+                'status'            => 'Aktif',
+                'nama_ayah'         => $nama_ayah,
+                'pekerjaan_ayah'    => $pekerjaan_ayah,
+                'penghasilan_ayah'  => $penghasilan_ayah,
+                'nama_ibu'          => $nama_ibu,
+                'pekerjaan_ibu'     => $pekerjaan_ibu,
+                'penghasilan_ibu'   => $penghasilan_ibu,
+                'cita_cita'         => $cita_cita,
+                'nama_smp'          => $nama_smp,
+                'tinggi'            => $tinggi,
+                'berat_badan'       => $berat,
+                'hobi'              => $hobi,
+                'nama_provinsi'     => $provinsi,
+                'thn_masuk'         => !empty($tahun_masuk) ? (int)$tahun_masuk : null
             ];
 
-            // cek apakah nis sudah ada
             $cek = $this->db->get_where('siswa', ['nis' => $nis])->row();
-
             if ($cek) {
                 $this->db->where('nis', $nis);
                 $this->db->update('siswa', $data);
@@ -287,11 +315,41 @@ class Siswa extends MY_Controller {
             }
         }
 
-        $this->session->set_flashdata('success',
-            "Import selesai. Tambah: {$countInsert}, Update: {$countUpdate}"
+       $this->set_flash(
+            "Import selesai. Berhasil menambahkan data.",'success'
         );
-        redirect('admin/siswa');
+
+        // kirim JSON agar Dropzone tahu hasilnya
+        echo json_encode(['status' => 'success']);
+        exit;
+
+    }
+
+    public function download_template()
+    {
+        // Path ke file template
+        $filePath = FCPATH . 'assets/templates/format_import_siswa.xlsx';
+
+        if (!file_exists($filePath)) {
+            $this->set_flash('File template tidak ditemukan. Silakan hubungi administrator.', 'error');
+            redirect('admin/siswa');
+        }
+
+        // Set header untuk download
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filePath));
+
+        // Baca file dan kirim ke output
+        readfile($filePath);
+        exit();
     }
 
 
 }
+
+
