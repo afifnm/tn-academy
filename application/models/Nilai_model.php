@@ -60,4 +60,25 @@ class Nilai_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_raport_by_siswa($id_siswa)
+    {
+        $sql = "
+            SELECT 
+                ta.tahun AS tahun_ajaran,
+                ta.semester AS jenis_semester,
+                m.nama_mapel,
+                mk.nama_komponen,
+                n.skor
+            FROM nilai n
+            JOIN enroll e ON n.id_enroll = e.id_enroll
+            JOIN tahun_ajaran ta ON e.id_ta = ta.id_ta
+            JOIN kelas_mapel km ON n.id_kelas_mapel = km.id_kelas_mapel
+            JOIN mapel m ON km.id_mapel = m.id_mapel
+            JOIN mapel_komponen mk ON n.id_komponen = mk.id_komponen
+            WHERE e.id_siswa = ?
+            ORDER BY ta.tahun, ta.semester, m.nama_mapel, mk.id_komponen
+        ";
+
+        return $this->db->query($sql, [$id_siswa])->result_array();
+    }
 }
