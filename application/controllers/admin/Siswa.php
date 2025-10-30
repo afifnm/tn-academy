@@ -350,4 +350,3 @@ class Siswa extends MY_Controller {
 
 }
 
-

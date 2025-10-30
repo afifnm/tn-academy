@@ -98,7 +98,7 @@ class Enroll_model extends CI_Model {
 
     public function get_siswa_not_enrolled($id_ta = null, $id_kelas = null, $semester = null)
     {
-        $this->db->select('s.*');
+        $this->db->select('s.id_siswa, s.nis,s.nisn, s.nama, s.thn_masuk');
         $this->db->from('siswa s');
 
         if ($id_ta) {
