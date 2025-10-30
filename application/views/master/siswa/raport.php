@@ -37,6 +37,15 @@
         </a>
       </div>
     </div>
+    
+    <!-- BEGIN: Grafik Semester -->
+    <div class="intro-y box p-5 mt-5">
+        <h2 class="text-lg font-medium">Grafik Perkembangan Nilai</h2>
+        <div class="mt-4">
+            <canvas id="semesterChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+    <!-- END: Grafik Semester -->
   </div>
   <!-- END: Profile Menu -->
 
@@ -120,7 +129,71 @@
   <!-- END: Konten Nilai Raport -->
 </div>
 
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.10/dist/cdn.min.js" defer></script>
 <script>
-  lucide.createIcons();
+  // Guard lucide.createIcons() in case lucide is not loaded on the page to avoid JS errors
+  if (typeof lucide !== 'undefined' && lucide && typeof lucide.createIcons === 'function') {
+    lucide.createIcons();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('semesterChart');
+    if (!canvas) return; // safety: exit if canvas not present
+    const ctx = canvas.getContext('2d');
+
+    // ensure the canvas has a visible height so Chart.js can render when maintainAspectRatio = false
+    canvas.style.maxHeight = canvas.style.maxHeight || '240px';
+
+    // Data dari PHP
+    const labels = <?= json_encode($chartLabels) ?>;
+    const data = <?= json_encode($chartData) ?>;
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Rata-rata Nilai Keseluruhan',
+          data: data,
+          borderColor: '#4f46e5', // Tailwind's indigo-600, warna primary MidOne
+          backgroundColor: 'rgba(79, 70, 229, 0.1)', // Area fill
+          borderWidth: 2,
+          pointBackgroundColor: '#4f46e5',
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          tension: 0.3, // Kurva halus
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false, // Membuat grafik mengikuti ukuran container
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false, // Mulai dari nilai terendah, bukan 0
+            min: 80,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Nilai'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Semester'
+            }
+          }
+        }
+      }
+    });
+  });
 </script>
