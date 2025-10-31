@@ -18,6 +18,8 @@ class Guru_model extends CI_Model {
 		}
 		$data = array(
 			'nama_guru'	=>$this->input->post('nama_guru'),
+			'nip'	    => $this->input->post('nip'),
+			'email_guru'=> $this->input->post('email_guru')
 		);
 
 		$this->db->insert('guru',$data);
@@ -28,6 +30,8 @@ class Guru_model extends CI_Model {
 	{
 		$data = array(
 			'nama_guru'	=>$this->input->post('nama_guru'),
+			'nip'	    => $this->input->post('nip'),
+			'email_guru'=> $this->input->post('email_guru')
 		);
 		$this->db->where('id_guru',$this->input->post('id_guru'));
 		$this->db->update('guru',$data);

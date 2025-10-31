@@ -12,6 +12,7 @@ class Enroll extends MY_Controller {
     {
         $siswa        = $this->db->get('siswa')->result();
         $kelas        = $this->db->get('kelas')->result();
+        $this->db->order_by('tahun', 'DESC');
         $tahun_ajaran = $this->db->get('tahun_ajaran')->result();
 
         // ambil enroll dengan join
