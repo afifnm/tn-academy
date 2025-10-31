@@ -14,7 +14,9 @@
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="border-b-2">NO</th>
+                            <th class="border-b-2">NIP GURU</th>
                             <th class="border-b-2">NAMA GURU</th>
+                            <th class="border-b-2">EMAIL</th>
                             <th class="border-b-2">AKSI</th>
                         </tr>
                     </thead>
@@ -22,7 +24,9 @@
                         <?php $no=1; foreach ($guru as $gu) { ?>
                         <tr>
                             <td class="border-b"><?= $no ?></td>
+                            <td class="border-b"><?= $gu['nip'] ?></td>
                             <td class="border-b"><?= $gu['nama_guru'] ?></td>
+                            <td class="border-b"><?= $gu['email_guru'] ?></td>
                             <td class="border-b">
                                 <div class="flex space-x-3">
                                     <!-- Edit -->

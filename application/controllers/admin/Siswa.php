@@ -13,7 +13,7 @@ class Siswa extends MY_Controller {
 
     public function index()
     {
-        $thn_masuk = $this->input->get('thn_masuk') ?? date('Y');
+        $thn_masuk = $this->input->get('thn_masuk');
         $data = array(
             'thn_masuk' => $thn_masuk,
             'daftar_thn'=> $this->Siswa_model->get_all_tahun_masuk(),
