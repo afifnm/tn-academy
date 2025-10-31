@@ -81,4 +81,21 @@ class Nilai_model extends CI_Model {
 
         return $this->db->query($sql, [$id_siswa])->result_array();
     }
+
+        public function get_nilai_satu($id_enroll, $id_mapel, $id_komponen) {
+        $kelas_mapel = $this->db->get_where('kelas_mapel', [
+            'id_kelas' => $this->db->get_where('enroll', ['id_enroll' => $id_enroll])->row()->id_kelas,
+            'id_mapel' => $id_mapel
+        ])->row();
+
+        if (!$kelas_mapel) return '';
+
+        $row = $this->db->get_where('nilai', [
+            'id_enroll' => $id_enroll,
+            'id_kelas_mapel' => $kelas_mapel->id_kelas_mapel,
+            'id_komponen' => $id_komponen
+        ])->row();
+
+        return $row ? $row->skor : '';
+    }
 }
