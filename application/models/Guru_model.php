@@ -10,11 +10,10 @@ class Guru_model extends CI_Model {
 
     public function add()
 	{
-		$this->db->from('guru')->where('nama_guru',$this->input->post('nama_guru'));
+		$this->db->from('guru')->where('nip',$this->input->post('nip'));
 		$cek = $this->db->get()->row();
-
 		if($cek != null){
-        	return false;
+        	return false; 
 		}
 		$data = array(
 			'nama_guru'	=>$this->input->post('nama_guru'),

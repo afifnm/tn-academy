@@ -53,12 +53,22 @@
                                     <form action="<?= base_url('admin/guru/edit') ?>" method="post">
                                         <div class="modal-body">
                                             <input type="hidden" name="id_guru" value="<?= $gu['id_guru'] ?>">
-
+                                            <div>
+                                                <label class="form-label">NIP Guru</label>
+                                                <input type="number " class="form-control mb-3" name="nip" 
+                                                       value="<?= $gu['nip'] ?>" required>
+                                            </div>
                                             <div>
                                                 <label class="form-label">Nama Guru</label>
-                                                <input type="text" class="form-control" name="nama_guru" 
+                                                <input type="text" class="form-control mb-3" name="nama_guru" 
                                                        value="<?= $gu['nama_guru'] ?>" required>
                                             </div>
+                                            <div>
+                                                <label class="form-label">Email</label>
+                                                <input type="text" class="form-control mb-3" name="email_guru" 
+                                                       value="<?= $gu['email_guru'] ?>" required>
+                                            </div>
+                                            
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" data-tw-dismiss="modal" 
@@ -88,10 +98,18 @@
       </div>
       <form action="<?= base_url('admin/guru/add') ?>" method="post">
         <div class="modal-body">
-          <div>
+            <div>
+                <label class="form-label mb-3">NIP Guru</label>
+                <input type="text" class="form-control mb-3" name="nip" placeholder="NIP Guru" required>
+            </div>
+            <div>
             <label class="form-label">Nama Guru</label>
-            <input type="text" class="form-control" name="nama_guru" placeholder="Nama Guru" required>
-          </div>
+                <input type="text" class="form-control mb-3" name="nama_guru" placeholder="Nama Guru" required>
+            </div>
+            <div>
+                <label class="form-label">Email</label> 
+                <input type="email" class="form-control mb-3" name="email_guru" placeholder="Email Guru" required>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
