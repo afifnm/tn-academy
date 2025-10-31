@@ -45,4 +45,47 @@ class Mapel_model extends CI_Model {
 		$where = array('id_mapel'=>$id_mapel);
 		$this->db->delete('mapel',$where);
 	}
+
+	public function get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta) {
+		$query = $this->db
+			->select('
+				em.id_enroll_mapel,
+				em.id_mapel,
+				em.id_guru,
+				em.id_komponen,
+				m.nama_mapel,
+				mk.nama_komponen,
+				mk.bobot
+			')
+			->from('enroll_mapel em')
+			->join('mapel m', 'm.id_mapel = em.id_mapel', 'left')
+			->join('mapel_komponen mk', 'mk.id_komponen = em.id_komponen', 'left')
+			->where('em.id_kelas', $id_kelas)
+			->where('em.id_ta', $id_ta)
+			->get();
+
+		$raw = $query->result();
+
+		// Kelompokkan per mapel
+		$grouped = [];
+		foreach ($raw as $row) {
+			if (!isset($grouped[$row->id_mapel])) {
+				$grouped[$row->id_mapel] = [
+					'id_mapel' => $row->id_mapel,
+					'nama_mapel' => $row->nama_mapel,
+					'id_guru' => $row->id_guru,
+					'komponen' => []
+				];
+			}
+			if ($row->id_komponen) {
+				$grouped[$row->id_mapel]['komponen'][] = [
+					'id_komponen' => $row->id_komponen,
+					'nama_komponen' => $row->nama_komponen,
+					'bobot' => $row->bobot
+				];
+			}
+		}
+
+		return array_values($grouped);
+	}
 }

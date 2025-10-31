@@ -16,31 +16,50 @@ class Nilai extends MY_Controller {
         $data['kelas'] = $this->Kelas_model->get_all();
         $data['tahun_ajaran'] = $this->db->get('tahun_ajaran')->result();
 
+        // Ambil parameter dari GET
         $id_kelas = $this->input->get('id_kelas');
         $id_ta = $this->input->get('id_ta');
+        $id_mapel = $this->input->get('id_mapel');
 
-        if($id_kelas && $id_ta) {
-            // Siswa & mapel untuk form input
-            $data['siswa'] = $this->Enroll_model->get_siswa_by_kelas($id_kelas, $id_ta);
-            $data['kelas_mapel'] = $this->Mapel_model->get_mapel_by_kelas($id_kelas);
-            foreach($data['kelas_mapel'] as $mapel) {
-                $mapel->komponen = $this->Nilai_model->get_komponen_by_mapel($mapel->id_mapel);
-            }
+        $data['id_kelas'] = $id_kelas;
+        $data['id_ta'] = $id_ta;
+        $data['id_mapel'] = $id_mapel;
 
-            // Nilai yang sudah ada untuk tabel kanan
-            $data['nilai_terisi'] = $this->Nilai_model->get_nilai_by_kelas_ta($id_kelas, $id_ta);
-
-            $data['id_kelas'] = $id_kelas;
-            $data['id_ta'] = $id_ta;
+        // Jika kelas & TA dipilih, ambil daftar mapel yang relevan
+        if ($id_kelas && $id_ta) {
+            $data['mapel_list'] = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta);
         } else {
-            $data['siswa'] = [];
-            $data['kelas_mapel'] = [];
-            $data['nilai_terisi'] = [];
-            $data['id_kelas'] = null;
-            $data['id_ta'] = null;
+            $data['mapel_list'] = [];
         }
 
-        $this->template->load('template','nilai/index', $data);
+        // Jika semua dipilih, siapkan data untuk form
+        if ($id_kelas && $id_ta && $id_mapel) {
+            $data['siswa'] = $this->Enroll_model->get_siswa_by_kelas($id_kelas, $id_ta);
+            
+            // Cari mapel_terpilih dari mapel_list
+            $mapel_terpilih = null;
+            foreach ($data['mapel_list'] ?? [] as $m) {
+                if ($m['id_mapel'] == $id_mapel) {
+                    // Konversi ke objek agar kompatibel dengan view lama
+                    $mapel_terpilih = (object) $m;
+                    // Tambahkan id_kelas_mapel (diperlukan untuk input name)
+                    $kelas_mapel = $this->db->get_where('kelas_mapel', [
+                        'id_kelas' => $id_kelas,
+                        'id_mapel' => $id_mapel
+                    ])->row();
+                    $mapel_terpilih->id_kelas_mapel = $kelas_mapel ? $kelas_mapel->id_kelas_mapel : null;
+                    break;
+                }
+            }
+            $data['mapel_terpilih'] = $mapel_terpilih;
+            $data['nilai_terisi'] = $this->Nilai_model->get_nilai_by_kelas_ta($id_kelas, $id_ta);
+        } else {
+            $data['siswa'] = [];
+            $data['mapel_terpilih'] = null;
+            $data['nilai_terisi'] = [];
+        }
+
+        $this->template->load('template', 'nilai/index', $data);
     }
 
 
@@ -62,7 +81,14 @@ class Nilai extends MY_Controller {
         }
 
         $this->session->set_flashdata('success', 'Nilai berhasil disimpan!');
-        redirect($_SERVER['HTTP_REFERER']);
+
+        // ✅ Redirect ke URL dengan semua parameter
+        $url = 'nilai?';
+        $url .= 'id_kelas=' . $post['id_kelas'];
+        $url .= '&id_ta=' . $post['id_ta'];
+        $url .= '&id_mapel=' . $post['id_mapel'];
+
+        redirect($url);
     }
 
 }
