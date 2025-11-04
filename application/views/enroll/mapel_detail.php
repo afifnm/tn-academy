@@ -39,28 +39,44 @@
                 </select>
             </div>
 
-            <!-- Komponen (Multi-select) -->
+           <!-- Komponen  -->
             <div class="form-group mb-6">
                 <label class="form-label">Komponen Penilaian</label>
                 <div class="mt-2 space-y-2 max-h-40 overflow-y-auto p-2 border rounded">
-                    <?php if (!empty($all_komponen)): ?>
-                        <?php foreach ($all_komponen as $k): ?>
+                    <?php
+                    $existing_komponen = $this->EnrollMapel_model->get_nama_komponen_by_enroll($enroll['id_enroll_mapel']);
+                    ?>
+                    <?php if (!empty($existing_komponen)): ?>
+                        <?php foreach ($existing_komponen as $k): ?>
                             <div class="flex items-center">
                                 <input type="checkbox" 
-                                       name="komponen_ids[]" 
-                                       value="<?= $k['id_komponen'] ?>"
-                                       id="komponen_<?= $k['id_komponen'] ?>"
-                                       <?= in_array($k['id_komponen'], $selected_komponen) ? 'checked' : '' ?>>
+                                    name="komponen_baru[]" 
+                                    value="<?= htmlspecialchars($k['nama_komponen']) ?>"
+                                    id="komponen_<?= $k['id_komponen'] ?>"
+                                    checked>
                                 <label for="komponen_<?= $k['id_komponen'] ?>" class="ml-2">
-                                    <?= $k['nama_komponen'] ?> 
-                                    <span class="text-sm text-slate-500">(Bobot: <?= $k['bobot'] ?>%)</span>
+                                    <?= htmlspecialchars($k['nama_komponen']) ?>
                                 </label>
                             </div>
                         <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="text-slate-500">Tidak ada komponen untuk mapel ini.</p>
                     <?php endif; ?>
+
+                    <!-- Input tambahan -->
+                    <div class="mt-3">
+                        <label class="text-sm">Tambah Komponen Baru:</label>
+                        <input type="text" 
+                            name="komponen_baru[]" 
+                            placeholder="Misal: UTS, UAS, PAS, Praktik, dll" 
+                            class="form-control w-full mt-1">
+                    </div>
+                    <div class="mt-1">
+                        <input type="text" 
+                            name="komponen_baru[]" 
+                            placeholder="Tambahkan lagi jika perlu" 
+                            class="form-control w-full mt-1">
+                    </div>
                 </div>
+                <small class="text-slate-500">Centang komponen lama atau tambahkan komponen baru di bawah.</small>
             </div>
 
             <div class="flex justify-between">

@@ -7,7 +7,11 @@ class Kelas_model extends CI_Model {
 		$this->db->order_by('nama_kelas','ASC');
 		return $this->db->get()->result_array();
 	}
-    
+		public function get_nama($id) {
+		$row = $this->db->get_where('kelas', ['id_kelas' => $id])->row();
+		return $row ? $row->nama_kelas : '—';
+	}
+		
     public function add()
 	{
 		$this->db->from('kelas')->where('nama_kelas',$this->input->post('nama_kelas'));
