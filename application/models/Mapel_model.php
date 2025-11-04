@@ -89,4 +89,48 @@ class Mapel_model extends CI_Model {
 
 		return array_values($grouped);
 	}
+
+	public function get_mapel_enrolled_by_kelas_ta_guru($id_kelas, $id_ta, $id_guru) {
+		$query = $this->db
+			->select('
+				em.id_enroll_mapel,
+				em.id_mapel,
+				em.id_guru,
+				ek.id_komponen,
+				m.nama_mapel,
+				mk.nama_komponen,
+				mk.bobot
+			')
+			->from('enroll_mapel em')
+			->join('mapel m', 'm.id_mapel = em.id_mapel', 'left')
+			->join('enroll_mapel_komponen ek', 'ek.id_enroll_mapel = em.id_enroll_mapel', 'left')
+			->join('mapel_komponen mk', 'mk.id_komponen = ek.id_komponen', 'left')
+			->where('em.id_kelas', $id_kelas)
+			->where('em.id_ta', $id_ta)
+			->where('em.id_guru', $id_guru) 
+			->get();
+
+		$raw = $query->result();
+
+		$grouped = [];
+		foreach ($raw as $row) {
+			if (!isset($grouped[$row->id_mapel])) {
+				$grouped[$row->id_mapel] = [
+					'id_mapel' => $row->id_mapel,
+					'nama_mapel' => $row->nama_mapel,
+					'id_guru' => $row->id_guru,
+					'komponen' => []
+				];
+			}
+			if ($row->id_komponen) {
+				$grouped[$row->id_mapel]['komponen'][] = [
+					'id_komponen' => $row->id_komponen,
+					'nama_komponen' => $row->nama_komponen,
+					'bobot' => $row->bobot
+				];
+			}
+		}
+
+		return array_values($grouped);
+	}
 }

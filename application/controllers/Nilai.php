@@ -16,7 +16,15 @@ class Nilai extends MY_Controller {
         $data['kelas'] = $this->Kelas_model->get_all();
         $data['tahun_ajaran'] = $this->db->get('tahun_ajaran')->result();
 
-        // Ambil parameter dari GET
+        $role = $this->session->userdata('role');
+        $id_guru = $this->session->userdata('id_guru');
+
+        // Jika bukan guru dan bukan admin → redirect
+        if (!$id_guru && $role !== 'admin') {
+            $this->session->set_flashdata('error', 'Anda harus login sebagai guru terlebih dahulu.');
+            redirect('auth');
+        }
+
         $id_kelas = $this->input->get('id_kelas');
         $id_ta = $this->input->get('id_ta');
         $id_mapel = $this->input->get('id_mapel');
@@ -25,15 +33,43 @@ class Nilai extends MY_Controller {
         $data['id_ta'] = $id_ta;
         $data['id_mapel'] = $id_mapel;
 
+        // Jika kelas & TA dipilih
         if ($id_kelas && $id_ta) {
-            $data['mapel_list'] = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta);
+            if ($role === 'admin') {
+                // Admin bisa lihat semua mapel di kelas & TA ini
+                $data['mapel_list'] = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta);
+            } else {
+                // Guru hanya bisa lihat mapel yang dia ajar
+                $data['mapel_list'] = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta_guru($id_kelas, $id_ta, $id_guru);
+            }
         } else {
             $data['mapel_list'] = [];
         }
 
         if ($id_kelas && $id_ta && $id_mapel) {
+            if ($role === 'admin') {
+                // Admin bisa akses semua mapel
+                $is_valid = $this->db->get_where('enroll_mapel', [
+                    'id_kelas' => $id_kelas,
+                    'id_ta' => $id_ta,
+                    'id_mapel' => $id_mapel
+                ])->row();
+            } else {
+                // Guru hanya bisa akses mapel yang dia ajar
+                $is_valid = $this->db->get_where('enroll_mapel', [
+                    'id_kelas' => $id_kelas,
+                    'id_ta' => $id_ta,
+                    'id_mapel' => $id_mapel,
+                    'id_guru' => $id_guru
+                ])->row();
+            }
+
+            if (!$is_valid) {
+                $this->session->set_flashdata('error', 'Anda tidak diizinkan mengajar mapel ini.');
+                redirect('nilai');
+            }
+
             $data['siswa'] = $this->Enroll_model->get_siswa_by_kelas($id_kelas, $id_ta);
-            
 
             $mapel_terpilih = null;
             foreach ($data['mapel_list'] ?? [] as $m) {
@@ -51,12 +87,13 @@ class Nilai extends MY_Controller {
 
                     if ($kelas_mapel) {
                         $mapel_terpilih->id_kelas_mapel = $kelas_mapel->id_kelas_mapel;
-                    }else {
+                    } else {
                         $this->db->insert('kelas_mapel', [
                             'id_kelas' => $id_kelas,
                             'id_mapel' => $id_mapel
                         ]);
-                        $mapel_terpilih->id_kelas_mapel = $this->db->insert_id();}
+                        $mapel_terpilih->id_kelas_mapel = $this->db->insert_id();
+                    }
                     break;
                 }
             }
@@ -74,16 +111,57 @@ class Nilai extends MY_Controller {
 
     public function save() {
         $post = $this->input->post();
+        $id_kelas = $post['id_kelas'];
+        $id_mapel = $post['id_mapel'];
+        $role = $this->session->userdata('role');
+        $id_guru = $this->session->userdata('id_guru');
+
+        if (!$id_guru && $role !== 'admin') {
+            $this->session->set_flashdata('error', 'Akses ditolak.');
+            redirect('nilai');
+        }
+
+        // Jika guru, cek apakah dia mengajar mapel ini
+        if ($role === 'guru') {
+            $is_valid = $this->db->get_where('enroll_mapel', [
+                'id_kelas' => $id_kelas,
+                'id_mapel' => $id_mapel,
+                'id_guru' => $id_guru
+            ])->row();
+
+            if (!$is_valid) {
+                $this->session->set_flashdata('error', 'Anda tidak diizinkan menyimpan nilai untuk mapel ini.');
+                redirect('nilai');
+            }
+        }
 
         foreach($post['nilai'] as $id_enroll => $mapel_nilai) {
             foreach($mapel_nilai as $id_kelas_mapel => $komponen_nilai) {
                 foreach($komponen_nilai as $id_komponen => $skor) {
+                    // Pastikan id_kelas_mapel valid
+                    if ($id_kelas_mapel == 0) {
+                        $kelas_mapel = $this->db->get_where('kelas_mapel', [
+                            'id_kelas' => $id_kelas,
+                            'id_mapel' => $id_mapel
+                        ])->row();
+
+                        if ($kelas_mapel) {
+                            $id_kelas_mapel = $kelas_mapel->id_kelas_mapel;
+                        } else {
+                            $this->db->insert('kelas_mapel', [
+                                'id_kelas' => $id_kelas,
+                                'id_mapel' => $id_mapel
+                            ]);
+                            $id_kelas_mapel = $this->db->insert_id();
+                        }
+                    }
+
                     $this->Nilai_model->save_nilai([
                         'id_enroll' => $id_enroll,
                         'id_kelas_mapel' => $id_kelas_mapel,
                         'id_komponen' => $id_komponen,
                         'skor' => $skor,
-                        'id_guru' => $this->session->userdata('id_guru')
+                        'id_guru' => $id_guru // ← Jika admin, bisa kosongkan atau isi sesuai logika Anda
                     ]);
                 }
             }

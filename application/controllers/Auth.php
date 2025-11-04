@@ -18,19 +18,29 @@ class Auth extends MY_Controller {
             $this->set_flash('Username tidak ditemukan','error');
             redirect('auth');
         } else if ($user->password==$password){
+            // Ambil id_guru jika role = guru
+            $id_guru = null;
+            if ($user->role === 'guru') {
+                // Ambil id_guru dari tabel guru berdasarkan id_user
+                $guru = $this->db->get_where('guru', ['id_user' => $user->id_user])->row();
+                if ($guru) {
+                    $id_guru = $guru->id_guru;
+                }
+            }
+
             $data = array (
-                'id_user'       =>$user->id_user,
-                'username'      =>$user->username,
-                'nama'          =>$user->nama,
-                'role'         =>$user->role,               
+                'id_user'       => $user->id_user,
+                'username'      => $user->username,
+                'nama'          => $user->nama,
+                'role'          => $user->role,
+                'id_guru'       => $id_guru
             );
-            $this -> session->set_userdata($data);
+            $this->session->set_userdata($data);
             redirect('home');
-        }else {
+        } else {
             $this->set_flash('Password Salah','error');
             redirect('auth');
         }
-
     }
 
     public function logout(){
