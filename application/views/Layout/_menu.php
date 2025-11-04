@@ -87,8 +87,7 @@
 
   		<!-- Kelola Nilai -->
   		<li>
-			<?php if($this->session->userdata('role')=='admin'){ ?>
-  			<a href="<?=base_url('nilai')?>"
+			<?php if(in_array($this->session->userdata('role'), ['guru', 'admin'])){ ?>  			<a href="<?=base_url('nilai')?>"
   				class="top-menu <?= (strpos($this->uri->uri_string(), 'nilai') === 0) ? 'top-menu--active' : '' ?>"> <!-- Gunakan top-menu--active -->
   				<div class="top-menu__icon"> <i data-lucide="file-text"></i> </div>
   				<div class="top-menu__title"> Kelola Nilai </div>
