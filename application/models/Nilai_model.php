@@ -47,7 +47,7 @@ class Nilai_model extends CI_Model {
     }
 
     public function get_nilai_by_kelas_ta($id_kelas, $id_ta) {
-        $this->db->select('n.id_nilai, s.nama, m.nama_mapel, mk.nama_komponen, n.skor');
+        $this->db->select('n.id_nilai, s.nama, m.nama_mapel, mk.nama_komponen, n.skor, m.id_mapel'); // ← tambahkan m.id_mapel
         $this->db->from('nilai n');
         $this->db->join('enroll e', 'e.id_enroll = n.id_enroll');
         $this->db->join('siswa s', 's.id_siswa = e.id_siswa');

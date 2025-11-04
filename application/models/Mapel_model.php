@@ -52,14 +52,15 @@ class Mapel_model extends CI_Model {
 				em.id_enroll_mapel,
 				em.id_mapel,
 				em.id_guru,
-				em.id_komponen,
+				ek.id_komponen,  
 				m.nama_mapel,
 				mk.nama_komponen,
 				mk.bobot
 			')
 			->from('enroll_mapel em')
 			->join('mapel m', 'm.id_mapel = em.id_mapel', 'left')
-			->join('mapel_komponen mk', 'mk.id_komponen = em.id_komponen', 'left')
+			->join('enroll_mapel_komponen ek', 'ek.id_enroll_mapel = em.id_enroll_mapel', 'left') 
+			->join('mapel_komponen mk', 'mk.id_komponen = ek.id_komponen', 'left')  
 			->where('em.id_kelas', $id_kelas)
 			->where('em.id_ta', $id_ta)
 			->get();

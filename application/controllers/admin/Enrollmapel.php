@@ -92,14 +92,13 @@ class Enrollmapel extends MY_Controller {
             redirect('admin/enrollmapel');
         }
 
-        // Ambil komponen yang sudah dipilih
+        // Ambil komponen yang sudah dipilih untuk enroll ini
         $selected_komponen = $this->EnrollMapel_model->get_komponen_by_enroll($id_enroll_mapel);
 
         $data = [
             'title' => 'Atur Detail Mapel: ' . $enroll['nama_mapel'],
             'enroll' => $enroll,
             'guru' => $this->db->get('guru')->result_array(),
-            'all_komponen' => $this->db->get_where('mapel_komponen', ['id_mapel' => $enroll['id_mapel']])->result_array(),
             'selected_komponen' => $selected_komponen,
             'filter' => [
                 'id_ta' => $enroll['id_ta'],
@@ -113,20 +112,21 @@ class Enrollmapel extends MY_Controller {
     public function update_detail() {
         $id = $this->input->post('id_enroll_mapel');
         $id_guru = $this->input->post('id_guru') ?: null;
-        $komponen_ids = $this->input->post('komponen_ids');
+        $komponen_baru = $this->input->post('komponen_baru'); // Array dari inputan user
 
         if (!$id) {
             $this->set_flash('ID tidak valid.', 'error');
             redirect($_SERVER['HTTP_REFERER'] ?? 'admin/enrollmapel');
         }
 
+        // Update guru
         $this->EnrollMapel_model->update($id, ['id_guru' => $id_guru]);
 
-        // Simpan relasi komponen
-        $this->EnrollMapel_model->save_komponen($id, $komponen_ids);
+        // Simpan komponen baru ke tabel mapel_komponen (jika belum ada) dan relasikan ke enroll
+        $this->EnrollMapel_model->save_komponen_baru($id, $komponen_baru);
 
-        $this->set_flash( 'Detail mapel berhasil diperbarui.','success');
-        
+        $this->set_flash('Detail mapel berhasil diperbarui.', 'success');
+
         $id_ta = $this->input->post('id_ta');
         $id_kelas = $this->input->post('id_kelas');
         redirect("admin/enrollmapel/filter?id_ta={$id_ta}&id_kelas={$id_kelas}");

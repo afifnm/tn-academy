@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Nilai extends MY_Controller {
 
     public function __construct() {
-        parent::__construct();
+        parent::__construct(); 
         $this->load->model('Nilai_model');
         $this->load->model('Enroll_model');
         $this->load->model('Kelas_model');
@@ -25,29 +25,38 @@ class Nilai extends MY_Controller {
         $data['id_ta'] = $id_ta;
         $data['id_mapel'] = $id_mapel;
 
-        // Jika kelas & TA dipilih, ambil daftar mapel yang relevan
         if ($id_kelas && $id_ta) {
             $data['mapel_list'] = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta);
         } else {
             $data['mapel_list'] = [];
         }
 
-        // Jika semua dipilih, siapkan data untuk form
         if ($id_kelas && $id_ta && $id_mapel) {
             $data['siswa'] = $this->Enroll_model->get_siswa_by_kelas($id_kelas, $id_ta);
             
-            // Cari mapel_terpilih dari mapel_list
+
             $mapel_terpilih = null;
             foreach ($data['mapel_list'] ?? [] as $m) {
                 if ($m['id_mapel'] == $id_mapel) {
-                    // Konversi ke objek agar kompatibel dengan view lama
-                    $mapel_terpilih = (object) $m;
-                    // Tambahkan id_kelas_mapel (diperlukan untuk input name)
+                    $mapel_terpilih = new stdClass();
+                    $mapel_terpilih->id_mapel = $m['id_mapel'];
+                    $mapel_terpilih->nama_mapel = $m['nama_mapel'];
+                    $mapel_terpilih->id_guru = $m['id_guru'];
+                    $mapel_terpilih->komponen = $m['komponen'];
+
                     $kelas_mapel = $this->db->get_where('kelas_mapel', [
                         'id_kelas' => $id_kelas,
                         'id_mapel' => $id_mapel
                     ])->row();
-                    $mapel_terpilih->id_kelas_mapel = $kelas_mapel ? $kelas_mapel->id_kelas_mapel : null;
+
+                    if ($kelas_mapel) {
+                        $mapel_terpilih->id_kelas_mapel = $kelas_mapel->id_kelas_mapel;
+                    }else {
+                        $this->db->insert('kelas_mapel', [
+                            'id_kelas' => $id_kelas,
+                            'id_mapel' => $id_mapel
+                        ]);
+                        $mapel_terpilih->id_kelas_mapel = $this->db->insert_id();}
                     break;
                 }
             }
@@ -82,7 +91,6 @@ class Nilai extends MY_Controller {
 
         $this->session->set_flashdata('success', 'Nilai berhasil disimpan!');
 
-        // ✅ Redirect ke URL dengan semua parameter
         $url = 'nilai?';
         $url .= 'id_kelas=' . $post['id_kelas'];
         $url .= '&id_ta=' . $post['id_ta'];
@@ -90,5 +98,4 @@ class Nilai extends MY_Controller {
 
         redirect($url);
     }
-
 }

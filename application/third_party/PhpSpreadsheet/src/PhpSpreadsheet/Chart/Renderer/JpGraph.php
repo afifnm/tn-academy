@@ -1,3 +1,4 @@
+
 <?php
 
 namespace PhpOffice\PhpSpreadsheet\Chart\Renderer;

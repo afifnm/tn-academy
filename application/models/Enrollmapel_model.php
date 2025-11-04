@@ -97,21 +97,19 @@ class EnrollMapel_model extends CI_Model {
         return true;
     }
 
-    // Ambil semua komponen yang terkait dengan enroll_mapel ini
     public function get_komponen_by_enroll($id_enroll_mapel) {
-        $this->db->select('ek.id_komponen');
+        $this->db->select('mk.id_komponen, mk.nama_komponen');
         $this->db->from('enroll_mapel_komponen ek');
+        $this->db->join('mapel_komponen mk', 'mk.id_komponen = ek.id_komponen');
         $this->db->where('ek.id_enroll_mapel', $id_enroll_mapel);
         $query = $this->db->get();
         return array_column($query->result_array(), 'id_komponen');
     }
 
-    // Simpan relasi banyak ke banyak
+
     public function save_komponen($id_enroll_mapel, $komponen_ids = []) {
-        // Hapus dulu yang lama
         $this->db->delete('enroll_mapel_komponen', ['id_enroll_mapel' => $id_enroll_mapel]);
 
-        // Simpan yang baru
         if (!empty($komponen_ids)) {
             $data = [];
             foreach ($komponen_ids as $id) {
@@ -131,6 +129,60 @@ class EnrollMapel_model extends CI_Model {
 
     public function delete($id) {
         $this->db->delete('enroll_mapel', ['id_enroll_mapel' => $id]);
+    }
+
+    
+    public function get_nama_komponen_by_enroll($id_enroll_mapel) {
+        $this->db->select('mk.id_komponen, mk.nama_komponen');
+        $this->db->from('enroll_mapel_komponen ek');
+        $this->db->join('mapel_komponen mk', 'mk.id_komponen = ek.id_komponen');
+        $this->db->where('ek.id_enroll_mapel', $id_enroll_mapel);
+        return $this->db->get()->result_array();
+    }
+
+    // Simpan komponen baru (dari input user) ke mapel_komponen jika belum ada, lalu relasikan
+    public function save_komponen_baru($id_enroll_mapel, $komponen_baru = []) {
+        // Hapus dulu semua relasi untuk enroll ini
+        $this->db->delete('enroll_mapel_komponen', ['id_enroll_mapel' => $id_enroll_mapel]);
+
+        if (!empty($komponen_baru)) {
+            $data_rels = [];
+            foreach ($komponen_baru as $nama_komponen) {
+                $nama_komponen = trim($nama_komponen);
+                if (empty($nama_komponen)) continue;
+
+                // Cek apakah komponen sudah ada di mapel_komponen
+                $komponen = $this->db->get_where('mapel_komponen', [
+                    'nama_komponen' => $nama_komponen
+                ])->row();
+
+                if ($komponen) {
+                    $id_komponen = $komponen->id_komponen;
+                } else {
+                    // Insert komponen baru ke mapel_komponen
+                    $this->db->insert('mapel_komponen', [
+                        'nama_komponen' => $nama_komponen,
+                        'id_mapel' => $this->get_mapel_id_by_enroll($id_enroll_mapel) // Ambil id_mapel dari enroll
+                    ]);
+                    $id_komponen = $this->db->insert_id();
+                }
+
+                $data_rels[] = [
+                    'id_enroll_mapel' => $id_enroll_mapel,
+                    'id_komponen' => $id_komponen
+                ];
+            }
+
+            if (!empty($data_rels)) {
+                $this->db->insert_batch('enroll_mapel_komponen', $data_rels);
+            }
+        }
+    }
+
+    // Helper: Ambil id_mapel dari enroll_mapel
+    private function get_mapel_id_by_enroll($id_enroll_mapel) {
+        $row = $this->db->get_where('enroll_mapel', ['id_enroll_mapel' => $id_enroll_mapel])->row();
+        return $row ? $row->id_mapel : null;
     }
    
 }
