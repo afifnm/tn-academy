@@ -98,4 +98,18 @@ class Nilai extends MY_Controller {
 
         redirect($url);
     }
+
+    public function daftar($id_kelas, $id_ta, $id_mapel) {
+        $data['title'] = 'Daftar Nilai';
+        $data['kelas'] = $this->Kelas_model->get_all();
+        $data['tahun_ajaran'] = $this->db->get('tahun_ajaran')->result();
+
+        $data['id_kelas'] = $id_kelas;
+        $data['id_ta'] = $id_ta;
+        $data['id_mapel'] = $id_mapel;
+
+        $data['nilai_terisi'] = $this->Nilai_model->get_nilai_by_kelas_ta($id_kelas, $id_ta);
+
+        $this->template->load('template', 'nilai/daftar', $data);
+    }
 }
