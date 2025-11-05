@@ -14,12 +14,11 @@ class Nilai extends MY_Controller {
     public function index() {
         $data['title'] = 'Input Nilai Siswa';
         $data['kelas'] = $this->Kelas_model->get_all();
-        $data['tahun_ajaran'] = $this->db->get('tahun_ajaran')->result();
+        $data['tahun_ajaran'] = $this->db->order_by('tahun', 'DESC')->get('tahun_ajaran')->result();
 
         $role = $this->session->userdata('role');
         $id_guru = $this->session->userdata('id_guru');
 
-        // Jika bukan guru dan bukan admin → redirect
         if (!$id_guru && $role !== 'admin') {
             $this->session->set_flashdata('error', 'Anda harus login sebagai guru terlebih dahulu.');
             redirect('auth');
@@ -33,13 +32,10 @@ class Nilai extends MY_Controller {
         $data['id_ta'] = $id_ta;
         $data['id_mapel'] = $id_mapel;
 
-        // Jika kelas & TA dipilih
         if ($id_kelas && $id_ta) {
             if ($role === 'admin') {
-                // Admin bisa lihat semua mapel di kelas & TA ini
                 $data['mapel_list'] = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta);
             } else {
-                // Guru hanya bisa lihat mapel yang dia ajar
                 $data['mapel_list'] = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta_guru($id_kelas, $id_ta, $id_guru);
             }
         } else {
@@ -48,14 +44,12 @@ class Nilai extends MY_Controller {
 
         if ($id_kelas && $id_ta && $id_mapel) {
             if ($role === 'admin') {
-                // Admin bisa akses semua mapel
                 $is_valid = $this->db->get_where('enroll_mapel', [
                     'id_kelas' => $id_kelas,
                     'id_ta' => $id_ta,
                     'id_mapel' => $id_mapel
                 ])->row();
             } else {
-                // Guru hanya bisa akses mapel yang dia ajar
                 $is_valid = $this->db->get_where('enroll_mapel', [
                     'id_kelas' => $id_kelas,
                     'id_ta' => $id_ta,
@@ -97,6 +91,12 @@ class Nilai extends MY_Controller {
                     break;
                 }
             }
+
+            if (!$mapel_terpilih || empty($mapel_terpilih->komponen)) {
+                $this->session->set_flashdata('error', 'Tidak ada komponen nilai untuk mapel ini.');
+                redirect('nilai?id_kelas=' . $id_kelas . '&id_ta=' . $id_ta);
+            }
+
             $data['mapel_terpilih'] = $mapel_terpilih;
             $data['nilai_terisi'] = $this->Nilai_model->get_nilai_by_kelas_ta($id_kelas, $id_ta);
         } else {
@@ -121,7 +121,6 @@ class Nilai extends MY_Controller {
             redirect('nilai');
         }
 
-        // Jika guru, cek apakah dia mengajar mapel ini
         if ($role === 'guru') {
             $is_valid = $this->db->get_where('enroll_mapel', [
                 'id_kelas' => $id_kelas,
@@ -161,7 +160,7 @@ class Nilai extends MY_Controller {
                         'id_kelas_mapel' => $id_kelas_mapel,
                         'id_komponen' => $id_komponen,
                         'skor' => $skor,
-                        'id_guru' => $id_guru // ← Jika admin, bisa kosongkan atau isi sesuai logika Anda
+                        'id_guru' => $id_guru 
                     ]);
                 }
             }
@@ -180,13 +179,27 @@ class Nilai extends MY_Controller {
     public function daftar($id_kelas, $id_ta, $id_mapel) {
         $data['title'] = 'Daftar Nilai';
         $data['kelas'] = $this->Kelas_model->get_all();
-        $data['tahun_ajaran'] = $this->db->get('tahun_ajaran')->result();
+        $data['tahun_ajaran'] = $this->db->order_by('tahun', 'DESC')->get('tahun_ajaran')->result();
 
         $data['id_kelas'] = $id_kelas;
         $data['id_ta'] = $id_ta;
         $data['id_mapel'] = $id_mapel;
 
-        $data['nilai_terisi'] = $this->Nilai_model->get_nilai_by_kelas_ta($id_kelas, $id_ta);
+        $mapel_list = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta);
+        $mapel_terpilih = null;
+        foreach ($mapel_list as $m) {
+            if ($m['id_mapel'] == $id_mapel) {
+                $mapel_terpilih = new stdClass();
+                $mapel_terpilih->id_mapel = $m['id_mapel'];
+                $mapel_terpilih->nama_mapel = $m['nama_mapel'];
+                $mapel_terpilih->komponen = $m['komponen'];
+                break;
+            }
+        }
+
+        $data['mapel_terpilih'] = $mapel_terpilih;
+
+         $data['nilai_terisi'] = $this->Nilai_model->get_nilai_by_kelas_ta_mapel($id_kelas, $id_ta, $id_mapel);
 
         $this->template->load('template', 'nilai/daftar', $data);
     }
