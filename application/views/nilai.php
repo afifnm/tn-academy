@@ -7,11 +7,9 @@
 
     <!-- DUO KOLOM: KIRI & KANAN -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- KOLOM KIRI: Filter Kelas, TA, Mapel -->
         <div class="intro-y box p-5 w-full overflow-auto lg:col-span-1 bg-white rounded-lg shadow-sm">
             <h3 class="font-medium text-lg mb-4">Filter & Pilih</h3>
 
-            <!-- LANGKAH 1: Pilih Kelas & Tahun Ajaran -->
             <div class="mb-6">
                 <h4 class="font-medium text-md mb-3 flex items-center text-blue-800">
                     <span class="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-2">1</span>
@@ -46,7 +44,6 @@
                 </form>
             </div>
 
-            <!-- LANGKAH 2: Pilih Mapel (muncul jika kelas & TA dipilih) -->
             <?php if (isset($id_kelas) && isset($id_ta)): ?>
                 <div class="mb-6 border-t pt-6">
                     <h4 class="font-medium text-md mb-3 flex items-center text-green-800">
@@ -136,7 +133,6 @@
 
 <script>
 $(document).ready(function(){
-    // Jika ada tabel daftar nilai, inisialisasi DataTable
     if ($('#nilai_terisi').length) {
         $('#nilai_terisi').DataTable({ "pageLength": 50 });
     }

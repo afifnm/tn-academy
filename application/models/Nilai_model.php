@@ -47,7 +47,7 @@ class Nilai_model extends CI_Model {
     }
 
     public function get_nilai_by_kelas_ta($id_kelas, $id_ta) {
-        $this->db->select('n.id_nilai, s.nama, m.nama_mapel, mk.nama_komponen, n.skor, m.id_mapel'); // ← tambahkan m.id_mapel
+        $this->db->select('n.id_nilai, n.id_enroll, s.nama, m.id_mapel, m.nama_mapel, mk.nama_komponen, n.skor, mk.id_komponen'); 
         $this->db->from('nilai n');
         $this->db->join('enroll e', 'e.id_enroll = n.id_enroll');
         $this->db->join('siswa s', 's.id_siswa = e.id_siswa');
@@ -97,5 +97,20 @@ class Nilai_model extends CI_Model {
         ])->row();
 
         return $row ? $row->skor : '';
+    }
+
+    public function get_nilai_by_kelas_ta_mapel($id_kelas, $id_ta, $id_mapel) {
+        $this->db->select('n.id_nilai, n.id_enroll, s.nama, m.id_mapel, m.nama_mapel, mk.nama_komponen, n.skor, mk.id_komponen');
+        $this->db->from('nilai n');
+        $this->db->join('enroll e', 'e.id_enroll = n.id_enroll');
+        $this->db->join('siswa s', 's.id_siswa = e.id_siswa');
+        $this->db->join('kelas_mapel km', 'km.id_kelas_mapel = n.id_kelas_mapel');
+        $this->db->join('mapel m', 'm.id_mapel = km.id_mapel');
+        $this->db->join('mapel_komponen mk', 'mk.id_komponen = n.id_komponen');
+        $this->db->where('e.id_kelas', $id_kelas);
+        $this->db->where('e.id_ta', $id_ta);
+        $this->db->where('m.id_mapel', $id_mapel);
+        $this->db->order_by('s.nama','ASC');
+        return $this->db->get()->result();
     }
 }
