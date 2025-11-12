@@ -193,6 +193,22 @@ class Nilai extends MY_Controller {
                 $mapel_terpilih->id_mapel = $m['id_mapel'];
                 $mapel_terpilih->nama_mapel = $m['nama_mapel'];
                 $mapel_terpilih->komponen = $m['komponen'];
+                
+                $kelas_mapel = $this->db->get_where('kelas_mapel', [
+                    'id_kelas' => $id_kelas,
+                    'id_mapel' => $id_mapel
+                ])->row();
+
+                if ($kelas_mapel) {
+                    $mapel_terpilih->id_kelas_mapel = $kelas_mapel->id_kelas_mapel;
+                } else {
+                    $this->db->insert('kelas_mapel', [
+                        'id_kelas' => $id_kelas,
+                        'id_mapel' => $id_mapel
+                    ]);
+                    $mapel_terpilih->id_kelas_mapel = $this->db->insert_id();
+                }
+
                 break;
             }
         }
@@ -203,4 +219,45 @@ class Nilai extends MY_Controller {
 
         $this->template->load('template', 'nilai/daftar', $data);
     }
+
+    public function update(){
+        $post = $this->input->post();
+        $id_nilai = $post['id_nilai'];
+        $skor = $post['skor'];
+        $id_guru = $this->session->userdata('id_guru');
+
+        if (!$id_guru && $this->session->userdata('role') !== 'admin') {
+            $this->set_flash('Akses ditolak.', 'error');
+            redirect('nilai');
+            
+        }
+        $result = $this->Nilai_model->update_nilai($id_nilai, $skor, $id_guru);
+    }
+    public function update_multiple() {
+        $id_enroll = $this->input->post('id_enroll');
+        $id_kelas_mapel = $this->input->post('id_kelas_mapel');
+        $nilai = $this->input->post('nilai');
+        $id_guru = $this->session->userdata('id_guru');
+
+        if (!$id_guru && $this->session->userdata('role') !== 'admin') {
+            $this->session->set_flashdata('error', 'Akses ditolak');
+            redirect('nilai');
+        }
+
+        $result = $this->Nilai_model->update_multiple_nilai($id_enroll, $id_kelas_mapel, $nilai, $id_guru);
+
+        if ($result['success']) {
+            $this->session->set_flashdata('success', 'Nilai berhasil diperbarui');
+        } else {
+            $this->session->set_flashdata('error', $result['error']);
+        }
+        
+        // Redirect ke halaman sebelumnya (daftar nilai)
+        $kelas_mapel = $this->db->get_where('kelas_mapel', ['id_kelas_mapel' => $id_kelas_mapel])->row();
+        $enroll = $this->db->get_where('enroll', ['id_enroll' => $id_enroll])->row();
+
+        redirect('nilai/daftar/'.$enroll->id_kelas.'/'.$enroll->id_ta.'/'.$kelas_mapel->id_mapel);
+    }
+
 }
+

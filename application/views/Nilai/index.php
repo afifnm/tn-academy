@@ -5,7 +5,6 @@
         <div class="alert alert-danger mb-4"><?= $this->session->flashdata('error') ?></div>
     <?php endif; ?>
 
-    <!-- Filter Kelas & Tahun Ajaran -->
     <form method="GET" class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
         <div class="flex w-full sm:w-auto">
             <div class="w-52 relative text-slate-500">
@@ -32,7 +31,6 @@
         </div>
     </form>
 
-    <!-- Filter Mapel (muncul jika kelas & TA dipilih) -->
     <?php if (isset($id_kelas) && isset($id_ta)): ?>
         <form method="GET" class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
             <input type="hidden" name="id_kelas" value="<?= $id_kelas ?>">
@@ -57,7 +55,6 @@
         </form>
     <?php endif; ?>
 
-    <!-- Input Nilai (muncul jika semua filter dipilih) -->
     <?php if (isset($id_kelas) && isset($id_ta) && isset($id_mapel)): ?>
         <div class="intro-y box p-5 w-full overflow-auto bg-white rounded-lg shadow-sm">
             <h3 class="font-medium text-lg mb-4">Input Nilai: <?= htmlspecialchars($mapel_terpilih->nama_mapel ?? '—') ?></h3>
