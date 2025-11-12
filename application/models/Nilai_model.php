@@ -113,4 +113,40 @@ class Nilai_model extends CI_Model {
         $this->db->order_by('s.nama','ASC');
         return $this->db->get()->result();
     }
+
+     public function update_multiple_nilai($id_enroll, $id_kelas_mapel, $nilai, $id_guru) {
+        // Ambil informasi untuk cek hak akses
+        $kelas_mapel = $this->db->get_where('kelas_mapel', ['id_kelas_mapel' => $id_kelas_mapel])->row();
+        $enroll = $this->db->get_where('enroll', ['id_enroll' => $id_enroll])->row();
+
+        if (!$kelas_mapel || !$enroll) {
+            return ['success' => false, 'error' => 'Data tidak valid'];
+        }
+
+        // Jika guru, cek apakah dia yang mengajar mapel ini
+        if ($id_guru) {
+            $enroll_mapel = $this->db->get_where('enroll_mapel', [
+                'id_kelas' => $enroll->id_kelas,
+                'id_mapel' => $kelas_mapel->id_mapel,
+                'id_guru' => $id_guru
+            ])->row();
+
+            if (!$enroll_mapel) {
+                return ['success' => false, 'error' => 'Anda tidak diizinkan mengedit nilai ini'];
+            }
+        }
+
+        // Update semua nilai komponen
+        foreach ($nilai as $id_komponen => $skor) {
+            $this->save_nilai([
+                'id_enroll' => $id_enroll,
+                'id_kelas_mapel' => $id_kelas_mapel,
+                'id_komponen' => $id_komponen,
+                'skor' => $skor,
+                'id_guru' => $id_guru
+            ]);
+        }
+
+        return ['success' => true];
+    }
 }

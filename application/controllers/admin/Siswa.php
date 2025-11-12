@@ -108,8 +108,8 @@ class Siswa extends MY_Controller {
             $semester_nomor = ($tahun_awal - $tahun_masuk) * 2 + 
                             ($row['jenis_semester'] == 'Ganjil' ? 1 : 2);
 
-            // Batasi hanya semester 1-5
-            if ($semester_nomor < 1 || $semester_nomor > 5) continue;
+            
+            if ($semester_nomor < 1 || $semester_nomor > 6) continue;
 
             $mapel = $row['nama_mapel'];
             
@@ -139,7 +139,7 @@ class Siswa extends MY_Controller {
         }
 
         $final = [];
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 6; $i++) {
             $final[$i] = $semesterData[$i] ?? [
                 'semester' => $i,
                 'tahun' => $this->format_tahun_semester($tahun_masuk, $i),
