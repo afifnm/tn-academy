@@ -243,17 +243,40 @@
                             <div class="w-60 mx-auto xl:mr-0 xl:ml-6">
                                 <label class="mb-3">Foto Siswa</label>
                                 <div class="border-2 border-dashed shadow-sm border-slate-200/60 dark:border-darkmode-400 rounded-md p-5 mt-3">
+
+<?php 
+    // Daftar ekstensi yang diperbolehkan
+    $allowedExt = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
+
+    $fotoFile = null;
+
+    foreach ($allowedExt as $ext) {
+        $checkFile = $siswa['nis'] . '.' . $ext;
+        $checkPath = FCPATH . 'assets/upload/foto_siswa/' . $checkFile;
+
+        if (file_exists($checkPath)) {
+            $fotoFile = $checkFile;
+            break; // hentikan jika sudah ketemu
+        }
+    }
+
+    // Jika ditemukan, set URL foto
+    if ($fotoFile) {
+        $fotoURL = base_url('assets/upload/foto_siswa/' . $fotoFile);
+    } else {
+        // default jika tidak ada file sama sekali
+        $fotoURL = base_url('assets/dist/images/profile-15.jpg');
+    }
+?>
+
+
                                     <div class="h-40 relative image-fit cursor-pointer zoom-in mx-auto">
-                                        <img id="previewFoto" class="rounded-md object-cover w-full h-full"
+                                        <img id="previewFoto" 
+                                            class="rounded-md object-cover w-full h-full"
                                             alt="Preview Foto Siswa"
-                                            src="<?= !empty($siswa['foto']) ? base_url('assets/upload/foto_siswa/'.$siswa['foto']) : base_url('assets/dist/images/profile-15.jpg') ?>">
-                                        <?php if (!empty($siswa['foto'])): ?>
-                                        <div id="removeFoto" title="Hapus foto ini?" 
-                                            class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2 cursor-pointer">
-                                            <i data-lucide="x" class="w-4 h-4"></i>
-                                        </div>
-                                        <?php endif; ?>
+                                            src="<?= $fotoURL ?>">
                                     </div>
+
                                     <div class="mx-auto cursor-pointer relative mt-5">
                                         <button type="button" class="btn btn-primary w-full" onclick="document.getElementById('fotoInput').click()">Ganti Foto</button>
                                         <input type="file" id="fotoInput" accept="image/*" name="foto"

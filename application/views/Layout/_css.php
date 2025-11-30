@@ -11,3 +11,4 @@
  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
  <!-- END: CSS Assets-->
+<script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js"></script>

@@ -99,12 +99,12 @@
                   ?>
                     <tr class="intro-x hover:bg-slate-50 dark:hover:bg-darkmode-600/50">
                       <td class="text-center"><?= $no++ ?></td>
-                      <td><div class="font-medium whitespace-nowrap"><?= esc($mapel['nama']) ?></div></td>
+                      <td><div class="font-medium whitespace-nowrap"><?= ($mapel['nama']) ?></div></td>
                       <td>
                         <div class="flex flex-wrap gap-2 mt-1">
                           <?php foreach ($mapel['komponen'] as $komp): ?>
                             <span class="flex items-center bg-slate-100 dark:bg-darkmode-400/30 text-slate-700 dark:text-slate-300 text-xs px-2 py-1 rounded">
-                              <span><?= esc($komp['nama']) ?></span>
+                              <span><?= ($komp['nama']) ?></span>
                               <span class="font-medium ml-1"><?= number_format($komp['nilai'], 1) ?></span>
                             </span>
                           <?php endforeach; ?>

@@ -4,8 +4,8 @@
 <div class="p-6 bg-gray-100 min-h-screen">
   <!-- Header -->
   <div class="mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">📊 Dashboard Raport Akademik</h1>
-    <p class="text-gray-600">Selamat datang di sistem raport akademik TN Malang</p>
+    <h1 class="text-3xl font-bold text-gray-800">📊 Dashboard E-Tarnus Malang</h1>
+    <p class="text-gray-600">Selamat datang di E-Tarnus Malang</p>
   </div>
 
   <!-- Pencarian Siswa -->

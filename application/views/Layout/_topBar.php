@@ -4,7 +4,7 @@
   		<!-- BEGIN: Logo -->
   		<a href="" class="-intro-x hidden md:flex">
   			<img alt="Midone - HTML Admin Template" class="w-6" src="<?= base_url('assets/') ?>dist/images/logo.svg">
-  			<span class="text-white text-lg ml-3"> TN ACADEMY </span>
+  			<span class="text-white text-lg ml-3"> E-Tarnus Malang </span>
   		</a>
   		<!-- END: Logo -->
   		<!-- BEGIN: Breadcrumb -->
