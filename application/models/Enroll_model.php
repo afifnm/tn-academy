@@ -74,7 +74,7 @@ class Enroll_model extends CI_Model {
     {
         $this->db->select('enroll.id_enroll, enroll.id_siswa, enroll.id_kelas, enroll.id_ta, 
                         DATE(enroll.tanggal_enroll) AS tanggal_enroll,
-                        siswa.nisn, siswa.nama, 
+                        siswa.nis, siswa.nama, 
                         kelas.nama_kelas, 
                         tahun_ajaran.tahun, tahun_ajaran.semester');
         $this->db->from('enroll');

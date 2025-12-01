@@ -4,7 +4,7 @@
     <?php if($this->session->flashdata('error')): ?>
         <div class="alert alert-danger mb-4"><?= $this->session->flashdata('error') ?></div>
     <?php endif; ?>
-
+    <?php if($this->session->userdata('role')=='admin'): ?>
     <form method="GET" class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
         <div class="flex w-full sm:w-auto">
             <div class="w-52 relative text-slate-500">
@@ -30,7 +30,35 @@
             <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan Mapel</button>
         </div>
     </form>
-
+    <?php endif; ?>
+    <?php if($this->session->userdata('role')=='guru'): ?>
+    <form method="GET" class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5" action="<?= base_url('nilai/guru') ?>">
+        <div class="flex w-full sm:w-auto">
+            <div class="w-52 relative text-slate-500">
+                <select name="id_kelas" class="form-select box w-52" required>
+                    <option value="">-- Pilih Kelas --</option>
+                    <?php foreach($kelas as $k): ?>
+                        <option value="<?= $k['id_kelas'] ?>" <?= isset($id_kelas) && $id_kelas==$k['id_kelas'] ? 'selected':'' ?>>
+                            <?= htmlspecialchars($k['nama_kelas']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="w-52 relative text-slate-500 ml-2">
+                <select name="id_ta" class="form-select box w-52" required>
+                    <option value="">-- Pilih Tahun Ajaran --</option>
+                    <?php foreach($tahun_ajaran as $ta): ?>
+                        <option value="<?= $ta->id_ta ?>" <?= isset($id_ta) && $id_ta==$ta->id_ta ? 'selected':'' ?>>
+                            <?= htmlspecialchars($ta->tahun . ' - ' . $ta->semester) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan Nilai</button>
+        </div>
+    </form>
+    <?php endif; ?>
+    <?php if($this->session->userdata('role')=='admin'): ?>
     <?php if (isset($id_kelas) && isset($id_ta)): ?>
         <form method="GET" class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
             <input type="hidden" name="id_kelas" value="<?= $id_kelas ?>">
@@ -53,6 +81,7 @@
                 <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan Input Nilai</button>
             </div>
         </form>
+    <?php endif; ?>
     <?php endif; ?>
 
     <?php if (isset($id_kelas) && isset($id_ta) && isset($id_mapel)): ?>

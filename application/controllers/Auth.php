@@ -15,25 +15,30 @@ class Auth extends MY_Controller {
         $user = $this->db->get()->row();
 
         if ($user == NULL){
-            $this->set_flash('Username tidak ditemukan','error');
-            redirect('auth');
-        } else if ($user->password==$password){
-            // Ambil id_guru jika role = guru
-            $id_guru = null;
-            if ($user->role === 'guru') {
-                // Ambil id_guru dari tabel guru berdasarkan id_user
-                $guru = $this->db->get_where('guru', ['id_user' => $user->id_user])->row();
-                if ($guru) {
-                    $id_guru = $guru->id_guru;
-                }
+            $this->db->from('guru')->where('nip',$username);
+            $guru = $this->db->get()->row();
+            if($guru==NULL){
+                $this->set_flash('Username tidak ditemukan','error');
+                redirect('auth');
+            } else if ($guru->password==$this->input->post('password')){
+                $data = array (
+                    'id_user'       => $guru->id_guru,
+                    'username'      => $guru->nip,
+                    'nama'          => $guru->nama_guru,
+                    'role'          => 'guru'
+                );
+                $this->session->set_userdata($data);
+                redirect('home');
+            } else {
+                $this->set_flash('Password Salah','error');
+                redirect('auth');
             }
-
+        } else if ($user->password==$password){
             $data = array (
                 'id_user'       => $user->id_user,
                 'username'      => $user->username,
                 'nama'          => $user->nama,
-                'role'          => $user->role,
-                'id_guru'       => $id_guru
+                'role'          => $user->role
             );
             $this->session->set_userdata($data);
             redirect('home');

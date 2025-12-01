@@ -58,15 +58,25 @@ class Enrollmapel extends MY_Controller {
         $success_count = 0;
         foreach ($mapel_ids as $id_mapel) {
             $data = [
-                'id_mapel' => $id_mapel,
-                'id_kelas' => $id_kelas,
-                'id_ta'    => $id_ta
+            'id_mapel' => $id_mapel,
+            'id_kelas' => $id_kelas,
+            'id_ta'    => $id_ta
             ];
 
-            if ($this->EnrollMapel_model->add($data)) {
-                $success_count++;
+            // Insert enroll mapel
+            $inserted = $this->EnrollMapel_model->add($data);
+            if ($inserted) {
+            $success_count++;
+
+            // Ambil ID enroll yang baru dibuat (model bisa mengembalikan ID atau true)
+            $id_enroll = (is_numeric($inserted) && $inserted > 0) ? $inserted : $this->db->insert_id();
+
+            if ($id_enroll) {
+                // Tambahkan komponen default ASTS dan ASAS untuk enroll yang baru dibuat
+                $this->EnrollMapel_model->save_komponen_baru($id_enroll, ['ASTS', 'ASAS']);
             }
-        }  
+            }
+        }
         if ($success_count > 0) {
             $this->set_flash( "$success_count mapel berhasil di-enroll.", 'success');
         } else {
@@ -91,8 +101,8 @@ class Enrollmapel extends MY_Controller {
             $this->set_flash('Data tidak ditemukan.', 'error');
             redirect('admin/enrollmapel');
         }
-
-        // Ambil komponen yang sudah dipilih untuk enroll ini
+  
+        // Ambil komponen yang sudah dipilih untuk enroll inis
         $selected_komponen = $this->EnrollMapel_model->get_komponen_by_enroll($id_enroll_mapel);
 
         $data = [
@@ -119,7 +129,7 @@ class Enrollmapel extends MY_Controller {
             redirect($_SERVER['HTTP_REFERER'] ?? 'admin/enrollmapel');
         }
 
-        // Update guru
+        // Update guru pengajar
         $this->EnrollMapel_model->update($id, ['id_guru' => $id_guru]);
 
         // Simpan komponen baru ke tabel mapel_komponen (jika belum ada) dan relasikan ke enroll

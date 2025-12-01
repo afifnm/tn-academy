@@ -1,11 +1,34 @@
+<?php 
+    // Daftar ekstensi yang diperbolehkan
+    $allowedExt = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
 
+    $fotoFile = null;
+
+    foreach ($allowedExt as $ext) {
+        $checkFile = $siswa['nis'] . '.' . $ext;
+        $checkPath = FCPATH . 'assets/upload/foto_siswa/' . $checkFile;
+
+        if (file_exists($checkPath)) {
+            $fotoFile = $checkFile;
+            break; // hentikan jika sudah ketemu
+        }
+    }
+
+    // Jika ditemukan, set URL foto
+    if ($fotoFile) {
+        $fotoURL = base_url('assets/upload/foto_siswa/' . $fotoFile);
+    } else {
+        // default jika tidak ada file sama sekali
+        $fotoURL = base_url('assets/dist/images/profile-15.jpg');
+    }
+?>
 <div class="grid grid-cols-12 gap-6">
 	<!-- BEGIN: Profile Menu -->
 	<div class="col-span-12 lg:col-span-4 2xl:col-span-3 flex lg:block flex-col-reverse">
 		<div class="intro-y box mt-5">
 			<div class="relative flex items-center p-5">
 				<div class="w-12 h-12 image-fit">
-					<img alt="Midone - HTML Admin Template" class="rounded-full" src="<?= !empty($siswa['foto']) ? base_url('assets/upload/foto_siswa/'.$siswa['foto']) : base_url('assets/dist/images/profile-15.jpg') ?>"">
+					<img class="rounded-full" src="<?= $fotoURL ?>">
 				</div>
 				<div class="ml-4 mr-auto">
 					<div class="font-medium text-base"><?= $siswa['nama'] ?></div>
@@ -91,12 +114,12 @@
                                         <div class="mt-3">
                                             <label class="form-label">Agama</label>
                                             <select class="form-select w-full" name="agama">
-                                                <option value="islam" <?= $siswa['agama']=='islam'?'selected':'' ?>>Islam</option>
-                                                <option value="kristen" <?= $siswa['agama']=='kristen'?'selected':'' ?>>Kristen</option>
-                                                <option value="katolik" <?= $siswa['agama']=='katolik'?'selected':'' ?>>Katolik</option>
-                                                <option value="hindu" <?= $siswa['agama']=='hindu'?'selected':'' ?>>Hindu</option>
-                                                <option value="budha" <?= $siswa['agama']=='budha'?'selected':'' ?>>Budha</option>
-                                                <option value="konghucu" <?= $siswa['agama']=='konghucu'?'selected':'' ?>>Konghucu</option>
+                                                <option value="ISLAM" <?= $siswa['agama']=='ISLAM'?'selected':'' ?>>ISLAM</option>
+                                                <option value="PROTESTAN" <?= $siswa['agama']=='PROTESTAN'?'selected':'' ?>>PROTESTAN</option>
+                                                <option value="KATOLIK" <?= $siswa['agama']=='KATOLIK'?'selected':'' ?>>KATOLIK</option>
+                                                <option value="HINDU" <?= $siswa['agama']=='HINDU'?'selected':'' ?>>HINDU</option>
+                                                <option value="BUDHA" <?= $siswa['agama']=='BUDHA'?'selected':'' ?>>BUDHA</option>
+                                                <option value="KONGHUCU" <?= $siswa['agama']=='KONGHUCU'?'selected':'' ?>>KONGHUCU</option>
                                             </select>
                                         </div>
 
@@ -243,33 +266,6 @@
                             <div class="w-60 mx-auto xl:mr-0 xl:ml-6">
                                 <label class="mb-3">Foto Siswa</label>
                                 <div class="border-2 border-dashed shadow-sm border-slate-200/60 dark:border-darkmode-400 rounded-md p-5 mt-3">
-
-<?php 
-    // Daftar ekstensi yang diperbolehkan
-    $allowedExt = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
-
-    $fotoFile = null;
-
-    foreach ($allowedExt as $ext) {
-        $checkFile = $siswa['nis'] . '.' . $ext;
-        $checkPath = FCPATH . 'assets/upload/foto_siswa/' . $checkFile;
-
-        if (file_exists($checkPath)) {
-            $fotoFile = $checkFile;
-            break; // hentikan jika sudah ketemu
-        }
-    }
-
-    // Jika ditemukan, set URL foto
-    if ($fotoFile) {
-        $fotoURL = base_url('assets/upload/foto_siswa/' . $fotoFile);
-    } else {
-        // default jika tidak ada file sama sekali
-        $fotoURL = base_url('assets/dist/images/profile-15.jpg');
-    }
-?>
-
-
                                     <div class="h-40 relative image-fit cursor-pointer zoom-in mx-auto">
                                         <img id="previewFoto" 
                                             class="rounded-md object-cover w-full h-full"

@@ -18,6 +18,7 @@
                             <th class="border-b-2">NIP GURU</th>
                             <th class="border-b-2">NAMA GURU</th>
                             <th class="border-b-2">EMAIL</th>
+                            <th class="border-b-2">PASSWORD</th>
                             <th class="border-b-2">AKSI</th>
                         </tr>
                     </thead>
@@ -28,6 +29,7 @@
                             <td class="border-b"><?= $gu['nip'] ?></td>
                             <td class="border-b"><?= $gu['nama_guru'] ?></td>
                             <td class="border-b"><?= $gu['email_guru'] ?></td>
+                            <td class="border-b"><?= $gu['password'] ?></td>
                             <td class="border-b">
                                 <div class="flex space-x-3">
                                     <!-- Edit -->
@@ -69,7 +71,11 @@
                                                 <input type="text" class="form-control mb-3" name="email_guru" 
                                                        value="<?= $gu['email_guru'] ?>" required>
                                             </div>
-                                            
+                                            <div>
+                                                <label class="form-label">Password</label>
+                                                <input type="text" class="form-control mb-3" name="password" 
+                                                       value="<?= $gu['password'] ?>" required>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" data-tw-dismiss="modal" 
@@ -110,6 +116,10 @@
             <div>
                 <label class="form-label">Email</label> 
                 <input type="email" class="form-control mb-3" name="email_guru" placeholder="Email Guru" required>
+            </div>
+            <div>
+                <label class="form-label">Password</label> 
+                <input type="password" class="form-control mb-3" name="password" placeholder="Password Guru" required>
             </div>
         </div>
         <div class="modal-footer">

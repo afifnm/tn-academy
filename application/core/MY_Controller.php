@@ -33,12 +33,12 @@ class MY_Controller extends CI_Controller {
         }
     }
 
-    // protected function only_teacher_allowed()
-    // {
-    //     if ($this->session->userdata('role') !== 'admin') {
-    //         $this->set_flash('error', 'Kamu bukan admin');
-    //         redirect('auth');
-    //         exit;
-    //     }
-    // }
+    protected function only_teacher_allowed()
+    {
+        if ($this->session->userdata('role') !== 'guru') {
+            $this->set_flash('error', 'Kamu bukan guru');
+            redirect('auth');
+            exit;
+        }
+    }
 }

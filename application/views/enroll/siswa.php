@@ -54,7 +54,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>NISN</th>
+                        <th>NIS</th>
                         <th>Nama</th>
                         <th>Kelas</th>
                         <th>Tahun Ajaran</th>
@@ -67,7 +67,7 @@
                         <?php $no = 1; foreach ($enrolled as $row): ?>
                             <tr>
                                 <td><?= $no++; ?></td>
-                                <td><?= $row['nisn']; ?></td>
+                                <td><?= $row['nis']; ?></td>
                                 <td><?= $row['nama']; ?></td>
                                 <td><?= $row['nama_kelas']; ?></td>
                                 <td><?= $row['tahun']; ?> - <?= $row['semester']; ?></td>
@@ -98,7 +98,7 @@
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="checkAll" class="mr-2">Pilih</th>
-                            <th>NISN</th>
+                            <th>NIS</th>
                             <th>Nama</th>
                         </tr>
                     </thead>
@@ -107,7 +107,7 @@
                             <?php foreach ($not_enrolled as $s): ?>
                                 <tr>
                                     <td><input type="checkbox" name="siswa_ids[]" value="<?= $s['id_siswa'] ?>"></td>
-                                    <td><?= $s['nisn']; ?></td>
+                                    <td><?= $s['nis']; ?></td>
                                     <td><?= $s['nama']; ?></td>
                                 </tr>
                             <?php endforeach; ?>

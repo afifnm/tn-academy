@@ -122,7 +122,7 @@ class EnrollMapel_model extends CI_Model {
         }
     }
     
-    public function update($id, $data) {
+    public function update($id, $data) { //update enroll_mapel bagian guru pengajar
         $this->db->where('id_enroll_mapel', $id);
         return $this->db->update('enroll_mapel', $data);
     }

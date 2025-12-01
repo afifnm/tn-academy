@@ -1,3 +1,27 @@
+<?php 
+    // Daftar ekstensi yang diperbolehkan
+    $allowedExt = ['jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG'];
+
+    $fotoFile = null;
+
+    foreach ($allowedExt as $ext) {
+        $checkFile = $siswa['nis'] . '.' . $ext;
+        $checkPath = FCPATH . 'assets/upload/foto_siswa/' . $checkFile;
+
+        if (file_exists($checkPath)) {
+            $fotoFile = $checkFile;
+            break; // hentikan jika sudah ketemu
+        }
+    }
+
+    // Jika ditemukan, set URL foto
+    if ($fotoFile) {
+        $fotoURL = base_url('assets/upload/foto_siswa/' . $fotoFile);
+    } else {
+        // default jika tidak ada file sama sekali
+        $fotoURL = base_url('assets/dist/images/profile-15.jpg');
+    }
+?>
 <div class="grid grid-cols-12 gap-6">
   <!-- BEGIN: Profile Menu -->
   <div class="col-span-12 lg:col-span-4 2xl:col-span-3 flex flex-col">
@@ -7,7 +31,7 @@
           <img
             alt="Foto Siswa"
             class="rounded-full"
-            src="<?= !empty($siswa['foto']) ? base_url('assets/upload/foto_siswa/'.$siswa['foto']) : base_url('assets/dist/images/profile-15.jpg') ?>"
+            src="<?= $fotoURL?>"
           />
         </div>
         <div class="ml-4">
@@ -90,6 +114,7 @@
                 <tbody>
                   <?php
                   $no = 1;
+                  $jumlahmapel = 0;
                   foreach ($sem['mapel'] as $mapel):
                     $nilaiList = array_column($mapel['komponen'], 'nilai');
                     $total = array_sum($nilaiList);
@@ -97,6 +122,7 @@
                     $predikat = $rata >= 85 ? 'A' : ($rata >= 75 ? 'B' : ($rata >= 60 ? 'C' : 'D'));
                     $badgeColor = $rata >= 85 ? 'bg-success/20 text-success' : ($rata >= 75 ? 'bg-warning/20 text-warning' : ($rata >= 60 ? 'bg-blue-200 text-blue-800' : 'bg-danger/20 text-danger'));
                   ?>
+                  <?php if ($rata == 0) continue; ?>
                     <tr class="intro-x hover:bg-slate-50 dark:hover:bg-darkmode-600/50">
                       <td class="text-center"><?= $no++ ?></td>
                       <td><div class="font-medium whitespace-nowrap"><?= ($mapel['nama']) ?></div></td>
@@ -117,7 +143,7 @@
                         </span>
                       </td>
                     </tr>
-                  <?php endforeach; ?>
+                  <?php $rata += $rata; $jumlahmapel++; endforeach; ?>
                 </tbody>
               </table>
             </div>

@@ -80,7 +80,6 @@
             <select class="form-select" name="role" required>
               <option value="admin">Admin</option>
               <option value="kepala sekolah">Kepala Sekolah</option>
-              <option value="guru">Guru</option>
             </select>
           </div>
         </div>

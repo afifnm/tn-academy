@@ -11,6 +11,16 @@ class Nilai extends MY_Controller {
         $this->load->model('Mapel_model');
     }
 
+    public function guru(){ //untuk guru mengarah ke index kirim id kelas, id ta dan id mapel
+        $id_kelas = $this->input->get('id_kelas');
+        $id_ta = $this->input->get('id_ta');
+        $this->db->where('id_kelas',$id_kelas);
+        $this->db->where('id_ta',$id_ta);
+        $this->db->where('id_guru',$this->session->userdata('id_guru'));
+        $id_mapel = $this->db->get('enroll_mapel')->row()->id_mapel;
+        redirect('nilai?id_kelas='.$id_kelas.'&id_ta='.$id_ta.'&id_mapel='.$id_mapel);
+
+    }
     public function index() {
         $data['title'] = 'Input Nilai Siswa';
         $data['kelas'] = $this->Kelas_model->get_all();
@@ -19,10 +29,6 @@ class Nilai extends MY_Controller {
         $role = $this->session->userdata('role');
         $id_guru = $this->session->userdata('id_guru');
 
-        if (!$id_guru && $role !== 'admin') {
-            $this->session->set_flashdata('error', 'Anda harus login sebagai guru terlebih dahulu.');
-            redirect('auth');
-        }
 
         $id_kelas = $this->input->get('id_kelas');
         $id_ta = $this->input->get('id_ta');
