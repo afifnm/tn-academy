@@ -9,7 +9,7 @@
   			</a>
   		</li>
 
-  		<!-- Data Master -->
+  		<!-- Data Master (Admin & Kepala Sekolah) -->
 		<?php if(in_array($this->session->userdata('role'), ['admin', 'kepala sekolah'])){ ?>
   		<li>
   			<a href="javascript:;" class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/siswa') === 0 || strpos($this->uri->uri_string(), 'admin/guru') === 0 || strpos($this->uri->uri_string(), 'admin/kelas') === 0 || strpos($this->uri->uri_string(), 'admin/mapel') === 0 || strpos($this->uri->uri_string(), 'admin/tahun_ajaran') === 0) ? 'top-menu--active' : '' ?>">
@@ -56,8 +56,10 @@
   				</li>
   			</ul>
   		</li>
+		<?php } ?>
 
-  		<!-- Enroll -->
+  		<!-- Enroll (Admin Only) -->
+		<?php if($this->session->userdata('role') == 'admin'){ ?>
   		<li>
   			<a href="javascript:;" class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/enrollsiswa') === 0 || strpos($this->uri->uri_string(), 'admin/enrollmapel') === 0) ? 'top-menu--active' : '' ?>">
   				<div class="top-menu__icon"> <i data-lucide="columns"></i> </div>
@@ -85,7 +87,7 @@
 		<?php } ?>
 
 
-  		<!-- Kelola Nilai -->
+  		<!-- Kelola Nilai (Admin & Guru) -->
   		<li>
 			<?php if(in_array($this->session->userdata('role'), ['guru', 'admin'])){ ?>  	<a href="<?=base_url('nilai')?>"
   				class="top-menu <?= (strpos($this->uri->uri_string(), 'nilai') === 0) ? 'top-menu--active' : '' ?>"> <!-- Gunakan top-menu--active -->
@@ -95,9 +97,7 @@
 			<?php } ?>
   		</li>
 
-  		<!-- Laporan -->
-
-  		<!-- User -->
+  		<!-- User (Admin Only) -->
 		<?php if($this->session->userdata('role')=='admin'){ ?>
   		<li>
   			<a href="<?=base_url('user')?>"

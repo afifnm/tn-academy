@@ -19,7 +19,9 @@
                             <th class="border-b-2">NAMA GURU</th>
                             <th class="border-b-2">EMAIL</th>
                             <th class="border-b-2">PASSWORD</th>
+                            <?php if($this->session->userdata('role')=='admin'): ?>
                             <th class="border-b-2">AKSI</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +32,7 @@
                             <td class="border-b"><?= $gu['nama_guru'] ?></td>
                             <td class="border-b"><?= $gu['email_guru'] ?></td>
                             <td class="border-b"><?= $gu['password'] ?></td>
+                            <?php if($this->session->userdata('role')=='admin'): ?>
                             <td class="border-b">
                                 <div class="flex space-x-3">
                                     <!-- Edit -->
@@ -44,6 +47,7 @@
                                     </a>
                                 </div>
                             </td>
+                            <?php endif; ?>
                         </tr>
 
                         <!-- Modal Edit -->

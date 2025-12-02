@@ -17,7 +17,9 @@
                             <th class="border-b-2">NO</th>
                             <th class="border-b-2">TAHUN AJARAN</th>
                             <th class="border-b-2">SEMESTER</th>
+                            <?php if($this->session->userdata('role')=='admin'): ?>
                             <th class="border-b-2">AKSI</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,6 +28,7 @@
                             <td class="border-b"><?= $no ?></td>
                             <td class="border-b"><?= $ta['tahun'] ?></td>
                             <td class="border-b"><?= $ta['semester'] ?></td>
+                            <?php if($this->session->userdata('role')=='admin'): ?>
                             <td class="border-b">
                                 <div class="flex space-x-3">
                                     <!-- Edit -->
@@ -41,6 +44,7 @@
                                     </a>
                                 </div>
                             </td>
+                            <?php endif; ?>
                         </tr>
 
                         <!-- Modal Edit -->

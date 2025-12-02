@@ -110,7 +110,7 @@
 
 
 </style>
-
+<?php if($this->session->userdata('role')=='admin'): ?>
 <!-- Tombol Tambah -->
 <div class="flex items-center justify-between mb-4">
 	<div class="flex items-center gap-2">
@@ -124,8 +124,8 @@
 			Import Excel
 		</a>
 	</div>
-
 </div>
+<?php endif; ?>
 
 <!-- Box List Siswa -->
 <div class="intro-y box mt-4">
@@ -188,76 +188,15 @@
 										href="<?= base_url('admin/siswa/detail/'.$sis['id_siswa']) ?>">
 										<i data-lucide="external-link" class="w-4 h-4 mr-1"></i> Detail
 									</a>
-
-									<!-- Edit
-                                        <a class="flex text-blue-500 mr-4" href="javascript:      ;" 
-                                        data-tw-toggle="modal" data-tw-target="#edit<?= $sis['id_siswa'] ?>">
-                                            <i data-lucide="edit" class="w-4 h-4 mr-1"></i> Edit
-                                        </a> -->
-
-									<!-- Delete -->
+                                    <?php if($this->session->userdata('role')=='admin'): ?>
 									<a class="flex text-danger delete-btn" href="javascript:;"
 										onclick="confirmDelete('<?= site_url('admin/siswa/delete/'.$sis['id_siswa']) ?>')">
 										<i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
 									</a>
+                                    <?php endif; ?>
 								</div>
 							</td>
 						</tr>
-						<!-- Modal Edit -->
-						<div id="edit<?= $sis['id_siswa'] ?>" class="modal" tabindex="-1" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h2 class="font-medium text-base mr-auto">Edit Data Siswa</h2>
-									</div>
-									<form action="<?= base_url('admin/siswa/edit') ?>" method="post">
-										<div class="modal-body">
-											<input type="hidden" name="id_siswa" value="<?= $sis['id_siswa'] ?>">
-
-											<div>
-												<label class="form-label">NISN</label>
-												<input type="text" class="form-control" name="nisn"
-													value="<?= $sis['nisn'] ?>" required>
-											</div>
-											<div class="mt-3">
-												<label class="form-label">Nama Siswa</label>
-												<input type="text" class="form-control" name="nama"
-													value="<?= $sis['nama'] ?>" required>
-											</div>
-											<div class="mt-3">
-												<label class="form-label">Tanggal Lahir</label>
-												<input type="text" class="datepicker form-control"
-													data-single-mode="true" name="tgl_lahir"
-													value="<?= $sis['tgl_lahir'] ?>" required>
-											</div>
-											<div class="mt-3">
-												<label class="form-label">Tahun Masuk</label>
-												<input type="number" class="form-control" name="thn_masuk"
-													value="<?= $sis['thn_masuk'] ?>" required>
-											</div>
-											<div class="mt-3">
-												<label class="form-label">Status</label>
-												<select class="form-select" name="status" required>
-													<option value="aktif" <?=($sis['status']=='aktif')?'selected':''?>>
-														Aktif</option>
-													<option value="lulus" <?=($sis['status']=='lulus')?'selected':''?>>
-														Lulus</option>
-													<option value="keluar"
-														<?=($sis['status']=='keluar')?'selected':''?>>Keluar</option>
-												</select>
-											</div>
-										</div>
-										<div class="modal-footer">
-											<button type="button" data-tw-dismiss="modal"
-												class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-											<button type="submit" class="btn btn-primary w-20">Save</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-						<!-- End Modal Edit -->
-
 						<?php $no++; } ?>
 						<?php endif; ?>
 					</tbody>

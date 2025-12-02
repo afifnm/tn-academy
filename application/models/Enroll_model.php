@@ -91,8 +91,7 @@ class Enroll_model extends CI_Model {
         if ($semester) {
             $this->db->where('tahun_ajaran.semester', $semester);
         }
-
-        $this->db->order_by('enroll.id_enroll', 'DESC');
+        $this->db->order_by('siswa.nama', 'ASC');
         return $this->db->get()->result_array();
     }
 
@@ -117,7 +116,6 @@ class Enroll_model extends CI_Model {
                 )", NULL, FALSE);
             }
         }
-
         return $this->db->get()->result_array();
     }
 

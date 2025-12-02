@@ -6,6 +6,27 @@
   <div class="mb-6">
     <h1 class="text-3xl font-bold text-gray-800">📊 Dashboard E-Tarnus Malang</h1>
     <p class="text-gray-600">Selamat datang <?= $this->session->userdata('nama') ?>, anda login sebagai <?= $this->session->userdata('role') ?></p>
+
+    <?php
+      // Ambil tahun ajaran paling baru sebagai 'aktif' (fallback: hitung otomatis)
+      $ta = $this->db->order_by('tahun', 'DESC')->order_by('semester', 'DESC')->limit(1)->get('tahun_ajaran')->row_array();
+      if (!$ta) {
+          // fallback sederhana: gunakan tahun berjalan dan next year sebagai format 2025/2026
+          $y = (int) date('Y');
+          // asumsikan tahun ajaran dimulai pertengahan tahun -> tentukan rentang
+          if ((int)date('m') >= 7) {
+              $ta_text = $y . '/' . ($y + 1) . ' (Ganjil)';
+          } else {
+              $ta_text = ($y - 1) . '/' . $y . ' (Genap)';
+          }
+      } else {
+          $ta_text = $ta['tahun'] . ' (' . $ta['semester'] . ')';
+      }
+    ?>
+
+    <div class="mt-2">
+      <span class="inline-block bg-blue-50 text-blue-700 text-sm px-3 py-1 rounded-full border border-blue-100">Tahun Ajaran Aktif: <strong><?= $ta_text ?></strong></span>
+    </div>
   </div>
 
   <!-- Pencarian Siswa -->

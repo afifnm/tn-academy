@@ -18,7 +18,9 @@
                             <th class="border-b-2">NAMA KELAS</th>
                             <th class="border-b-2">TINGKAT</th>
                             <th class="border-b-2">JURUSAN</th>
+                            <?php if($this->session->userdata('role')=='admin'): ?>
                             <th class="border-b-2">AKSI</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,6 +30,7 @@
                             <td><?= $kel['nama_kelas'] ?></td>
                             <td><?= $kel['tingkat'] ?></td>
                             <td><?= $kel['jurusan'] ?></td>
+                            <?php if($this->session->userdata('role')=='admin'): ?>
                             <td>
                                 <div class="flex space-x-3">
                                     <!-- Edit -->
@@ -43,6 +46,7 @@
                                     </a>
                                 </div>
                             </td>
+                            <?php endif; ?>
                         </tr>
 
                         <!-- Modal Edit -->

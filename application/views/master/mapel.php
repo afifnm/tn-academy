@@ -16,7 +16,9 @@
                         <tr>
                             <th class="border-b-2">NO</th>
                             <th class="border-b-2">MATA PELAJARAN</th>
+                            <?php if($this->session->userdata('role')=='admin'): ?>
                             <th class="border-b-2">AKSI</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
