@@ -141,5 +141,41 @@ class Enrollmapel extends MY_Controller {
         $id_kelas = $this->input->post('id_kelas');
         redirect("admin/enrollmapel/filter?id_ta={$id_ta}&id_kelas={$id_kelas}");
     }
+    public function clone(){
+        $source_ta = $this->input->post('source_ta');
+        $source_kelas = $this->input->post('source_kelas');
+        $target_ta = $this->input->post('target_ta');
+        $target_kelas = $this->input->post('target_kelas');
+
+        $cek = $this->EnrollMapel_model->get_enrolled($target_ta, $target_kelas);
+        if(!empty($cek)){
+            $this->set_flash('Kelas tujuan sudah memiliki mapel yang di-enroll. Proses cloning dibatalkan.', 'error');
+            redirect('admin/enrollmapel/filter?id_ta='.$source_ta.'&id_kelas='.$source_kelas);
+        } else {
+            $data_to_clone = $this->EnrollMapel_model->get_enrolled($source_ta, $source_kelas);
+            $cloned_count = 0;
+            foreach($data_to_clone as $data){
+                $enroll_data = [
+                    'id_mapel' => $data['id_mapel'],
+                    'id_kelas' => $target_kelas,
+                    'id_ta'    => $target_ta,
+                    'id_guru'  => $data['id_guru']
+                ];
+                $inserted = $this->EnrollMapel_model->add($enroll_data);
+                // Ambil ID enroll yang baru dibuat (model bisa mengembalikan ID atau true)
+                $id_enroll = (is_numeric($inserted) && $inserted > 0) ? $inserted : $this->db->insert_id();
+
+                if ($id_enroll) {
+                    // Tambahkan komponen default ASTS dan ASAS untuk enroll yang baru dibuat
+                    $this->EnrollMapel_model->save_komponen_baru($id_enroll, ['ASTS', 'ASAS']);
+                }
+                if($inserted){
+                    $cloned_count++;
+                }
+            }
+            $this->set_flash("$cloned_count mapel berhasil di-clone ke kelas tujuan.", 'success');
+            redirect('admin/enrollmapel/filter?id_ta='.$target_ta.'&id_kelas='.$target_kelas);
+        }
+    }
 
 }

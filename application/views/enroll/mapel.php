@@ -2,7 +2,7 @@
     <!-- Filter -->
     <form method="GET" action="<?= base_url('admin/enrollmapel/filter') ?>">
         <div class="intro-y col-span-12 flex flex-wrap xl:flex-nowrap items-center mt-2 mb-5">
-            <div class="flex w-full sm:w-auto">
+            <div class="flex w-full sm:w-auto gap-2">
                 <div class="w-52 relative text-slate-500">
                     <select name="id_ta" class="form-select box w-52">
                         <option value="">-- Pilih Tahun Ajaran --</option>
@@ -14,7 +14,7 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="w-40 relative text-slate-500 ml-2">
+                <div class="w-40 relative text-slate-500">
                     <select name="id_kelas" class="form-select box w-40">
                         <option value="">-- Pilih Kelas --</option>
                         <?php foreach ($kelas as $k): ?>
@@ -25,11 +25,51 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary shadow-md ml-2">Tampilkan</button>
+                <button type="submit" class="btn btn-primary shadow-md">Tampilkan</button>
             </div>
-
+            <button type="button" class="btn btn-primary shadow-md ml-auto" data-tw-toggle="modal" data-tw-target="#cloneModal">Clone Mata Pelajaran</button>
         </div>
     </form>
+
+    <!-- Modal Clone Mata Pelajaran -->
+    <div id="cloneModal" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Clone Mata Pelajaran</h2>
+                    <button type="button" class="btn-close" data-tw-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="<?= base_url('admin/enrollmapel/clone') ?>">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Tahun Ajaran Tujuan</label>
+                            <select name="target_ta" class="form-select" required>
+                                <option value="">-- Pilih Tahun Ajaran --</option>
+                                <?php foreach ($tahun_ajaran as $ta): ?>
+                                    <option value="<?= $ta['id_ta']; ?>"><?= $ta['tahun']; ?> - <?= $ta['semester']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kelas Tujuan</label>
+                            <select name="target_kelas" class="form-select" required>
+                                <option value="">-- Pilih Kelas --</option>
+                                <?php foreach ($kelas as $k): ?>
+                                    <option value="<?= $k['id_kelas']; ?>"><?= $k['nama_kelas']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <input type="hidden" name="source_ta" value="<?= $filter['id_ta'] ?? '' ?>">
+                        <input type="hidden" name="source_kelas" value="<?= $filter['id_kelas'] ?? '' ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-tw-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Clone</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Dua Kolom -->
     <div class="grid grid-cols-3 gap-6">

@@ -35,18 +35,63 @@
                     Showing <?= count($enrolled) ?> siswa sudah enroll
                 <?php endif; ?>
             </div>
-
+            <?php if(!empty($filter)): ?>
+            <?php if ($enrolled): ?>
             <!-- Tombol Export (opsional) -->
             <div class="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
-                <button class="btn btn-primary shadow-md mr-2">Export Excel</button>
-                <button class="btn btn-primary shadow-md">Export PDF</button>
+                <button type="button" class="btn btn-primary shadow-md" data-tw-toggle="modal" data-tw-target="#filterModal">Clone Kelas > Tahun Ajaran</button>
             </div>
+            <?php endif; ?>
+            <?php endif; ?>
         </div>
     </form>
 
+    <!-- Modal Filter -->
+    <div id="filterModal" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Clone Kelas Ke Tahun Ajaran</h2>
+                    <button type="button" class="btn-close" data-tw-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="cloneForm" method="POST" action="<?= base_url('admin/enrollsiswa/clone') ?>">
+                        <div class="mb-3">
+                            <label class="form-label">Tahun Ajaran Tujuan</label>
+                            <input type="hidden" name="source_ta" value="<?= $filter['id_ta'] ?>">
+                            <select name="target_ta" class="form-select" required>
+                                <option value="">-- Pilih Tahun Ajaran --</option>
+                                <?php foreach ($tahun_ajaran as $ta): ?>
+                                    <option value="<?= $ta['id_ta']; ?>">
+                                        <?= $ta['tahun'] ?> - <?= $ta['semester'] ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kelas Tujuan</label>
+                            <input type="hidden" name="source_kelas" value="<?= $filter['id_kelas'] ?>">
+                            <select name="target_kelas" class="form-select" required>
+                                <option value="">-- Pilih Kelas --</option>
+                                <?php foreach ($kelas as $k): ?>
+                                    <option value="<?= $k['id_kelas']; ?>">
+                                        <?= $k['nama_kelas'] ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-tw-dismiss="modal">Batal</button>
+                    <button type="submit" form="cloneForm" class="btn btn-primary">Clone</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php if(!empty($filter)): ?>
     <!-- Dua Kolom -->
     <div class="grid grid-cols-3 gap-6">
-        
         <!-- Siswa Sudah Enroll -->
         <div class="intro-y box p-5 w-full overflow-auto col-span-2">
             <h2 class="text-lg font-medium mb-4">Siswa Sudah Enroll</h2>
@@ -120,6 +165,7 @@
             </form>
         </div>
     </div>
+    <?php endif; ?>
 </div>
 
 <script>

@@ -10,7 +10,7 @@
   		</li>
 
   		<!-- Data Master -->
-		<?php if($this->session->userdata('role')=='admin'){ ?>
+		<?php if(in_array($this->session->userdata('role'), ['admin', 'kepala sekolah'])){ ?>
   		<li>
   			<a href="javascript:;" class="top-menu <?= (strpos($this->uri->uri_string(), 'admin/siswa') === 0 || strpos($this->uri->uri_string(), 'admin/guru') === 0 || strpos($this->uri->uri_string(), 'admin/kelas') === 0 || strpos($this->uri->uri_string(), 'admin/mapel') === 0 || strpos($this->uri->uri_string(), 'admin/tahun_ajaran') === 0) ? 'top-menu--active' : '' ?>">
   				<div class="top-menu__icon"> <i data-lucide="monitor"></i> </div>

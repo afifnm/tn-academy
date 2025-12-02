@@ -115,35 +115,52 @@
                   <?php
                   $no = 1;
                   $jumlahmapel = 0;
+                  $sumRata = 0;
                   foreach ($sem['mapel'] as $mapel):
-                    $nilaiList = array_column($mapel['komponen'], 'nilai');
-                    $total = array_sum($nilaiList);
-                    $rata = count($nilaiList) > 0 ? round($total / count($nilaiList), 1) : 0;
-                    $predikat = $rata >= 85 ? 'A' : ($rata >= 75 ? 'B' : ($rata >= 60 ? 'C' : 'D'));
-                    $badgeColor = $rata >= 85 ? 'bg-success/20 text-success' : ($rata >= 75 ? 'bg-warning/20 text-warning' : ($rata >= 60 ? 'bg-blue-200 text-blue-800' : 'bg-danger/20 text-danger'));
+                  // Ambil hanya komponen dengan nilai > 0
+                  $nilaiList = [];
+                  foreach ($mapel['komponen'] as $komp) {
+                    if (isset($komp['nilai']) && $komp['nilai'] > 0) {
+                    $nilaiList[] = $komp['nilai'];
+                    }
+                  }
+
+                  $total = array_sum($nilaiList);
+                  $rata = count($nilaiList) > 0 ? round($total / count($nilaiList), 1) : 0;
+
+                  // Jangan tampilkan mapel yang rata-rata 0 (tidak mempengaruhi rata-rata keseluruhan)
+                  if ($rata == 0) continue;
+
+                  $predikat = $rata >= 85 ? 'A' : ($rata >= 75 ? 'B' : ($rata >= 60 ? 'C' : 'D'));
+                  $badgeColor = $rata >= 85 ? 'bg-success/20 text-success' : ($rata >= 75 ? 'bg-warning/20 text-warning' : ($rata >= 60 ? 'bg-blue-200 text-blue-800' : 'bg-danger/20 text-danger'));
+
+                  // Akumulasi untuk rata-rata keseluruhan
+                  $sumRata += $rata;
+                  $jumlahmapel++;
                   ?>
-                  <?php if ($rata == 0) continue; ?>
-                    <tr class="intro-x hover:bg-slate-50 dark:hover:bg-darkmode-600/50">
-                      <td class="text-center"><?= $no++ ?></td>
-                      <td><div class="font-medium whitespace-nowrap"><?= ($mapel['nama']) ?></div></td>
-                      <td>
-                        <div class="flex flex-wrap gap-2 mt-1">
-                          <?php foreach ($mapel['komponen'] as $komp): ?>
-                            <span class="flex items-center bg-slate-100 dark:bg-darkmode-400/30 text-slate-700 dark:text-slate-300 text-xs px-2 py-1 rounded">
-                              <span><?= ($komp['nama']) ?></span>
-                              <span class="font-medium ml-1"><?= number_format($komp['nilai'], 1) ?></span>
-                            </span>
-                          <?php endforeach; ?>
-                        </div>
-                      </td>
-                      <td class="text-center font-medium"><?= $rata ?></td>
-                      <td class="text-center">
-                        <span class="px-2 py-1 rounded-full text-xs font-medium <?= $badgeColor ?>">
-                          <?= $predikat ?>
+                  <tr class="intro-x hover:bg-slate-50 dark:hover:bg-darkmode-600/50">
+                    <td class="text-center"><?= $no++ ?></td>
+                    <td><div class="font-medium whitespace-nowrap"><?= ($mapel['nama']) ?></div></td>
+                    <td>
+                    <div class="flex flex-wrap gap-2 mt-1">
+                      <?php foreach ($mapel['komponen'] as $komp): ?>
+                      <?php if (isset($komp['nilai']) && $komp['nilai'] > 0): // hanya tampilkan komponen > 0 ?>
+                        <span class="flex items-center bg-slate-100 dark:bg-darkmode-400/30 text-slate-700 dark:text-slate-300 text-xs px-2 py-1 rounded">
+                        <span><?= ($komp['nama']) ?></span>
+                        <span class="font-medium ml-1"><?= number_format($komp['nilai'], 1) ?></span>
                         </span>
-                      </td>
-                    </tr>
-                  <?php $rata += $rata; $jumlahmapel++; endforeach; ?>
+                      <?php endif; ?>
+                      <?php endforeach; ?>
+                    </div>
+                    </td>
+                    <td class="text-center font-medium"><?= $rata ?></td>
+                    <td class="text-center">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium <?= $badgeColor ?>">
+                      <?= $predikat ?>
+                    </span>
+                    </td>
+                  </tr>
+                  <?php endforeach; ?>
                 </tbody>
               </table>
             </div>
