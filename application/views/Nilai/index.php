@@ -1,6 +1,4 @@
 <div class="p-4">
-    <h2 class="font-medium text-base mb-4">Input Nilai</h2>
-
     <?php if($this->session->flashdata('error')): ?>
         <div class="alert alert-danger mb-4"><?= $this->session->flashdata('error') ?></div>
     <?php endif; ?>
