@@ -6,7 +6,10 @@ class Mapel_model extends CI_Model {
 		$this->db->from('mapel')->order_by('nama_mapel','ASC');
 		return $this->db->get()->result_array();
 	}
-
+	public function get_nama($id) {
+		$row = $this->db->get_where('mapel', ['id_mapel' => $id])->row();
+		return $row ? $row->nama_mapel : '—';
+	}
 	public function get_mapel_by_kelas($id_kelas) {
         $this->db->select('km.id_kelas_mapel, m.id_mapel, m.nama_mapel');
         $this->db->from('kelas_mapel km');
