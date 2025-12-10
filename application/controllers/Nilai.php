@@ -272,6 +272,16 @@ class Nilai extends MY_Controller {
         redirect('nilai/daftar/'.$enroll->id_kelas.'/'.$enroll->id_ta.'/'.$kelas_mapel->id_mapel);
     }
     public function exportExcel($id_kelas, $id_ta, $id_mapel){
+        // Nonaktifkan error reporting dan semua output
+        error_reporting(0);
+        @ini_set('display_errors', 0);
+        
+        // Start output buffering dengan level maksimal
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        ob_start();
+        
         $siswa = $this->Enroll_model->get_siswa_by_kelas($id_kelas, $id_ta);
         $mapel_list = $this->Mapel_model->get_mapel_enrolled_by_kelas_ta($id_kelas, $id_ta);
         $mapel_terpilih = null;
@@ -301,6 +311,20 @@ class Nilai extends MY_Controller {
             }
         }
 
+        // Validasi data
+        if (!$mapel_terpilih || empty($mapel_terpilih->komponen)) {
+            ob_end_clean();
+            $this->session->set_flashdata('error', 'Data mapel tidak ditemukan atau tidak memiliki komponen.');
+            redirect('nilai');
+        }
+
+        // Ambil semua nilai dari database
+        $nilai_db = $this->Nilai_model->get_nilai_by_kelas_ta_mapel($id_kelas, $id_ta, $id_mapel);
+        $nilai_map = [];
+        foreach ($nilai_db as $n) {
+            $nilai_map[$n->id_enroll][$n->id_komponen] = $n->skor;
+        }
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -309,183 +333,321 @@ class Nilai extends MY_Controller {
         $sheet->mergeCells('A1:C1');
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16);
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A1')->getFill()->setFillType(Fill::FILL_SOLID);
+        $sheet->getStyle('A1')->getFill()->getStartColor()->setARGB('FF4472C4');
+        $sheet->getStyle('A1')->getFont()->getColor()->setARGB('FFFFFFFF');
+        $sheet->getRowDimension(1)->setRowHeight(25);
+
         $sheet->setCellValue('A2', 'Kelas: '.$this->Kelas_model->get_nama($id_kelas));
         $sheet->mergeCells('A2:C2');
         $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
         $sheet->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A2')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A2')->getFill()->setFillType(Fill::FILL_SOLID);
+        $sheet->getStyle('A2')->getFill()->getStartColor()->setARGB('FFD9E1F2');
+        $sheet->getRowDimension(2)->setRowHeight(20);
+
+        // Header baris 3
         $sheet->setCellValue('A3', 'No');
-        $sheet->getColumnDimension('A')->setWidth(5);
+        $sheet->getColumnDimension('A')->setWidth(8);
         $sheet->setCellValue('B3', 'ID Enroll');
-        $sheet->getColumnDimension('B')->setWidth(10);
-        $sheet->setCellValue('C3', 'Nama');
-        $sheet->getColumnDimension('C')->setWidth(50);
+        $sheet->getColumnDimension('B')->setWidth(12);
+        $sheet->setCellValue('C3', 'Nama Siswa');
+        $sheet->getColumnDimension('C')->setWidth(40);
+        
+        // ID Temp di D2 dan E2
         $sheet->setCellValue('D2', 'ID Temp');
-        $sheet->getColumnDimension('D')->setWidth(10);
-        $sheet->setCellValue('E2', $kelas_mapel->id_kelas_mapel);
-        $sheet->getColumnDimension('D')->setWidth(10);
+        $sheet->setCellValue('E2', $mapel_terpilih->id_kelas_mapel);
+        $sheet->getStyle('D2')->getFont()->setBold(true);
+        $sheet->getStyle('E2')->getFont()->setBold(true);
+        $sheet->getStyle('D2:E2')->getFill()->setFillType(Fill::FILL_SOLID);
+        $sheet->getStyle('D2:E2')->getFill()->getStartColor()->setARGB('FFFFC000');
+        $sheet->getStyle('D2:E2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        // Header komponen mulai dari D3
         $col = 'D';
+        $komponenCols = [];
         foreach ($mapel_terpilih->komponen as $komponen) {
             $sheet->setCellValue($col.'3', $komponen['nama_komponen']);
+            $sheet->getColumnDimension($col)->setWidth(15);
+            $komponenCols[$col] = $komponen['id_komponen'];
+            $lastHeaderCol = $col; // Simpan kolom terakhir
             $col++;
         }
 
+        // Styling header baris 3
+        $headerRange = 'A3:' . $lastHeaderCol . '3';
+        $sheet->getStyle($headerRange)->getFont()->setBold(true);
+        $sheet->getStyle($headerRange)->getFill()->setFillType(Fill::FILL_SOLID);
+        $sheet->getStyle($headerRange)->getFill()->getStartColor()->setARGB('FF4472C4');
+        $sheet->getStyle($headerRange)->getFont()->getColor()->setARGB('FFFFFFFF');
+        $sheet->getStyle($headerRange)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle($headerRange)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getRowDimension(3)->setRowHeight(20);
+
+        // Border untuk header
+        $borderStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+            ],
+        ];
+        $sheet->getStyle($headerRange)->applyFromArray($borderStyle);
+        $sheet->getStyle('A1:C2')->applyFromArray($borderStyle);
+        $sheet->getStyle('D2:E2')->applyFromArray($borderStyle);
+
         // DATA siswa 
         $row = 4;
-        $no =1;
+        $no = 1;
         foreach ($siswa as $s) {
             $sheet->setCellValue('A'.$row, strval($no));
             $sheet->setCellValue('B'.$row, $s->id_enroll);
             $sheet->setCellValue('C'.$row, $s->nama);
+            
+            // Isi nilai dari database jika ada
+            foreach ($komponenCols as $col => $id_komponen) {
+                if (isset($nilai_map[$s->id_enroll][$id_komponen])) {
+                    $sheet->setCellValue($col.$row, $nilai_map[$s->id_enroll][$id_komponen]);
+                }
+            }
+            
+            // Border untuk setiap baris data (termasuk kolom nilai yang kosong)
+            $dataRowRange = 'A'.$row.':' . $lastHeaderCol . $row;
+            $sheet->getStyle($dataRowRange)->applyFromArray($borderStyle);
+            
+            // Alternating row colors
+            if ($no % 2 == 0) {
+                $sheet->getStyle($dataRowRange)->getFill()->setFillType(Fill::FILL_SOLID);
+                $sheet->getStyle($dataRowRange)->getFill()->getStartColor()->setARGB('FFF2F2F2');
+            }
+            
+            // Alignment
+            $sheet->getStyle('A'.$row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('B'.$row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('C'.$row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            
+            // Alignment untuk kolom nilai
+            foreach ($komponenCols as $col => $id_komponen) {
+                $sheet->getStyle($col.$row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            }
+            
             $row++;
             $no++;
         }
+
+        // Freeze panes untuk memudahkan scroll
+        $sheet->freezePane('D4');
         
-        // DOWNLOAD
+        // DOWNLOAD - Simpan ke temporary file dulu, lalu baca dan kirim
+        // Bersihkan semua output buffer dengan agresif
+        @ob_end_clean();
+        @ob_end_flush();
+        while (@ob_get_level()) {
+            @ob_end_clean();
+        }
+        flush();
+        
         $namakelas = $this->Kelas_model->get_nama($id_kelas);
         $namamapel = $this->Mapel_model->get_nama($id_mapel);
+        
+        // Sanitize filename untuk menghindari karakter khusus
+        $namakelas = preg_replace('/[^a-zA-Z0-9_-]/', '_', $namakelas);
+        $namamapel = preg_replace('/[^a-zA-Z0-9_-]/', '_', $namamapel);
         $filename = "Nilai_Kelas_{$namakelas}_Mapel_{$namamapel}.xlsx";
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment; filename={$filename}");
-        header('Cache-Control: max-age=0');
-
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $writer->save('php://output');
-        exit;
-    }
-    public function importExcel()
-{
-    $this->load->library('upload');
-    $this->load->library('PHPExcel');
-
-    // Validasi guru / admin
-    $role = $this->session->userdata('role');
-    $id_guru = $this->session->userdata('id_guru');
-
-    if (!$id_guru && $role !== 'admin') {
-        echo json_encode(['status' => false, 'message' => 'Akses ditolak']);
-        return;
-    }
-
-    // Upload file
-    $config['upload_path'] = './uploads/excel/';
-    $config['allowed_types'] = 'xls|xlsx';
-    $config['encrypt_name'] = TRUE;
-
-    if (!is_dir($config['upload_path'])) {
-        mkdir($config['upload_path'], 0777, true);
-    }
-
-    $this->upload->initialize($config);
-
-    if (!$this->upload->do_upload('file_excel')) {
-        echo json_encode(['status' => false, 'message' => $this->upload->display_errors()]);
-        return;
-    }
-
-    $file = $this->upload->data('full_path');
-
-    // Load Excel
-    $excel = PHPExcel_IOFactory::load($file);
-    $sheet = $excel->getActiveSheet();
-    $data = $sheet->toArray(null, true, true, true);
-
-    /**
-     * =========================================
-     * TEMPLATE:
-     * A1 = No
-     * B1 = Nama
-     * C1,D1,E1,... = Nama Komponen
-     * =========================================
-     */
-
-    // Ambil ID dari GET (modal berada di halaman nilai)
-    $id_kelas = $this->input->get('id_kelas');
-    $id_ta    = $this->input->get('id_ta');
-    $id_mapel = $this->input->get('id_mapel');
-
-    // Pastikan kelas_mapel ada
-    $kelas_mapel = $this->db->get_where('kelas_mapel', [
-        'id_kelas' => $id_kelas,
-        'id_mapel' => $id_mapel
-    ])->row();
-
-    if ($kelas_mapel) {
-        $id_kelas_mapel = $kelas_mapel->id_kelas_mapel;
-    } else {
-        $this->db->insert('kelas_mapel', [
-            'id_kelas' => $id_kelas,
-            'id_mapel' => $id_mapel
-        ]);
-        $id_kelas_mapel = $this->db->insert_id();
-    }
-
-    // Ambil komponen mapel
-    $komponen = $this->db->get_where('komponen_mapel', [
-        'id_kelas_mapel' => $id_kelas_mapel
-    ])->result_array();
-
-    if (!$komponen) {
-        echo json_encode(['status' => false, 'message' => 'Tidak ada komponen mapel.']);
-        return;
-    }
-
-    // Map kolom Excel ke id_komponen
-    $colMap = [];
-    $col = 'C';
-
-    foreach ($komponen as $k) {
-        $excelHeader = trim($data[1][$col]); // row 1
-        if ($excelHeader == $k['nama_komponen']) {
-            $colMap[$col] = $k['id_komponen'];
+        
+        // Check jika headers sudah terkirim - ini bisa jadi masalah di hosting
+        if (headers_sent($file, $line)) {
+            // Jika headers sudah terkirim, output error dan exit
+            die("Cannot send file: headers already sent in {$file} on line {$line}. Please check for whitespace or output before this line.");
         }
-        $col++;
-    }
-
-    // Ambil siswa kelas → untuk mapping nama => id_enroll
-    $siswa = $this->db->select('enroll.id_enroll, siswa.nama')
-                      ->from('enroll')
-                      ->join('siswa', 'siswa.id_siswa=enroll.id_siswa')
-                      ->where('enroll.id_kelas', $id_kelas)
-                      ->get()->result();
-
-    $mapNamaEnroll = [];
-    foreach ($siswa as $s) {
-        $mapNamaEnroll[trim(strtolower($s->nama))] = $s->id_enroll;
-    }
-
-    /**
-     * =========================================
-     * LOOP DATA EXCEL
-     * =========================================
-     */
-
-    for ($row = 2; $row <= count($data); $row++) {
-        $nama = trim(strtolower($data[$row]['B'])); 
-        if ($nama == "") continue;
-
-        if (!isset($mapNamaEnroll[$nama])) {
-            continue; // abaikan siswa yg tidak cocok
-        }
-
-        $id_enroll = $mapNamaEnroll[$nama];
-
-        // Loop kolom nilai
-        foreach ($colMap as $col => $id_komponen) {
-            $skor = floatval($data[$row][$col]);
-
-            $this->Nilai_model->save_nilai([
-                'id_enroll' => $id_enroll,
-                'id_kelas_mapel' => $id_kelas_mapel,
-                'id_komponen' => $id_komponen,
-                'skor' => $skor,
-                'id_guru' => $id_guru
-            ]);
+        
+        $temp_file = null;
+        try {
+            // Set headers dengan encoding yang benar SEBELUM membuat file
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header("Content-Disposition: attachment; filename=\"{$filename}\"");
+            header('Content-Transfer-Encoding: binary');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            header('Expires: 0');
+            
+            // Coba simpan ke temporary file dulu
+            $writable_path = defined('WRITEPATH') ? WRITEPATH . 'cache/' : sys_get_temp_dir() . '/';
+            if (!is_writable($writable_path)) {
+                $writable_path = sys_get_temp_dir() . '/';
+            }
+            
+            $use_temp_file = is_writable($writable_path);
+            
+            if ($use_temp_file) {
+                // Metode 1: Simpan ke temporary file, lalu baca
+                $temp_file = $writable_path . uniqid('excel_') . '.xlsx';
+                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                $writer->save($temp_file);
+                
+                header('Content-Length: ' . filesize($temp_file));
+                readfile($temp_file);
+                
+                // Hapus temporary file
+                @unlink($temp_file);
+            } else {
+                // Metode 2: Langsung output (fallback jika tidak bisa write file)
+                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                $writer->save('php://output');
+            }
+            
+            exit;
+            
+        } catch (Exception $e) {
+            // Jika error, bersihkan dan redirect
+            if ($temp_file && file_exists($temp_file)) {
+                @unlink($temp_file);
+            }
+            $this->session->set_flashdata('error', 'Gagal membuat file Excel: ' . $e->getMessage());
+            redirect('nilai');
         }
     }
+    public function importExcel(){
+        // Start output buffering untuk mencegah header sudah terkirim
+        ob_start();
+        
+        if (empty($_FILES['file_excel']['tmp_name'])) {
+            ob_end_clean();
+            $this->set_flash('Silakan pilih file Excel terlebih dahulu.', 'error');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
 
-    echo json_encode(['status' => true, 'message' => 'Import berhasil']);
-}
+        $this->load->library('Spreadsheet_loader');
 
+        $file_tmp = $_FILES['file_excel']['tmp_name'];
+        $ext = pathinfo($_FILES['file_excel']['name'], PATHINFO_EXTENSION);
 
+        if (!in_array(strtolower($ext), ['xlsx', 'xls'])) {
+            ob_end_clean();
+            $this->set_flash('Format file tidak didukung. Gunakan .xlsx atau .xls', 'error');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+
+        // Set error handler untuk menekan warning dari PhpSpreadsheet
+        set_error_handler(function($errno, $errstr, $errfile, $errline) {
+            // Hanya suppress warning terkait DefaultValueBinder
+            if (strpos($errfile, 'DefaultValueBinder.php') !== false && 
+                strpos($errstr, 'Trying to access array offset') !== false) {
+                return true; // Suppress error ini
+            }
+            return false; // Biarkan error lain tetap ditampilkan
+        }, E_WARNING);
+        
+        try {
+            if ($ext == 'xlsx') {
+                $spreadsheet = $this->spreadsheet_loader->loadXlsx($file_tmp);
+            } else {
+                $spreadsheet = $this->spreadsheet_loader->loadXls($file_tmp);
+            }
+        } catch (Exception $e) {
+            restore_error_handler();
+            ob_end_clean();
+            $this->set_flash('File Excel rusak atau tidak valid.', 'error');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+        
+        // Restore error handler setelah load berhasil
+        restore_error_handler();
+        
+        try {
+            $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+            
+            // Ambil ID kelas mapel dari E2
+            $id_kelas_mapel = isset($sheetData[2]['E']) ? trim($sheetData[2]['E']) : null;
+            if (empty($id_kelas_mapel) || !is_numeric($id_kelas_mapel)) {
+                ob_end_clean();
+                $this->set_flash('File Excel tidak valid. Pastikan kolom E2 berisi ID kelas mapel.', 'error');
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+            $id_kelas_mapel = (int) $id_kelas_mapel;
+            
+            // Hapus data lama berdasarkan id_kelas_mapel
+            $this->db->where('id_kelas_mapel', $id_kelas_mapel);
+            $this->db->delete('nilai');
+            
+            // Ambil header komponen dari baris 3
+            $headerRow = isset($sheetData[3]) ? $sheetData[3] : [];
+            $komponenCols = [];
+            $colIndex = 'D';
+            while (isset($headerRow[$colIndex]) && !empty(trim($headerRow[$colIndex]))) {
+                $komponenName = trim($headerRow[$colIndex]);
+                // Cari ID komponen berdasarkan nama
+                $komponen = $this->db->get_where('mapel_komponen', ['nama_komponen' => $komponenName])->row();
+                if ($komponen) {
+                    $komponenCols[$colIndex] = $komponen->id_komponen;
+                }
+                $colIndex++;
+            }
+            
+            // Import data mulai dari baris 4
+            $countSuccess = 0;
+            $countFailed = 0;
+            $id_guru = $this->session->userdata('id_guru');
+            if (!$id_guru && $this->session->userdata('role') === 'admin') {
+                $id_guru = null;
+            }
+            
+            foreach ($sheetData as $rowNum => $row) {
+                // Skip header rows (1, 2, 3)
+                if ($rowNum <= 3) continue;
+                
+                // Ambil ID enroll dari kolom B
+                $id_enroll = isset($row['B']) ? trim($row['B']) : null;
+                if (empty($id_enroll) || !is_numeric($id_enroll)) {
+                    continue; // Skip baris tanpa ID enroll valid
+                }
+                $id_enroll = (int) $id_enroll;
+                
+                // Verifikasi ID enroll ada di database
+                $enroll = $this->db->get_where('enroll', ['id_enroll' => $id_enroll])->row();
+                if (!$enroll) {
+                    $countFailed++;
+                    continue;
+                }
+                
+                // Import nilai untuk setiap komponen
+                foreach ($komponenCols as $col => $id_komponen) {
+                    $nilai = isset($row[$col]) ? trim($row[$col]) : '';
+                    if ($nilai !== '' && is_numeric($nilai)) {
+                        $nilai = (float) $nilai;
+                        
+                        // Simpan atau update nilai
+                        $this->Nilai_model->save_nilai([
+                            'id_enroll' => $id_enroll,
+                            'id_kelas_mapel' => $id_kelas_mapel,
+                            'id_komponen' => $id_komponen,
+                            'skor' => $nilai,
+                            'id_guru' => $id_guru
+                        ]);
+                        $countSuccess++;
+                    }
+                }
+            }
+            
+            // Clean output buffer sebelum redirect
+            ob_end_clean();
+            
+            $message = "Import selesai. Berhasil mengimpor {$countSuccess} nilai.";
+            if ($countFailed > 0) {
+                $message .= " {$countFailed} baris gagal.";
+            }
+            $this->set_flash($message, 'success');
+            
+        } catch (Exception $e) {
+            ob_end_clean();
+            $this->set_flash('Gagal membaca data Excel: ' . $e->getMessage(), 'error');
+        }
+        
+        redirect($_SERVER['HTTP_REFERER']);
+
+    }
 }
 

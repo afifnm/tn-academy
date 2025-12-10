@@ -13,11 +13,15 @@ class Spreadsheet_loader {
 
     public function loadXlsx($file_tmp) {
         $reader = new ReaderXlsx();
+        $reader->setReadDataOnly(true);
+        $reader->setReadEmptyCells(false);
         return $reader->load($file_tmp);
     }
 
     public function loadXls($file_tmp) {
         $reader = new ReaderXls();
+        $reader->setReadDataOnly(true);
+        $reader->setReadEmptyCells(false);
         return $reader->load($file_tmp);
     }
 }

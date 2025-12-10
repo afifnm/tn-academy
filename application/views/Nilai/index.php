@@ -138,152 +138,128 @@ $(document).ready(function(){
 
         <div class="intro-y box p-5">
             <div class="col-span-12">
-                    <div class="alert alert-warning flex items-center mb-4">
-                        <i data-lucide="info" class="w-5 h-5 mr-2"></i>
-                        Format harus sesuai template.
-                        <a href="<?=base_url('nilai/exportexcel/'.$id_kelas.'/'.$id_ta.'/'.$id_mapel)?>" class="underline ml-1">
-                        Unduh Template
-                        </a>
-                    </div>
+                <div class="alert alert-warning flex items-center mb-4">
+                    <i data-lucide="info" class="w-5 h-5 mr-2"></i>
+                    Format harus sesuai template.
+                    <a href="<?=base_url('nilai/exportexcel/'.$id_kelas.'/'.$id_ta.'/'.$id_mapel)?>" class="underline ml-1">
+                    Unduh Template
+                    </a>
                 </div>
-            
-                <!-- HANYA form dengan class dropzone, TANPA input asli -->
-                <form 
-                id="importExcelForm" 
-                action="<?= base_url('nilai/importExcel') ?>" 
-                method="post" 
-                enctype="multipart/form-data"
-                class="dropzone" data-single="true"
-                >
-                <div class="">
-                    <!-- Info & Download Template -->
-
-                    <!-- Dropzone Area -->
-                    <div class="col-span-12">
-                        <!-- TIDAK ADA <input> di sini -->
-                        <div class="dz-message">
-                            <div class="text-lg font-medium">Drop file Excel di sini atau klik untuk upload.</div>
-                            <div class="text-slate-500 mt-1">
-                            Format: <span class="font-medium">.xlsx</span> atau <span class="font-medium">.xls</span> •
+                <form action="<?= base_url('nilai/importExcel'); ?>" method="post" enctype="multipart/form-data" id="importForm">
+                    <div class="mb-4">
+                        <label for="file_excel" class="form-label mb-3 block font-medium">Pilih File Excel</label>
+                        <div class="relative">
+                            <input type="file" 
+                                   class="form-control block w-full text-sm text-slate-600 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-primary focus:border-primary cursor-pointer" 
+                                   id="file_excel" 
+                                   name="file_excel" 
+                                   accept=".xls,.xlsx" 
+                                   required>
+                        </div>
+                        <p class="text-slate-500 text-xs mt-2">
+                            <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>
+                            Format yang didukung: .xls, .xlsx (maks. 10MB)
+                        </p>
+                        <div id="file-info" class="mt-3 p-3 bg-slate-50 rounded-lg hidden">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i data-lucide="file-spreadsheet" class="w-5 h-5 text-success mr-2"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-700" id="file-name"></p>
+                                        <p class="text-xs text-slate-500" id="file-size"></p>
+                                    </div>
+                                </div>
+                                <button type="button" id="file-remove" class="text-danger text-sm hover:underline">
+                                    Hapus
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                
+                    <div class="flex justify-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-tw-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="upload" class="w-4 h-4 mr-2"></i>
+                            Import
+                        </button>
+                    </div>
                 </form>
-                <div class="modal-footer py-0 mt-4">
-                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">Batal</button>
-                    <button type="submit" id="btnImport" class="btn btn-success w-24">Impor</button>
-                </div>
-
+                
+                <script>
+                $(document).ready(function() {
+                    const fileInput = document.getElementById('file_excel');
+                    const fileInfo = document.getElementById('file-info');
+                    const fileName = document.getElementById('file-name');
+                    const fileSize = document.getElementById('file-size');
+                    const fileRemove = document.getElementById('file-remove');
+                    
+                    // Initialize Lucide icons
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                    
+                    // Format file size
+                    function formatFileSize(bytes) {
+                        if (bytes === 0) return '0 Bytes';
+                        const k = 1024;
+                        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                        const i = Math.floor(Math.log(bytes) / Math.log(k));
+                        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+                    }
+                    
+                    // Handle file selection
+                    fileInput.addEventListener('change', function() {
+                        const file = this.files[0];
+                        if (file) {
+                            // Validate file type
+                            const validExtensions = ['.xls', '.xlsx'];
+                            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+                            
+                            if (!validExtensions.includes(fileExtension)) {
+                                alert('Format file tidak valid! Harus .xls atau .xlsx');
+                                this.value = '';
+                                fileInfo.classList.add('hidden');
+                                return;
+                            }
+                            
+                            // Validate file size (10MB)
+                            if (file.size > 10 * 1024 * 1024) {
+                                alert('Ukuran file terlalu besar! Maksimal 10MB');
+                                this.value = '';
+                                fileInfo.classList.add('hidden');
+                                return;
+                            }
+                            
+                            // Show file info
+                            fileName.textContent = file.name;
+                            fileSize.textContent = formatFileSize(file.size);
+                            fileInfo.classList.remove('hidden');
+                            
+                            // Re-initialize icons
+                            if (typeof lucide !== 'undefined') {
+                                lucide.createIcons();
+                            }
+                        } else {
+                            fileInfo.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Remove file
+                    if (fileRemove) {
+                        fileRemove.addEventListener('click', function() {
+                            fileInput.value = '';
+                            fileInfo.classList.add('hidden');
+                        });
+                    }
+                    
+                    // Reset when modal is closed
+                    $('#importExcel').on('hidden.bs.modal hidden.tw.modal', function() {
+                        fileInput.value = '';
+                        fileInfo.classList.add('hidden');
+                    });
+                });
+                </script>
             </div>
         </div>
     </div>
 </div>
 <!-- END: Modal Import Excel -->
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-    // Pastikan auto discover dimatikan SEBELUM apapun
-    Dropzone.autoDiscover = false;
-
-    // Cegah inisialisasi ganda
-    if (Dropzone.instances.length > 0) {
-        Dropzone.instances.forEach(dz => dz.destroy());
-        console.log("Dropzone lama dihancurkan sebelum inisialisasi ulang");
-    }
-
-    // Pastikan form belum memiliki Dropzone sebelumnya
-    const formElement = document.querySelector("#importExcelForm");
-    if (formElement.dropzone) {
-        console.log("Dropzone sudah ada di form, skip inisialisasi.");
-        return;
-    }
-
-    // Inisialisasi Dropzone baru
-    const myDropzone = new Dropzone(formElement, {
-        url: "<?= base_url('nilai/importExcel') ?>",
-        paramName: "file_excel",
-        maxFilesize: 10, // MB
-        acceptedFiles: ".xlsx,.xls",
-        addRemoveLinks: true,
-        dictDefaultMessage: "Drop file Excel di sini atau klik untuk upload.",
-        dictRemoveFile: "",
-        autoProcessQueue: false,
-        uploadMultiple: false,
-        parallelUploads: 1,
-        maxFiles: 1,
-        headers: {
-        '<?= $this->security->get_csrf_token_name() ?>': '<?= $this->security->get_csrf_hash() ?>'
-        },
-
-        init: function() {
-        const dz = this;
-
-        dz.on("addedfile", function(file) {
-            if (dz.files.length > 1) {
-            dz.removeFile(dz.files[0]);
-            }
-        });
-
-        dz.on("removedfile", function(file) {
-        });
-
-        dz.on("queuecomplete", function() {
-            dz.removeAllFiles(true);
-        });
-
-        dz.on("success", function(file, response) {
-            // Tutup modal setelah upload sukses
-            const modalEl = document.querySelector("#importExcel");
-            const modalInstance = tailwind.Modal.getInstance(modalEl);
-
-            if (modalInstance) {
-                modalInstance.hide();
-            } else {
-                modalEl.setAttribute("aria-hidden", "true");
-                modalEl.classList.remove("show");
-            }
-
-            // Bersihkan file dari dropzone
-            dz.removeAllFiles(true);
-
-            // Opsional: reload halaman setelah 1 detik biar data siswa muncul
-            setTimeout(() => location.reload(), 1000);
-        });
-        }
-    });
-
-    // Tombol Impor
-    document.getElementById('btnImport').addEventListener('click', function() {
-        if (myDropzone.getAcceptedFiles().length > 0) {
-        myDropzone.processQueue();
-        } else {
-        alert('Silakan pilih file terlebih dahulu.');
-        }
-    });
-
-    // Tombol Batal & Close (hapus file)
-    document.querySelectorAll('#importExcel [data-tw-dismiss="modal"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-        myDropzone.removeAllFiles(true);
-        console.log("Modal ditutup, file dihapus");
-        });
-    });
-
-    // Observer: jika modal disembunyikan (aria-hidden)
-    const modal = document.getElementById('importExcel');
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(mutation => {
-        if (mutation.attributeName === "aria-hidden" && modal.getAttribute("aria-hidden") === "true") {
-            myDropzone.removeAllFiles(true);
-            console.log("Modal disembunyikan, file dihapus otomatis.");
-        }
-        });
-    });
-    observer.observe(modal, { attributes: true });
-    });
-</script>
