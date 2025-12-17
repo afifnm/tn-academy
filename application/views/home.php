@@ -102,6 +102,40 @@
       </div>
     </div>
   </div>
+<!-- Akses Cepat -->
+<div class="mt-6">
+  <h2 class="text-xl font-bold text-gray-800 mb-4">🔗 Link Akses</h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+    <!-- E-Learning -->
+    <a href="#"
+       class="group bg-white rounded-2xl shadow p-6 hover:shadow-lg transition border border-gray-100">
+      <div class="flex items-center gap-5">
+        <div class="p-4 rounded-2xl bg-blue-100 text-blue-600 group-hover:scale-110 transition">
+          <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">E-Learning</h3>
+        </div>
+      </div>
+    </a>
+
+    <!-- Rencana Website Tambahan -->
+    <a href="#"
+       class="group bg-white rounded-2xl shadow p-6 hover:shadow-lg transition border border-gray-100">
+      <div class="flex items-center gap-5">
+        <div class="p-4 rounded-2xl bg-orange-100 text-orange-600 group-hover:scale-110 transition">
+          <i data-lucide="lightbulb" class="w-7 h-7"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">Pembelajaran online & materi digital</h3>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</div>
 
   <!-- Ranking & Pengumuman -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
